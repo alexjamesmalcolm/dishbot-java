@@ -15,9 +15,9 @@ public class DishbotController {
     public void receiveMessage(HttpServletRequest request) throws IOException {
         System.out.println("Message Received");
         request.getReader().lines().forEach(System.out::println);
-        List<String> list = request.getReader().lines().collect(Collectors.toList());
-        System.out.println(list);
-        String message = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        System.out.println(message);
+//        List<String> list = request.getReader().lines().collect(Collectors.toList());
+//        System.out.println(list);
+//        String message = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+//        System.out.println(message);
     }
 }
