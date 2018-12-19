@@ -19,7 +19,7 @@ public class DishbotController {
 //        String message = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         String message = "{\"attachments\":[],\"avatar_url\":\"https://i.groupme.com/750x750.jpeg.83f02dee51d24c9386bce40c4da6d445\",\"created_at\":1545193684,\"group_id\":\"46707218\",\"id\":\"154519368481152940\",\"name\":\"Alex Malcolm\",\"sender_id\":\"19742906\",\"sender_type\":\"user\",\"source_guid\":\"7729f2ce786d2f646f0e37744a52d306\",\"system\":false,\"text\":\"test\",\"user_id\":\"19742906\"}";
         System.out.println(message);
-        String withTheEndsCutOff = message.substring(1, message.length() - 1);
+        String withTheEndsCutOff = message.substring(1, message.length() - 1).replace("\"", "");
         System.out.println(withTheEndsCutOff);
         Stream<String> foo = Arrays.stream(withTheEndsCutOff.split(","));
         foo.forEach(System.out::println);
