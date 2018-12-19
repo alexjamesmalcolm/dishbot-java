@@ -13,6 +13,7 @@ public class DishbotController {
     @RequestMapping("/receive-message")
     public void receiveMessage(HttpServletRequest request) throws IOException {
         System.out.println("Message Received");
+        request.getReader().lines().forEach(System.out::println);
         String message = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         System.out.println(message);
     }
