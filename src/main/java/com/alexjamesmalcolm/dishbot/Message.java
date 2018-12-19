@@ -13,4 +13,12 @@ public class Message {
         content = map.get("text");
         attachments = map.get("attachments");
     }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public String getContent() {
+        return content;
+    }
 }

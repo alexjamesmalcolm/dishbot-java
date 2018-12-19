@@ -1,27 +1,21 @@
 package com.alexjamesmalcolm.dishbot;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import javax.annotation.Resource;
 
-import static java.util.stream.Collectors.toMap;
-
-@RestController
+@Controller
 public class DishbotController {
 
-    @RequestMapping("/receive-message")
-    public void receiveMessage(HttpServletRequest request) throws IOException {
-        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        String withTheEndsCutOff = json.substring(1, json.length() - 1).replace("\"", "");
-        Stream<String> stream = Arrays.stream(withTheEndsCutOff.split(","));
-        Map<String, String> map = stream.collect(toMap(x -> x.split(":")[0], x -> x.split(":")[1]));
-        Message message = new Message(map);
-        System.out.println(message);
+    @Resource
+    private MessageRepository messageRepo;
+
+    @RequestMapping("/")
+    public String displayIndex(Model model) {
+        Iterable<Message> messages = messageRepo.findAll();
+        model.addAttribute("messages", messages);
+        return "index";
     }
 }
