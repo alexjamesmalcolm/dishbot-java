@@ -3,13 +3,18 @@ package com.alexjamesmalcolm.dishbot;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 @RestController
 public class DishbotController {
 
     @RequestMapping("/receive-message")
-    public void receiveMessage(HttpServletRequest request) {
+    public void receiveMessage(HttpServletRequest request) throws IOException, ServletException {
         System.out.println("Message Received");
         StringBuilder sb = new StringBuilder();
         sb.append(" [");
@@ -29,6 +34,10 @@ public class DishbotController {
         sb.append("\n\t ServerName: ").append(request.getServerName());
         sb.append("\n\t ServerPort: ").append(request.getServerPort());
         sb.append("\n\t ServletPath: ").append(request.getServletPath());
+        List<Part> parts = (List<Part>) request.getParts();
+        for (int i = 0; i < parts.size(); i++) {
+            sb.append("\n\t Part(" + i + "): ").append(parts.get(i));
+        }
         sb.append("\n]");
         System.out.println(sb);
     }
