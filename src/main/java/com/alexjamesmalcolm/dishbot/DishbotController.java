@@ -1,13 +1,10 @@
 package com.alexjamesmalcolm.dishbot;
 
-import com.oracle.javafx.jmx.json.JSONException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
