@@ -10,28 +10,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toMap;
+
 @RestController
 public class DishbotController {
 
     @RequestMapping("/receive-message")
     public void receiveMessage(HttpServletRequest request) throws IOException {
-        System.out.println("Message Received");
-//        String message = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        String message = "{\"attachments\":[],\"avatar_url\":\"https://i.groupme.com/750x750.jpeg.83f02dee51d24c9386bce40c4da6d445\",\"created_at\":1545193684,\"group_id\":\"46707218\",\"id\":\"154519368481152940\",\"name\":\"Alex Malcolm\",\"sender_id\":\"19742906\",\"sender_type\":\"user\",\"source_guid\":\"7729f2ce786d2f646f0e37744a52d306\",\"system\":false,\"text\":\"test\",\"user_id\":\"19742906\"}";
+        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        String withTheEndsCutOff = json.substring(1, json.length() - 1).replace("\"", "");
+        Stream<String> stream = Arrays.stream(withTheEndsCutOff.split(","));
+        Map<String, String> map = stream.collect(toMap(x -> x.split(":")[0], x -> x.split(":")[1]));
+        Message message = new Message(map);
         System.out.println(message);
-        String withTheEndsCutOff = message.substring(1, message.length() - 1).replace("\"", "");
-        System.out.println(withTheEndsCutOff);
-        Stream<String> foo = Arrays.stream(withTheEndsCutOff.split(","));
-        foo.forEach(System.out::println);
-        Map<String, String> bar = Arrays.stream(withTheEndsCutOff.split(",")).collect(Collectors.toMap(x -> {return x.split(":")[0];}, x -> {return x.split(":")[1];}));
-        System.out.println(bar);
-//        HashMap<String, String> bar = Arrays.stream(foo).collect(
-//                Collectors.toMap(x -> {
-//            return ((String) x).split(":")[0];
-//        }, x -> {
-//            return ((String) x).split(":")[1];
-//        }));
-//        Arrays.stream(foo).collect(Collectors.mapping());
-//        withTheEndsCutOff.split("")
     }
 }
