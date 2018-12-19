@@ -2,14 +2,17 @@ package com.alexjamesmalcolm.dishbot;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Map;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 public class Message {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private long id;
 
     private String senderName;
@@ -30,5 +33,9 @@ public class Message {
 
     public String getContent() {
         return content;
+    }
+
+    public long getId() {
+        return id;
     }
 }
