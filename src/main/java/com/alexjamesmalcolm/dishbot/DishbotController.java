@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 public class DishbotController {
@@ -20,8 +21,9 @@ public class DishbotController {
         System.out.println(message);
         String withTheEndsCutOff = message.substring(1, message.length() - 1);
         System.out.println(withTheEndsCutOff);
-        String[] foo = withTheEndsCutOff.split(",");
-        Map<String, String> bar = Arrays.stream(foo).collect(Collectors.toMap(x -> {return x.split(":")[0];}, x -> {return x.split(":")[1];}));
+        Stream<String> foo = Arrays.stream(withTheEndsCutOff.split(","));
+        foo.forEach(System.out::println);
+        Map<String, String> bar = Arrays.stream(withTheEndsCutOff.split(",")).collect(Collectors.toMap(x -> {return x.split(":")[0];}, x -> {return x.split(":")[1];}));
         System.out.println(bar);
 //        HashMap<String, String> bar = Arrays.stream(foo).collect(
 //                Collectors.toMap(x -> {
