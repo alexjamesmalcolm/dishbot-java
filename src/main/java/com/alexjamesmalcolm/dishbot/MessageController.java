@@ -1,5 +1,6 @@
 package com.alexjamesmalcolm.dishbot;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,5 +28,11 @@ public class MessageController {
         Map<String, String> map = stream.collect(toMap(x -> x.split(":")[0], x -> x.split(":")[1]));
         Message message = new Message(map);
         messageRepo.save(message);
+    }
+
+    @GetMapping("/messages")
+    public Iterable<Message> getMessages() {
+        Iterable<Message> messages = messageRepo.findAll();
+        return messages;
     }
 }
