@@ -16,6 +16,8 @@ public class Message {
     private String content;
     private String attachments;
 
+    private Message() {}
+
     public Message(Map<String, String> map) {
         senderName = map.get("name");
         content = map.get("text");
