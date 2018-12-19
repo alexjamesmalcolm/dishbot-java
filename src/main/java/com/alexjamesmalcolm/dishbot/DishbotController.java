@@ -14,7 +14,10 @@ public class DishbotController {
     @RequestMapping("/receive-message")
     public void receiveMessage(HttpServletRequest request) throws IOException {
         System.out.println("Message Received");
-        request.getReader().lines().forEach(System.out::println);
+        request.getReader().lines().forEach(line -> {
+            System.out.println("This is a seperator");
+            System.out.println(line);
+        });
 //        List<String> list = request.getReader().lines().collect(Collectors.toList());
 //        System.out.println(list);
 //        String message = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
