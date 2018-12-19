@@ -1,8 +1,16 @@
 package com.alexjamesmalcolm.dishbot;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Map;
 
+@Entity
 public class Message {
+
+    @Id
+    @GeneratedValue
+    private long id;
 
     private String senderName;
     private String content;
