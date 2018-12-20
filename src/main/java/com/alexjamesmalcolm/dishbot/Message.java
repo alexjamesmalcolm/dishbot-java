@@ -3,6 +3,7 @@ package com.alexjamesmalcolm.dishbot;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -44,38 +45,42 @@ public class Message {
     private Message() {
     }
 
-    public Message(String[] attachments, String avatar_url, Long created_at, String group_id,
-                   String id, String name, String sender_id, String sender_type,
-                   String source_guid, Boolean system, String text, String user_id) {
-        System.out.println(attachments);
-        System.out.println(avatar_url);
-        System.out.println(created_at);
-        System.out.println(group_id);
-        System.out.println(id);
-        System.out.println(name);
-        System.out.println(sender_id);
-        System.out.println(sender_type);
-        System.out.println(source_guid);
-        System.out.println(system);
-        System.out.println(text);
-        System.out.println(user_id);
-        this.id = Long.parseLong(id);
-        this.name = name;
-        this.text = text;
-        this.attachments = attachments;
-        try {
-            this.avatar_url = new URL(avatar_url);
-        } catch (MalformedURLException e) {
-            e.fillInStackTrace();
-        }
-        this.sender_type = sender_type;
-        this.source_guid = source_guid;
-        this.system = system;
-        this.created_at = new Timestamp(created_at);
-        this.group_id = Long.parseLong(group_id);
-        this.sender_id = Long.parseLong(sender_id);
-        this.user_id = Long.parseLong(user_id);
+    public Message (HttpServletRequest request) {
+        System.out.println(request);
     }
+
+//    public Message(String[] attachments, String avatar_url, Long created_at, String group_id,
+//                   String id, String name, String sender_id, String sender_type,
+//                   String source_guid, Boolean system, String text, String user_id) {
+//        System.out.println(attachments);
+//        System.out.println(avatar_url);
+//        System.out.println(created_at);
+//        System.out.println(group_id);
+//        System.out.println(id);
+//        System.out.println(name);
+//        System.out.println(sender_id);
+//        System.out.println(sender_type);
+//        System.out.println(source_guid);
+//        System.out.println(system);
+//        System.out.println(text);
+//        System.out.println(user_id);
+//        this.id = Long.parseLong(id);
+//        this.name = name;
+//        this.text = text;
+//        this.attachments = attachments;
+//        try {
+//            this.avatar_url = new URL(avatar_url);
+//        } catch (MalformedURLException e) {
+//            e.fillInStackTrace();
+//        }
+//        this.sender_type = sender_type;
+//        this.source_guid = source_guid;
+//        this.system = system;
+//        this.created_at = new Timestamp(created_at);
+//        this.group_id = Long.parseLong(group_id);
+//        this.sender_id = Long.parseLong(sender_id);
+//        this.user_id = Long.parseLong(user_id);
+//    }
 
     public String getName() {
         return name;
