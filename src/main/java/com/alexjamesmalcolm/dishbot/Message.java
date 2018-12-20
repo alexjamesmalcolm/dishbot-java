@@ -47,7 +47,18 @@ public class Message {
     public Message(String[] attachments, String avatar_url, long created_at, String group_id,
                    String id, String name, String sender_id, String sender_type,
                    String source_guid, boolean system, String text, String user_id) {
-
+        System.out.println(attachments);
+        System.out.println(avatar_url);
+        System.out.println(created_at);
+        System.out.println(group_id);
+        System.out.println(id);
+        System.out.println(name);
+        System.out.println(sender_id);
+        System.out.println(sender_type);
+        System.out.println(source_guid);
+        System.out.println(system);
+        System.out.println(text);
+        System.out.println(user_id);
         this.id = Long.parseLong(id);
         this.name = name;
         this.text = text;
