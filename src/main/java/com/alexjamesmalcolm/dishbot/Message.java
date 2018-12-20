@@ -28,9 +28,7 @@ public class Message {
 //    }
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
     private long id;
-
     private String name;
     private String source_guid;
     private String sender_type;
@@ -49,7 +47,7 @@ public class Message {
     public Message(String[] attachments, String avatar_url, long created_at, String group_id,
                    String id, String name, String sender_id, String sender_type,
                    String source_guid, boolean system, String text, String user_id) {
-        
+
         this.id = Long.parseLong(id);
         this.name = name;
         this.text = text;
