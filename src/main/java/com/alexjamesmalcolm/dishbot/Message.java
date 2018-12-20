@@ -44,9 +44,9 @@ public class Message {
     private Message() {
     }
 
-    public Message(String[] attachments, String avatar_url, long created_at, String group_id,
+    public Message(String[] attachments, String avatar_url, Long created_at, String group_id,
                    String id, String name, String sender_id, String sender_type,
-                   String source_guid, boolean system, String text, String user_id) {
+                   String source_guid, Boolean system, String text, String user_id) {
         System.out.println(attachments);
         System.out.println(avatar_url);
         System.out.println(created_at);
