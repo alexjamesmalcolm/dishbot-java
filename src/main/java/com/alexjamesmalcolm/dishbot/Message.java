@@ -34,7 +34,7 @@ public class Message {
     private String name;
     private String source_guid;
     private String sender_type;
-    private Iterable<String> attachments;
+    private String[] attachments;
     private URL avatar_url;
     private String text;
     private boolean system;
@@ -46,8 +46,10 @@ public class Message {
     private Message() {
     }
 
-    public Message(Iterable<String> attachments, String avatar_url, long created_at, String group_id, String id, String name,
-                   String sender_id, String sender_type, String source_guid, boolean system, String text, String user_id) {
+    public Message(String[] attachments, String avatar_url, long created_at, String group_id,
+                   String id, String name, String sender_id, String sender_type,
+                   String source_guid, boolean system, String text, String user_id) {
+        
         this.id = Long.parseLong(id);
         this.name = name;
         this.text = text;
@@ -86,7 +88,7 @@ public class Message {
         return sender_type;
     }
 
-    public Iterable<String> getAttachments() {
+    public String[] getAttachments() {
         return attachments;
     }
 
