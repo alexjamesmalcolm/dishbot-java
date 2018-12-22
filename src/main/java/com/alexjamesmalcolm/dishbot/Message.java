@@ -53,9 +53,11 @@ public class Message {
 
     public Message (HttpServletRequest request) throws IOException {
         String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        System.out.println(json);
         String withTheEndsCutOff = json.substring(1, json.length() - 1).replace("\"", "");
+        System.out.println(withTheEndsCutOff);
         Stream<String> stream = Arrays.stream(withTheEndsCutOff.split(","));
-        Map<String, String> map = stream.collect(toMap(x -> x.split(":")[0], x -> x.split(":")[1]));
+        Map<String, String> map = stream.collect(toMap(x -> x.split(": ")[0], x -> x.split(":")[1]));
         System.out.println(map);
         id = parseLong(map.get("id"));
         name = map.get("name");
