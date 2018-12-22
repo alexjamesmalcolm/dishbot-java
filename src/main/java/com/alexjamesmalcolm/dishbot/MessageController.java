@@ -15,7 +15,7 @@ public class MessageController {
     private MessageRepository messageRepo;
 
     @RequestMapping("/receive-message")
-    public void receiveMessage(HttpServletRequest request) throws IOException {
+    public void receiveMessage(HttpServletRequest request) throws IOException, SystemMessageException {
         Message message = new Message(request);
         messageRepo.save(message);
     }
