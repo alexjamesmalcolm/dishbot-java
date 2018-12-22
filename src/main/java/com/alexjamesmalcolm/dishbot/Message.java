@@ -81,11 +81,10 @@ public class Message {
         source_guid = map.get("source_guid");
         sender_type = map.get("sender_type");
         attachments = map.get("attachments").split(",");
-        System.out.println(Arrays.toString(attachments));
         avatar_url = map.get("avatar_url");
         text = map.get("text");
         system = parseBoolean(map.get("system"));
-        created_at = new Timestamp(parseLong(map.get("created_at")));
+        created_at = new Timestamp(1000 * parseLong(map.get("created_at")));
         group_id = parseLong(map.get("group_id"));
         sender_id = parseLong(map.get("sender_id"));
         user_id = parseLong(map.get("user_id"));
