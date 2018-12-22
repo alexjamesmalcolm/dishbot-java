@@ -54,10 +54,15 @@ public class Message {
     public Message (HttpServletRequest request) throws IOException {
         String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         System.out.println(json);
-        String withTheEndsCutOff = json.substring(1, json.length() - 1).replace("\"", "");
+        // {"attachments":[],"avatar_url":"https://i.groupme.com/750x750.jpeg.83f02dee51d24c9386bce40c4da6d445","created_at":1545438872,"group_id":"46707218","id":"154543887253121474","name":"Alex Malcolm","sender_id":"19742906","sender_type":"user","source_guid":"b59709300225e65ebbecfb27ad36eb2a","system":false,"text":"test","user_id":"19742906"}
+        String withTheEndsCutOff = json.substring(1, json.length() - 1);
         System.out.println(withTheEndsCutOff);
         Stream<String> stream = Arrays.stream(withTheEndsCutOff.split(","));
-        Map<String, String> map = stream.collect(toMap(x -> x.split(": ")[0], x -> x.split(":")[1]));
+        Map<String, String> map = stream.collect(toMap(x -> {
+            return x.split("\":")[0];
+        }, x -> {
+            return x.split("\":")[1];
+        }));
         System.out.println(map);
         id = parseLong(map.get("id"));
         name = map.get("name");
