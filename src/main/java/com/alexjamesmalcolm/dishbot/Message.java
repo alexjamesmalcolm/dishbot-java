@@ -68,6 +68,8 @@ public class Message {
             key = key.replaceAll("\"", "");
             if (key.equals("text")) {
                 value = value.substring(1, value.length() - 1);
+            } else if (key.equals("attachments")) {
+                value = value.substring(1, value.length() - 1);
             } else {
                 value = value.replaceAll("\"", "");
             }
