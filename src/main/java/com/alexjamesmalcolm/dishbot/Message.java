@@ -41,8 +41,6 @@ public class Message {
     private String name;
     private String source_guid;
     private String sender_type;
-    @OneToMany
-    private Collection<Attachment> attachments;
     private URL avatar_url;
     @Lob
     private String text;
@@ -84,11 +82,6 @@ public class Message {
         name = map.get("name");
         source_guid = map.get("source_guid");
         sender_type = map.get("sender_type");
-        System.out.println(map.get("attachments"));
-        Arrays.stream(map.get("attachments").split("},")).forEach(attachment -> {
-            System.out.println(attachment);
-        });
-//        attachments = map.get("attachments").split(",");
         avatar_url = new URL(map.get("avatar_url"));
         text = map.get("text");
         system = parseBoolean(map.get("system"));
@@ -149,10 +142,6 @@ public class Message {
 
     public String getSenderType() {
         return sender_type;
-    }
-
-    public Collection<Attachment> getAttachments() {
-        return attachments;
     }
 
     public URL getAvatarUrl() {
