@@ -3,10 +3,13 @@ package com.alexjamesmalcolm.dishbot;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,8 +41,9 @@ public class Message {
     private String name;
     private String source_guid;
     private String sender_type;
-    private String[] attachments;
-    private String avatar_url;
+    @OneToMany
+    private Collection<Attachment> attachments;
+    private URL avatar_url;
     @Lob
     private String text;
     private boolean system;
@@ -80,8 +84,12 @@ public class Message {
         name = map.get("name");
         source_guid = map.get("source_guid");
         sender_type = map.get("sender_type");
-        attachments = map.get("attachments").split(",");
-        avatar_url = map.get("avatar_url");
+        System.out.println(map.get("attachments"));
+        Arrays.stream(map.get("attachments").split("},")).forEach(attachment -> {
+            System.out.println(attachment);
+        });
+//        attachments = map.get("attachments").split(",");
+        avatar_url = new URL(map.get("avatar_url"));
         text = map.get("text");
         system = parseBoolean(map.get("system"));
         created_at = new Timestamp(1000 * parseLong(map.get("created_at")));
@@ -143,11 +151,11 @@ public class Message {
         return sender_type;
     }
 
-    public String[] getAttachments() {
+    public Collection<Attachment> getAttachments() {
         return attachments;
     }
 
-    public String getAvatarUrl() {
+    public URL getAvatarUrl() {
         return avatar_url;
     }
 
