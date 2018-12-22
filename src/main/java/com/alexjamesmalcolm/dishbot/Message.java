@@ -56,6 +56,7 @@ public class Message {
         String withTheEndsCutOff = json.substring(1, json.length() - 1).replace("\"", "");
         Stream<String> stream = Arrays.stream(withTheEndsCutOff.split(","));
         Map<String, String> map = stream.collect(toMap(x -> x.split(":")[0], x -> x.split(":")[1]));
+        System.out.println(map);
         id = parseLong(map.get("id"));
         name = map.get("name");
         source_guid = map.get("source_guid");
