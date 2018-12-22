@@ -59,9 +59,19 @@ public class Message {
         System.out.println(withTheEndsCutOff);
         Stream<String> stream = Arrays.stream(withTheEndsCutOff.split(","));
         Map<String, String> map = stream.collect(toMap(x -> {
-            return x.split("\":")[0];
+            String key = x.split("\":")[0];
+            key = key.replaceAll("\"", "");
+            return key;
         }, x -> {
-            return x.split("\":")[1];
+            String value = x.split("\":")[1];
+            String key = x.split("\":")[0];
+            key = key.replaceAll("\"", "");
+            if (key.equals("text")) {
+                value = value.substring(1, value.length() - 1);
+            } else {
+                value = value.replaceAll("\"", "");
+            }
+            return value;
         }));
         System.out.println(map);
         id = parseLong(map.get("id"));
