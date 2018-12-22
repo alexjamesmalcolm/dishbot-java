@@ -40,7 +40,7 @@ public class Message {
     private String source_guid;
     private String sender_type;
     private String[] attachments;
-    private URL avatar_url;
+    private String avatar_url;
     @Lob
     private String text;
     private boolean system;
@@ -62,7 +62,7 @@ public class Message {
         source_guid = map.get("source_guid");
         sender_type = map.get("sender_type");
         attachments = map.get("attachments").split(",");
-        avatar_url = new URL(map.get("avatar_url"));
+        avatar_url = map.get("avatar_url");
         text = map.get("text");
         system = parseBoolean(map.get("system"));
         created_at = new Timestamp(parseLong(map.get("created_at")));
