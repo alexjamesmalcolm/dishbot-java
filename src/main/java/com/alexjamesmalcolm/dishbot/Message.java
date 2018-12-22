@@ -5,7 +5,6 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Map;
@@ -128,7 +127,7 @@ public class Message {
         return attachments;
     }
 
-    public URL getAvatarUrl() {
+    public String getAvatarUrl() {
         return avatar_url;
     }
 
