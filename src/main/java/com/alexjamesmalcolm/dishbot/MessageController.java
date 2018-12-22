@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class MessageController {
@@ -13,7 +14,8 @@ public class MessageController {
     private MessageRepository messageRepo;
 
     @RequestMapping("/receive-message")
-    public void receiveMessage(Message message) {
+    public void receiveMessage(HttpServletRequest request) {
+        Message message = new Message(request);
         messageRepo.save(message);
     }
 

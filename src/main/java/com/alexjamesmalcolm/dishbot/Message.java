@@ -1,14 +1,20 @@
 package com.alexjamesmalcolm.dishbot;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.servlet.http.HttpServletRequest;
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Long.parseLong;
+import static java.util.stream.Collectors.toMap;
 
 @Entity
 public class Message {
@@ -35,6 +41,7 @@ public class Message {
     private String sender_type;
     private String[] attachments;
     private URL avatar_url;
+    @Lob
     private String text;
     private boolean system;
     private Timestamp created_at;
@@ -45,8 +52,23 @@ public class Message {
     private Message() {
     }
 
-    public Message (HttpServletRequest request) {
-        System.out.println(request);
+    public Message (HttpServletRequest request) throws IOException {
+        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        String withTheEndsCutOff = json.substring(1, json.length() - 1).replace("\"", "");
+        Stream<String> stream = Arrays.stream(withTheEndsCutOff.split(","));
+        Map<String, String> map = stream.collect(toMap(x -> x.split(":")[0], x -> x.split(":")[1]));
+        id = parseLong(map.get("id"));
+        name = map.get("name");
+        source_guid = map.get("source_guid");
+        sender_type = map.get("sender_type");
+        attachments = map.get("attachments").split(",");
+        avatar_url = new URL(map.get("avatar_url"));
+        text = map.get("text");
+        system = parseBoolean(map.get("system"));
+        created_at = new Timestamp(parseLong(map.get("created_at")));
+        group_id = parseLong(map.get("group_id"));
+        sender_id = parseLong(map.get("sender_id"));
+        user_id = parseLong(map.get("user_id"));
     }
 
 //    public Message(String[] attachments, String avatar_url, Long created_at, String group_id,
