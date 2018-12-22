@@ -81,6 +81,7 @@ public class Message {
         source_guid = map.get("source_guid");
         sender_type = map.get("sender_type");
         attachments = map.get("attachments").split(",");
+        System.out.println(Arrays.toString(attachments));
         avatar_url = map.get("avatar_url");
         text = map.get("text");
         system = parseBoolean(map.get("system"));
