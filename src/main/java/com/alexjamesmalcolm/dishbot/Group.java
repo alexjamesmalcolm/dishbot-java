@@ -17,7 +17,7 @@ public class Group {
 
     @ManyToMany(cascade = ALL)
     private List<User> users = new ArrayList<>();
-    @OneToOne
+    @OneToOne(mappedBy = "group", cascade = ALL)
     private Bot bot;
 
     private Group() {}
