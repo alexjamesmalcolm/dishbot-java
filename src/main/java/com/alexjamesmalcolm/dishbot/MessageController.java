@@ -48,6 +48,8 @@ public class MessageController {
                         .append(properties.getAccessToken()).toString());
                 Map<String, Object> results = restTemplate.getForObject(uri, Map.class);
                 System.out.println(results);
+                List<Object> bots = (List<Object>) results.get("response");
+                System.out.println(bots);
             }
 //            em.flush();
 //            em.clear();
