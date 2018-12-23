@@ -64,16 +64,18 @@ public class MessageController {
                 }).filter(b -> {
                     return b.getGroup().getId() == groupId;
                 }).findFirst().get();
-                botRepo.save(bot);
+                System.out.println(bot);
+                bot = botRepo.save(bot);
+                System.out.println(bot);
             }
             em.flush();
             em.clear();
-            message = messageRepo.findById(id).get();
-            String text = message.getText();
-            System.out.println(text);
-            String botId = message.getGroup().getBot().getId();
-            System.out.println(botId);
-            sendMessage(text, botId);
+//            message = messageRepo.findById(id).get();
+//            String text = message.getText();
+//            System.out.println(text);
+//            String botId = message.getGroup().getBot().getId();
+//            System.out.println(botId);
+//            sendMessage(text, botId);
         } catch (BotMessageException e) {
             System.out.println("Message was from Bot");
         } catch (SystemMessageException e) {
