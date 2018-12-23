@@ -31,6 +31,9 @@ public class MessageController {
     @Resource
     private Properties properties;
 
+    @Resource
+    private BotRepository botRepo;
+
     @Transactional
     @RequestMapping("/receive-message")
     public void receiveMessage(HttpServletRequest request) throws IOException, URISyntaxException {
@@ -61,16 +64,16 @@ public class MessageController {
                 }).filter(b -> {
                     return b.getGroup().getId() == groupId;
                 }).findFirst().get();
-                System.out.println(bot);
+                botRepo.save(bot);
             }
-//            em.flush();
-//            em.clear();
-//            message = messageRepo.findById(id).get();
-//            String text = message.getText();
-//            System.out.println(text);
-//            String botId = message.getGroup().getBot().getId();
-//            System.out.println(botId);
-//            sendMessage(text, botId);
+            em.flush();
+            em.clear();
+            message = messageRepo.findById(id).get();
+            String text = message.getText();
+            System.out.println(text);
+            String botId = message.getGroup().getBot().getId();
+            System.out.println(botId);
+            sendMessage(text, botId);
         } catch (BotMessageException e) {
             System.out.println("Message was from Bot");
         } catch (SystemMessageException e) {
