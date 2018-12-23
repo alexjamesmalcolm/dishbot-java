@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
@@ -17,6 +16,7 @@ public class Group {
 
     @ManyToMany(cascade = ALL)
     private List<User> users = new ArrayList<>();
+    private String botId = "6dc7db8c212c036ddc9dc9acbc";
 
     private Group() {}
 
@@ -34,5 +34,9 @@ public class Group {
 
     public void addUser(User user) {
         users.add(user);
+    }
+
+    public String getBotId() {
+        return botId;
     }
 }

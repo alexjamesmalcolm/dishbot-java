@@ -1,5 +1,6 @@
 package com.alexjamesmalcolm.dishbot;
 
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,9 +16,11 @@ public class MessageController {
     private MessageRepository messageRepo;
 
     @RequestMapping("/receive-message")
-    public void receiveMessage(HttpServletRequest request) throws IOException, SystemMessageException {
+    @SendTo("https://api.groupme.com/v3/bots/post")
+    public BotMessage receiveMessage(HttpServletRequest request) throws IOException, SystemMessageException {
         Message message = new Message(request);
-        messageRepo.save(message);
+        message = messageRepo.save(message);
+        return new BotMessage(message.getText(), message.getGroup().getBotId());
     }
 
     @GetMapping("/messages")

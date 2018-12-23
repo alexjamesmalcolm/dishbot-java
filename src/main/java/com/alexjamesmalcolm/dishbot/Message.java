@@ -1,14 +1,15 @@
 package com.alexjamesmalcolm.dishbot;
 
-import javax.annotation.Resource;
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -41,7 +42,7 @@ public class Message {
     @ManyToOne(cascade = ALL)
     private User user;
     private String source_guid;
-    private URL avatar_url;
+//    private URL avatar_url;
     @Lob
     private String text;
     private Timestamp created_at;
@@ -85,13 +86,13 @@ public class Message {
         }
         id = parseLong(map.get("id"));
         source_guid = map.get("source_guid");
-        avatar_url = new URL(map.get("avatar_url"));
         text = map.get("text");
         created_at = new Timestamp(1000 * parseLong(map.get("created_at")));
         long group_id = parseLong(map.get("group_id"));
-        long user_id = parseLong(map.get("user_id"));
         String name = map.get("name");
-        user = new User(name, user_id);
+        long user_id = parseLong(map.get("user_id"));
+        URL avatar_url = new URL(map.get("avatar_url"));
+        user = new User(name, user_id, avatar_url);
         group = new Group(group_id);
         group.addUser(user);
     }
@@ -102,10 +103,6 @@ public class Message {
 
     public String getSourceGuid() {
         return source_guid;
-    }
-
-    public URL getAvatarUrl() {
-        return avatar_url;
     }
 
     public Timestamp getCreatedAt() {
