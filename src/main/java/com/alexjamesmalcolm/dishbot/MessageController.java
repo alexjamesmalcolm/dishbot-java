@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class MessageController {
@@ -45,7 +46,7 @@ public class MessageController {
                         .append(properties.getBaseUrl())
                         .append("/bots?token=")
                         .append(properties.getAccessToken()).toString());
-                Object results = restTemplate.getForObject(uri, Object.class);
+                Map<String, Object> results = restTemplate.getForObject(uri, Map.class);
                 System.out.println(results);
             }
 //            em.flush();
@@ -61,12 +62,6 @@ public class MessageController {
         } catch (SystemMessageException e) {
             System.out.println("Message was from System");
         }
-    }
-
-    List<Object> getBotsAndAttachToGroups() throws URISyntaxException {
-        URI uri = new URI(properties.getBaseUrl() + "/bots");
-        List<Object> results = restTemplate.getForObject(uri, List.class);
-        return results;
     }
 
     private void sendMessage(String text, String botId) {
