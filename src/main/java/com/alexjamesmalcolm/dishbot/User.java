@@ -1,6 +1,9 @@
 package com.alexjamesmalcolm.dishbot;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.net.URL;
 import java.util.Collection;
 
@@ -37,5 +40,13 @@ public class User {
 
     public Collection<Group> getGroups() {
         return groups;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public URL getAvatar_url() {
+        return avatar_url;
     }
 }

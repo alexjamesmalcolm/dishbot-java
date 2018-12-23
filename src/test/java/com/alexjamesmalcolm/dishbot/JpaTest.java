@@ -8,8 +8,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 
@@ -34,7 +32,7 @@ public class JpaTest {
     private URL avatar_url;
 
     @Test
-    public void shouldSaveMessage() throws IOException, SystemMessageException, BotMessageException {
+    public void shouldSaveMessage() throws SystemMessageException, BotMessageException {
         String json = "{\"attachments\":[],\"avatar_url\":\"https://i.groupme.com/750x750.jpeg.83f02dee51d24c9386bce40c4da6d445\",\"created_at\":1545438872,\"group_id\":\"46707218\",\"id\":\"154543887253121474\",\"name\":\"Alex Malcolm\",\"sender_id\":\"19742906\",\"sender_type\":\"user\",\"source_guid\":\"b59709300225e65ebbecfb27ad36eb2a\",\"system\":false,\"text\":\"test\",\"user_id\":\"19742906\"}";
         Message message = new Message(json);
         long id = messageRepo.save(message).getId();
@@ -44,7 +42,7 @@ public class JpaTest {
     }
 
     @Test
-    public void shouldAttachMessageToUser() throws MalformedURLException, SystemMessageException, BotMessageException {
+    public void shouldAttachMessageToUser() throws SystemMessageException, BotMessageException {
         long userId = 19742906;
         String name = "Alex Malcolm";
         userRepo.save(new User(name, userId, avatar_url));
@@ -61,7 +59,7 @@ public class JpaTest {
     }
 
     @Test
-    public void shouldAttachTwoMessagesToUser() throws MalformedURLException, SystemMessageException, BotMessageException {
+    public void shouldAttachTwoMessagesToUser() throws SystemMessageException, BotMessageException {
         long userId = 19742906;
         String name = "Alex Malcolm";
         userRepo.save(new User(name, userId, avatar_url));
@@ -82,7 +80,7 @@ public class JpaTest {
     }
 
     @Test
-    public void shouldAttachUserToGroupIfUserMessagesInGroup() throws MalformedURLException, SystemMessageException, BotMessageException {
+    public void shouldAttachUserToGroupIfUserMessagesInGroup() throws SystemMessageException, BotMessageException {
         long userId = 19742906;
         String name = "Alex Malcolm";
         userRepo.save(new User(name, userId, avatar_url));
@@ -100,7 +98,7 @@ public class JpaTest {
     }
 
     @Test
-    public void shouldAttachGroupToUser() throws MalformedURLException, SystemMessageException, BotMessageException {
+    public void shouldAttachGroupToUser() throws SystemMessageException, BotMessageException {
         long userId = 19742906;
         String name = "Alex Malcolm";
         userRepo.save(new User(name, userId, avatar_url));
@@ -115,5 +113,11 @@ public class JpaTest {
         User user = userRepo.findById(userId).get();
         boolean hasUser = user.getGroups().stream().anyMatch(group -> group.getId() == groupId);
         assertTrue(hasUser);
+    }
+
+    @Test(expected = BotMessageException.class)
+    public void shouldThrowBotMessageException() throws SystemMessageException, BotMessageException {
+        String json = "{\"attachments\":[],\"avatar_url\":null,\"created_at\":1545542775,\"group_id\":\"46707218\",\"id\":\"154554277559043579\",\"name\":\"Test bot\",\"sender_id\":\"752564\",\"sender_type\":\"bot\",\"source_guid\":\"313e09e0e8a1013627de22000bf8e41a\",\"system\":false,\"text\":\"test\",\"user_id\":\"752564\"}";
+        Message message = new Message(json);
     }
 }

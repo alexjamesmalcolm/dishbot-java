@@ -1,12 +1,9 @@
 package com.alexjamesmalcolm.dishbot;
 
-import org.springframework.web.client.RestTemplate;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import java.net.URI;
-import java.net.URISyntaxException;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,14 +17,13 @@ public class Group {
 
     @ManyToMany(cascade = ALL)
     private List<User> users = new ArrayList<>();
-    private String botId;
+    @OneToOne
+    private Bot bot;
 
     private Group() {}
 
-    public Group(long group_id) throws URISyntaxException {
+    public Group(long group_id) {
         id = group_id;
-        List foo = new RestTemplate().getForObject(new URI("/bots"), List.class);
-        System.out.println(foo);
     }
 
     public List<User> getUsers() {
@@ -42,7 +38,7 @@ public class Group {
         users.add(user);
     }
 
-    public String getBotId() {
-        return botId;
+    public Bot getBot() {
+        return bot;
     }
 }

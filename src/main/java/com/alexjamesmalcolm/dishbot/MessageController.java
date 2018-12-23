@@ -11,6 +11,9 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 @RestController
 public class MessageController {
@@ -24,7 +27,8 @@ public class MessageController {
     @Resource
     private RestTemplate restTemplate;
 
-    private String botMessageUrl = "https://api.groupme.com/v3/bots/post";
+    @Resource
+    private Properties properties;
 
     @Transactional
     @RequestMapping("/receive-message")
@@ -37,11 +41,10 @@ public class MessageController {
             message = messageRepo.findById(id).get();
             String text = message.getText();
             System.out.println(text);
-            String botId = message.getGroup().getBotId();
+            String botId = message.getGroup().getBot().getId();
+//            String botId = message.getGroup().getBotId();
             System.out.println(botId);
-            BotMessage botMessage = new BotMessage(text, botId);
-            HttpEntity<BotMessage> entity = new HttpEntity<>(botMessage);
-            restTemplate.postForLocation(botMessageUrl, entity);
+            sendMessage(text, botId);
         } catch (BotMessageException e) {
             System.out.println("Message was from Bot");
         } catch (SystemMessageException e) {
@@ -49,9 +52,21 @@ public class MessageController {
         }
     }
 
+    List<Object> getBotsAndAttachToGroups() throws URISyntaxException {
+        URI uri = new URI(properties.getBaseUrl() + "/bots");
+        List<Object> results = restTemplate.getForObject(uri, List.class);
+        return results;
+    }
+
+    private void sendMessage(String text, String botId) {
+        BotMessage botMessage = new BotMessage(text, botId);
+        HttpEntity<BotMessage> entity = new HttpEntity<>(botMessage);
+        String botMessageUrl = properties.getBaseUrl() + "/bots/post";
+        restTemplate.postForLocation(botMessageUrl, entity);
+    }
+
     @GetMapping("/messages")
     public Iterable<Message> getMessages() {
-        Iterable<Message> messages = messageRepo.findAll();
-        return messages;
+        return messageRepo.findAll();
     }
 }
