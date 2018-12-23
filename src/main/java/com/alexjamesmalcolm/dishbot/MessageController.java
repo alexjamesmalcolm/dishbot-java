@@ -33,6 +33,8 @@ public class MessageController {
     @Transactional
     @RequestMapping("/receive-message")
     public void receiveMessage(HttpServletRequest request) throws IOException, URISyntaxException {
+        System.out.println("Base URL");
+        System.out.println(properties.getBaseUrl());
         try {
             Message message = new Message(request);
             long id = messageRepo.save(message).getId();
