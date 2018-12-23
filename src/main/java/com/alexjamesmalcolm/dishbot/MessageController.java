@@ -44,7 +44,10 @@ public class MessageController {
             Group group = message.getGroup();
             Bot bot = group.getBot();
             if (bot == null) {
-                URI uri = new URI(properties.getBaseUrl() + "/bots");
+                URI uri = new URI(new StringBuilder()
+                        .append(properties.getBaseUrl())
+                        .append("/bots?token=")
+                        .append(properties.getAccessToken()).toString());
                 List<Object> results = restTemplate.getForObject(uri, List.class);
                 System.out.println(results);
             }
