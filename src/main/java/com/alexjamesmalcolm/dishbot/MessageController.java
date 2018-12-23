@@ -46,14 +46,14 @@ public class MessageController {
                 List<Object> results = restTemplate.getForObject(uri, List.class);
                 System.out.println(results);
             }
-            em.flush();
-            em.clear();
-            message = messageRepo.findById(id).get();
-            String text = message.getText();
-            System.out.println(text);
-            String botId = message.getGroup().getBot().getId();
-            System.out.println(botId);
-            sendMessage(text, botId);
+//            em.flush();
+//            em.clear();
+//            message = messageRepo.findById(id).get();
+//            String text = message.getText();
+//            System.out.println(text);
+//            String botId = message.getGroup().getBot().getId();
+//            System.out.println(botId);
+//            sendMessage(text, botId);
         } catch (BotMessageException e) {
             System.out.println("Message was from Bot");
         } catch (SystemMessageException e) {
