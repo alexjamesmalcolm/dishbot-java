@@ -75,7 +75,7 @@ public class MessageController {
             System.out.println(text);
             String botId = message.getGroup().getBot().getId();
             System.out.println(botId);
-//            sendMessage(text, botId);
+            sendMessage(text, botId);
         } catch (BotMessageException e) {
             System.out.println("Message was from Bot");
         } catch (SystemMessageException e) {
