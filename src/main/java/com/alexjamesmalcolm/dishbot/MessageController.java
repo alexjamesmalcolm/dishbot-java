@@ -55,7 +55,8 @@ public class MessageController {
                 bot = bots.stream().map(botMap -> {
                     String bot_id = (String) botMap.get("bot_id");
                     String name = (String) botMap.get("name");
-                    Group group = new Group((Long) botMap.get("group_id"));
+                    long group_id = Long.parseLong((String) botMap.get("group_id"));
+                    Group group = new Group(group_id);
                     return new Bot(bot_id, name, group);
                 }).filter(b -> {
                     return b.getGroup().getId() == groupId;
