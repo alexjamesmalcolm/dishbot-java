@@ -1,5 +1,6 @@
 package com.alexjamesmalcolm.dishbot;
 
+import org.springframework.http.HttpEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +39,8 @@ public class MessageController {
         String botId = message.getGroup().getBotId();
         System.out.println(botId);
         BotMessage botMessage = new BotMessage(text, botId);
-        restTemplate.put(botMessageUrl, botMessage);
+        HttpEntity<BotMessage> entity = new HttpEntity<>(botMessage);
+        restTemplate.postForLocation(botMessageUrl, entity);
     }
 
     @GetMapping("/messages")
