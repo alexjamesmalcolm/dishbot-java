@@ -33,22 +33,19 @@ public class MessageController {
     @Transactional
     @RequestMapping("/receive-message")
     public void receiveMessage(HttpServletRequest request) throws IOException, URISyntaxException {
-        System.out.println("Base URL");
-        System.out.println(properties.getBaseUrl());
         try {
             Message message = new Message(request);
             long id = messageRepo.save(message).getId();
             em.flush();
             em.clear();
             message = messageRepo.findById(id).get();
-            Group group = message.getGroup();
-            Bot bot = group.getBot();
+            Bot bot = message.getGroup().getBot();
             if (bot == null) {
                 URI uri = new URI(new StringBuilder()
                         .append(properties.getBaseUrl())
                         .append("/bots?token=")
                         .append(properties.getAccessToken()).toString());
-                List<Object> results = restTemplate.getForObject(uri, List.class);
+                Object results = restTemplate.getForObject(uri, Object.class);
                 System.out.println(results);
             }
 //            em.flush();
