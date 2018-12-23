@@ -28,19 +28,25 @@ public class MessageController {
 
     @Transactional
     @RequestMapping("/receive-message")
-    public void receiveMessage(HttpServletRequest request) throws IOException, SystemMessageException, BotMessageException {
-        Message message = new Message(request);
-        long id = messageRepo.save(message).getId();
-        em.flush();
-        em.clear();
-        message = messageRepo.findById(id).get();
-        String text = message.getText();
-        System.out.println(text);
-        String botId = message.getGroup().getBotId();
-        System.out.println(botId);
-        BotMessage botMessage = new BotMessage(text, botId);
-        HttpEntity<BotMessage> entity = new HttpEntity<>(botMessage);
-        restTemplate.postForLocation(botMessageUrl, entity);
+    public void receiveMessage(HttpServletRequest request) throws IOException {
+        try {
+            Message message = new Message(request);
+            long id = messageRepo.save(message).getId();
+            em.flush();
+            em.clear();
+            message = messageRepo.findById(id).get();
+            String text = message.getText();
+            System.out.println(text);
+            String botId = message.getGroup().getBotId();
+            System.out.println(botId);
+            BotMessage botMessage = new BotMessage(text, botId);
+            HttpEntity<BotMessage> entity = new HttpEntity<>(botMessage);
+            restTemplate.postForLocation(botMessageUrl, entity);
+        } catch (BotMessageException e) {
+            System.out.println("Message was from Bot");
+        } catch (SystemMessageException e) {
+            System.out.println("Message was from System");
+        }
     }
 
     @GetMapping("/messages")
