@@ -32,17 +32,26 @@ public class MessageController {
 
     @Transactional
     @RequestMapping("/receive-message")
-    public void receiveMessage(HttpServletRequest request) throws IOException {
+    public void receiveMessage(HttpServletRequest request) throws IOException, URISyntaxException {
         try {
             Message message = new Message(request);
             long id = messageRepo.save(message).getId();
             em.flush();
             em.clear();
             message = messageRepo.findById(id).get();
+            Group group = message.getGroup();
+            Bot bot = group.getBot();
+            if (bot == null) {
+                URI uri = new URI(properties.getBaseUrl() + "/bots");
+                List<Object> results = restTemplate.getForObject(uri, List.class);
+                System.out.println(results);
+            }
+            em.flush();
+            em.clear();
+            message = messageRepo.findById(id).get();
             String text = message.getText();
             System.out.println(text);
             String botId = message.getGroup().getBot().getId();
-//            String botId = message.getGroup().getBotId();
             System.out.println(botId);
             sendMessage(text, botId);
         } catch (BotMessageException e) {
