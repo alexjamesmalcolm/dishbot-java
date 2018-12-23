@@ -28,7 +28,7 @@ public class MessageController {
 
     @Transactional
     @RequestMapping("/receive-message")
-    public void receiveMessage(HttpServletRequest request) throws IOException, SystemMessageException {
+    public void receiveMessage(HttpServletRequest request) throws IOException, SystemMessageException, BotMessageException {
         Message message = new Message(request);
         long id = messageRepo.save(message).getId();
         em.flush();

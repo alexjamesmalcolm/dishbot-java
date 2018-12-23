@@ -42,7 +42,6 @@ public class Message {
     @ManyToOne(cascade = ALL)
     private User user;
     private String source_guid;
-//    private URL avatar_url;
     @Lob
     private String text;
     private Timestamp created_at;
@@ -52,11 +51,11 @@ public class Message {
     private Message() {
     }
 
-    public Message (HttpServletRequest request) throws IOException, SystemMessageException {
+    public Message (HttpServletRequest request) throws IOException, SystemMessageException, BotMessageException {
         this(request.getReader().lines().collect(Collectors.joining(System.lineSeparator())));
     }
 
-    public Message(String json) throws SystemMessageException {
+    public Message(String json) throws SystemMessageException, BotMessageException {
         System.out.println(json);
         // {"attachments":[],"avatar_url":"https://i.groupme.com/750x750.jpeg.83f02dee51d24c9386bce40c4da6d445","created_at":1545438872,"group_id":"46707218","id":"154543887253121474","name":"Alex Malcolm","sender_id":"19742906","sender_type":"user","source_guid":"b59709300225e65ebbecfb27ad36eb2a","system":false,"text":"test","user_id":"19742906"}
         String withTheEndsCutOff = json.substring(1, json.length() - 1);
@@ -83,6 +82,10 @@ public class Message {
         boolean system = parseBoolean(map.get("system"));
         if (system) {
             throw new SystemMessageException();
+        }
+        String senderType = map.get("sender_type");
+        if (senderType.equals("bot")) {
+            throw new BotMessageException();
         }
         id = parseLong(map.get("id"));
         source_guid = map.get("source_guid");
