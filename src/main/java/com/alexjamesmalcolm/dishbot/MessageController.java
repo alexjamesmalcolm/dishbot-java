@@ -40,6 +40,7 @@ public class MessageController {
             em.flush();
             em.clear();
             message = messageRepo.findById(id).get();
+            long groupId = message.getGroup().getId();
             Bot bot = message.getGroup().getBot();
             if (bot == null) {
                 URI uri = new URI(new StringBuilder()
@@ -48,8 +49,18 @@ public class MessageController {
                         .append(properties.getAccessToken()).toString());
                 Map<String, Object> results = restTemplate.getForObject(uri, Map.class);
                 System.out.println(results);
-                List<Object> bots = (List<Object>) results.get("response");
+                List<Map> bots = (List<Map>) results.get("response");
+                // [{name=Snackatron, bot_id=e3af5b0fbe6a6be70d16dbd9fc, group_id=37820787, group_name=Guinness VI Squad, avatar_url=null, callback_url=, dm_notification=false}, {name=Test bot, bot_id=6dc7db8c212c036ddc9dc9acbc, group_id=46707218, group_name=Empty Bot Test Group, avatar_url=null, callback_url=https://dishbot.herokuapp.com/receive-message, dm_notification=false}]
                 System.out.println(bots);
+                bot = bots.stream().map(botMap -> {
+                    String bot_id = (String) botMap.get("bot_id");
+                    String name = (String) botMap.get("name");
+                    Group group = new Group((Long) botMap.get("group_id"));
+                    return new Bot(bot_id, name, group);
+                }).filter(b -> {
+                    return b.getGroup().getId() == groupId;
+                }).findFirst().get();
+                System.out.println(bot);
             }
 //            em.flush();
 //            em.clear();
