@@ -1,10 +1,10 @@
 package com.alexjamesmalcolm.dishbot;
 
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -20,16 +20,25 @@ public class MessageController {
     @Resource
     private EntityManager em;
 
+    @Resource
+    private RestTemplate restTemplate;
+
+    private String botMessageUrl = "https://api.groupme.com/v3/bots/post";
+
     @Transactional
     @RequestMapping("/receive-message")
-    @SendTo("https://api.groupme.com/v3/bots/post")
-    public BotMessage receiveMessage(HttpServletRequest request) throws IOException, SystemMessageException {
+    public void receiveMessage(HttpServletRequest request) throws IOException, SystemMessageException {
         Message message = new Message(request);
         long id = messageRepo.save(message).getId();
         em.flush();
         em.clear();
         message = messageRepo.findById(id).get();
-        return new BotMessage(message.getText(), message.getGroup().getBotId());
+        String text = message.getText();
+        System.out.println(text);
+        String botId = message.getGroup().getBotId();
+        System.out.println(botId);
+        BotMessage botMessage = new BotMessage(text, botId);
+        restTemplate.put(botMessageUrl, botMessage);
     }
 
     @GetMapping("/messages")
