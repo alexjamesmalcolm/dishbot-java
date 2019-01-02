@@ -43,13 +43,12 @@ public class MessageController {
             em.flush();
             em.clear();
             message = messageRepo.findById(id).get();
-            long groupId = message.getGroup().getId();
             Bot bot = message.getGroup().getBot();
             if (bot == null) {
-                URI uri = new URI(new StringBuilder()
-                        .append(properties.getBaseUrl())
-                        .append("/bots?token=")
-                        .append(properties.getAccessToken()).toString());
+                long groupId = message.getGroup().getId();
+                URI uri = new URI(properties.getBaseUrl() +
+                        "/bots?token=" +
+                        properties.getAccessToken());
                 Map<String, Object> results = restTemplate.getForObject(uri, Map.class);
                 System.out.println(results);
                 List<Map> bots = (List<Map>) results.get("response");
@@ -61,9 +60,7 @@ public class MessageController {
                     long group_id = Long.parseLong((String) botMap.get("group_id"));
                     Group group = new Group(group_id);
                     return new Bot(bot_id, name, group);
-                }).filter(b -> {
-                    return b.getGroup().getId() == groupId;
-                }).findFirst().get();
+                }).filter(b -> b.getGroup().getId() == groupId).findFirst().get();
                 System.out.println(bot);
                 bot = botRepo.save(bot);
                 System.out.println(bot);
