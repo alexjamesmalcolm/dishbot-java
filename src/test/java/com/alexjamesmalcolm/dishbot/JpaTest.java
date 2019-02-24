@@ -1,5 +1,10 @@
 package com.alexjamesmalcolm.dishbot;
 
+import com.alexjamesmalcolm.dishbot.exception.BotMessageException;
+import com.alexjamesmalcolm.dishbot.exception.SystemMessageException;
+import com.alexjamesmalcolm.dishbot.physical.Group;
+import com.alexjamesmalcolm.dishbot.physical.Message;
+import com.alexjamesmalcolm.dishbot.physical.User;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

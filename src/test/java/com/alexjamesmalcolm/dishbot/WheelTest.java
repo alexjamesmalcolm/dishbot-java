@@ -1,5 +1,7 @@
 package com.alexjamesmalcolm.dishbot;
 
+import com.alexjamesmalcolm.dishbot.physical.User;
+import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

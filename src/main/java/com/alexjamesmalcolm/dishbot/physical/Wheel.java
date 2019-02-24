@@ -1,4 +1,4 @@
-package com.alexjamesmalcolm.dishbot;
+package com.alexjamesmalcolm.dishbot.physical;
 
 import javax.persistence.*;
 import java.sql.Timestamp;

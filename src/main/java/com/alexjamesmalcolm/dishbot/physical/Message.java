@@ -1,4 +1,9 @@
-package com.alexjamesmalcolm.dishbot;
+package com.alexjamesmalcolm.dishbot.physical;
+
+import com.alexjamesmalcolm.dishbot.exception.BotMessageException;
+import com.alexjamesmalcolm.dishbot.exception.SystemMessageException;
+import com.alexjamesmalcolm.dishbot.physical.Group;
+import com.alexjamesmalcolm.dishbot.physical.User;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

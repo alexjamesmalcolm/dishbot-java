@@ -1,5 +1,11 @@
 package com.alexjamesmalcolm.dishbot;
 
+import com.alexjamesmalcolm.dishbot.exception.BotMessageException;
+import com.alexjamesmalcolm.dishbot.exception.SystemMessageException;
+import com.alexjamesmalcolm.dishbot.logical.BotMessage;
+import com.alexjamesmalcolm.dishbot.physical.Bot;
+import com.alexjamesmalcolm.dishbot.physical.Group;
+import com.alexjamesmalcolm.dishbot.physical.Message;
 import org.springframework.http.HttpEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;

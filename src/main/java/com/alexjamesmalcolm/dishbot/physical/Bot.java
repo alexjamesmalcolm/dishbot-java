@@ -1,4 +1,4 @@
-package com.alexjamesmalcolm.dishbot;
+package com.alexjamesmalcolm.dishbot.physical;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
