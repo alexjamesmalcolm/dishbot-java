@@ -1,5 +1,6 @@
 package com.alexjamesmalcolm.dishbot;
 
+import com.alexjamesmalcolm.dishbot.exception.NotFoundException;
 import com.alexjamesmalcolm.dishbot.physical.Group;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +27,7 @@ public class AdminController {
 
     @RequestMapping("/group/{groupId}")
     public String displayManageGroupPage(Model model, @PathVariable Long groupId) {
-        Group group = groupRepo.findById(groupId).get();
+        Group group = groupRepo.findById(groupId).orElseThrow(() -> new NotFoundException("Group was not found."));
         model.addAttribute("group", group);
         return "group";
     }
