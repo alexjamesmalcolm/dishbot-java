@@ -1,8 +1,5 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
-import com.alexjamesmalcolm.dishbot.physical.Bot;
-import com.alexjamesmalcolm.dishbot.physical.User;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
