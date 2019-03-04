@@ -39,6 +39,7 @@ dependencies {
     implementation("org.webjars:stomp-websocket:2.3.3")
 	implementation('org.webjars:vue:2.5.16')
 	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+	implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
 	implementation('org.springframework.boot:spring-boot-starter-web')
 	runtimeOnly('com.h2database:h2')
 	runtimeOnly('org.postgresql:postgresql')
