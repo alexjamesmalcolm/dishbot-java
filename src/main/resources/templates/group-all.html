@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <main>
+        <section th:each="group : ${groups}">
+            <p>
+                <span>ID:</span>
+                <span>${group.id}</span>
+            </p>
+            <p>
+                <span>Users:</span>
+                <span th:each="user : ${group.users}">${user}</span>
+            </p>
+        </section>
+    </main>
+</div>
+</body>
+</html>
