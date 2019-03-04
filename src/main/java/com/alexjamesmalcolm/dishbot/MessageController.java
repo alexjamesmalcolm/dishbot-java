@@ -1,5 +1,6 @@
 package com.alexjamesmalcolm.dishbot;
 
+import com.alexjamesmalcolm.dishbot.bean.Interpreter;
 import com.alexjamesmalcolm.dishbot.exception.BotMessageException;
 import com.alexjamesmalcolm.dishbot.exception.SystemMessageException;
 import com.alexjamesmalcolm.dishbot.logical.BotMessage;
@@ -21,6 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class MessageController {
@@ -39,6 +41,9 @@ public class MessageController {
 
     @Resource
     private BotRepository botRepo;
+
+    @Resource
+    private Interpreter interpreter;
 
     @Transactional
     @RequestMapping("/receive-message")
@@ -74,11 +79,13 @@ public class MessageController {
             em.flush();
             em.clear();
             message = messageRepo.findById(id).get();
-            String text = message.getText();
-            System.out.println(text);
-            String botId = message.getGroup().getBot().getId();
-            System.out.println(botId);
-            sendMessage(text, botId);
+            Optional<BotMessage> response = interpreter.respond(message);
+            response.ifPresent(botMessage -> sendMessage(botMessage));
+//            String text = message.getText();
+//            System.out.println(text);
+//            String botId = message.getGroup().getBot().getId();
+//            System.out.println(botId);
+//            sendMessage(text, botId);
         } catch (BotMessageException e) {
             System.out.println("Message was from Bot");
         } catch (SystemMessageException e) {
@@ -86,11 +93,15 @@ public class MessageController {
         }
     }
 
-    private void sendMessage(String text, String botId) {
-        BotMessage botMessage = new BotMessage(text, botId);
-        HttpEntity<BotMessage> entity = new HttpEntity<>(botMessage);
+    private void sendMessage(BotMessage message) {
+        HttpEntity<BotMessage> entity = new HttpEntity<>(message);
         String botMessageUrl = properties.getBaseUrl() + "/bots/post";
         restTemplate.postForLocation(botMessageUrl, entity);
+    }
+
+    private void sendMessage(String text, String botId) {
+        BotMessage botMessage = new BotMessage(text, botId);
+        sendMessage(botMessage);
     }
 
     @GetMapping("/messages")

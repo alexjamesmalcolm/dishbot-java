@@ -22,6 +22,8 @@ public class Group {
     private List<User> users = new ArrayList<>();
     @OneToOne(mappedBy = "group", cascade = ALL)
     private Bot bot;
+    @OneToOne
+    private Wheel wheel;
 
     private Group() {}
 
@@ -43,5 +45,9 @@ public class Group {
 
     public Bot getBot() {
         return bot;
+    }
+
+    public Wheel getWheel() {
+        return wheel;
     }
 }

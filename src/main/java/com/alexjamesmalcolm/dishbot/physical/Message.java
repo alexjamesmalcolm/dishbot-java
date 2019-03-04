@@ -108,6 +108,15 @@ public class Message {
         group.addUser(user);
     }
 
+    public Message(long id, User user, String sourceGuid, String content, Timestamp createdAt, Group group) {
+        this.id = id;
+        this.user = user;
+        this.source_guid = sourceGuid;
+        this.text = content;
+        this.created_at = createdAt;
+        this.group = group;
+    }
+
     public String getText() {
         return text;
     }
@@ -130,5 +139,9 @@ public class Message {
 
     public Group getGroup() {
         return group;
+    }
+
+    public Wheel getWheel() {
+        return group.getWheel();
     }
 }

@@ -13,7 +13,7 @@ public class BotMessage {
         return text;
     }
 
-    public String getBot_id() {
+    public String getBotId() {
         return bot_id;
     }
 }
