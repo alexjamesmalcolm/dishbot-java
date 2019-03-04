@@ -8,7 +8,32 @@
 <div class="container">
     <main>
         <h1>Group: [[${group.id}]]</h1>
-
+        <section>
+            <h2>People on this line</h2>
+            <div th:each="user : ${group.users}" th:object="${user}">
+                <p>
+                    <span>ID: </span>
+                    <span th:text="*{id}"></span>
+                </p>
+                <p>
+                    <span>Name: </span>
+                    <span th:text="*{name}"></span>
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>Roommates on the dish wheel</h2>
+            <div th:each="roommate : ${group.wheel.roommates}" th:object="${roommate}">
+                <p>
+                    <span>ID: </span>
+                    <span th:text="*{id}"></span>
+                </p>
+                <p>
+                    <span>Name: </span>
+                    <span th:text="*{name}"></span>
+                </p>
+            </div>
+        </section>
     </main>
 </div>
 </body>
