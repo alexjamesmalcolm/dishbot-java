@@ -6,6 +6,7 @@ import com.alexjamesmalcolm.dishbot.physical.Group;
 import com.alexjamesmalcolm.dishbot.physical.Message;
 import com.alexjamesmalcolm.dishbot.physical.User;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,10 @@ import java.net.URL;
 import java.util.Collection;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -61,7 +66,7 @@ public class JpaTest {
         em.clear();
         User user = userRepo.findById(userId).get();
         Collection<Message> messages = user.getMessages();
-        Assert.assertThat(messages, hasSize(1));
+        assertThat(messages, hasSize(1));
     }
 
     @Test
@@ -82,7 +87,7 @@ public class JpaTest {
         em.clear();
         User user = userRepo.findById(userId).get();
         Collection<Message> messages = user.getMessages();
-        Assert.assertThat(messages, hasSize(2));
+        assertThat(messages, hasSize(2));
     }
 
     @Test
@@ -142,6 +147,29 @@ public class JpaTest {
         long groupId = 46707218;
         Group group = groupRepo.findById(groupId).get();
         Wheel wheel = group.getWheel();
-        Assert.assertNotNull("Wheel was not saved.", wheel);
+        assertNotNull("Wheel was not saved.", wheel);
+    }
+
+    @Test
+    public void shouldHaveMultipleWheels() throws BotMessageException, SystemMessageException {
+        long firstGroupId = 123;
+        long secondGroupId = 456;
+        String firstMessageJson = "{\"attachments\":[],\"avatar_url\":\"https://i.groupme.com/750x750.jpeg.83f02dee51d24c9386bce40c4da6d445\",\"created_at\":1545438872,\"group_id\":\"" + firstGroupId + "\",\"id\":\"154543887253121474\",\"name\":\"Alex Malcolm\",\"sender_id\":\"19742906\",\"sender_type\":\"user\",\"source_guid\":\"b59709300225e65ebbecfb27ad36eb2a\",\"system\":false,\"text\":\"test\",\"user_id\":\"19742906\"}";
+        String secondMessageJson = "{\"attachments\":[],\"avatar_url\":\"https://i.groupme.com/750x750.jpeg.83f02dee51d24c9386bce40c4da6d445\",\"created_at\":1545438872,\"group_id\":\"" + secondGroupId + "\",\"id\":\"154543887253121474\",\"name\":\"Alex Malcolm\",\"sender_id\":\"19742906\",\"sender_type\":\"user\",\"source_guid\":\"b59709300225e65ebbecfb27ad36eb2a\",\"system\":false,\"text\":\"test\",\"user_id\":\"19742906\"}";
+        Message firstMessage = new Message(firstMessageJson);
+        messageRepo.save(firstMessage);
+        em.flush();
+        em.clear();
+        Message secondMessage = new Message(secondMessageJson);
+        messageRepo.save(secondMessage);
+        em.flush();
+        em.clear();
+        Group firstGroup = groupRepo.findById(firstGroupId).get();
+        Group secondGroup = groupRepo.findById(secondGroupId).get();
+        Wheel firstWheel = firstGroup.getWheel();
+        Wheel secondWheel = secondGroup.getWheel();
+        long firstWheelId = firstWheel.getId();
+        long secondWheelId = secondWheel.getId();
+        assertThat(firstWheelId, is(not(secondWheelId)));
     }
 }

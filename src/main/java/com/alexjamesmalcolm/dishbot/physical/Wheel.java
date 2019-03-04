@@ -90,4 +90,8 @@ public class Wheel {
         }
         timeShiftStarted = Timestamp.from(now());
     }
+
+    public long getId() {
+        return id;
+    }
 }
