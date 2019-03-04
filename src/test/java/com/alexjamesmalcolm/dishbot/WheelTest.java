@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
@@ -37,7 +38,7 @@ public class WheelTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        underTest = new Wheel(id);
+        underTest = new Wheel(0);
     }
 
     @Test

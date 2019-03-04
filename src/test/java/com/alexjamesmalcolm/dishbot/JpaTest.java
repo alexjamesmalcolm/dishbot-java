@@ -5,6 +5,7 @@ import com.alexjamesmalcolm.dishbot.exception.SystemMessageException;
 import com.alexjamesmalcolm.dishbot.physical.Group;
 import com.alexjamesmalcolm.dishbot.physical.Message;
 import com.alexjamesmalcolm.dishbot.physical.User;
+import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -124,5 +125,23 @@ public class JpaTest {
     public void shouldThrowBotMessageException() throws SystemMessageException, BotMessageException {
         String json = "{\"attachments\":[],\"avatar_url\":null,\"created_at\":1545542775,\"group_id\":\"46707218\",\"id\":\"154554277559043579\",\"name\":\"Test bot\",\"sender_id\":\"752564\",\"sender_type\":\"bot\",\"source_guid\":\"313e09e0e8a1013627de22000bf8e41a\",\"system\":false,\"text\":\"test\",\"user_id\":\"752564\"}";
         Message message = new Message(json);
+    }
+
+    @Test
+    public void shouldAttachWheelToGroup() throws BotMessageException, SystemMessageException {
+        long userId = 19742906;
+        String name = "Alex Malcolm";
+        userRepo.save(new User(name, userId, avatar_url));
+        em.flush();
+        em.clear();
+        String json = "{\"attachments\":[],\"avatar_url\":\"https://i.groupme.com/750x750.jpeg.83f02dee51d24c9386bce40c4da6d445\",\"created_at\":1545438872,\"group_id\":\"46707218\",\"id\":\"154543887253121474\",\"name\":\"Alex Malcolm\",\"sender_id\":\"19742906\",\"sender_type\":\"user\",\"source_guid\":\"b59709300225e65ebbecfb27ad36eb2a\",\"system\":false,\"text\":\"test\",\"user_id\":\"19742906\"}";
+        Message message = new Message(json);
+        messageRepo.save(message);
+        em.flush();
+        em.clear();
+        long groupId = 46707218;
+        Group group = groupRepo.findById(groupId).get();
+        Wheel wheel = group.getWheel();
+        Assert.assertNotNull("Wheel was not saved.", wheel);
     }
 }
