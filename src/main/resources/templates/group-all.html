@@ -10,7 +10,7 @@
         <section th:each="group : ${groups}">
             <p>
                 <span>ID:</span>
-                <span th:text="${group.id}"></span>
+                <a th:href="'/group/' + ${group.id}" th:text="${group.id}"></a>
             </p>
             <p>
                 <span>Users:</span>
