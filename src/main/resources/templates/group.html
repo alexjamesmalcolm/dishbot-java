@@ -28,7 +28,7 @@
                 <span th:if="${group.wheel}">Yes</span>
                 <span th:unless="${group.wheel}">No</span>
             </p>
-            <section th:if="${group.wheel}">
+            <section th:if="${group.wheel and group.wheel.users}">
                 <h3>Roommates on the dish wheel</h3>
                 <div class="person" th:each="user : ${group.wheel.users}" th:object="${user}">
                     <p>
