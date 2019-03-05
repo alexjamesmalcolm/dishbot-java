@@ -1,7 +1,5 @@
-package com.alexjamesmalcolm.dishbot;
+package com.alexjamesmalcolm.dishbot.physical;
 
-import com.alexjamesmalcolm.dishbot.physical.User;
-import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -9,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
@@ -160,5 +157,20 @@ public class WheelTest {
         Duration actual = underTest.getDurationUntilFineForCurrentRoommate();
         Duration difference = duration.minus(actual).minus(Duration.ofMillis(milliseconds));
         assertThat(difference, lessThan(Duration.ofMillis(100)));
+    }
+
+    @Test
+    public void shouldAdvanceBackToTheOriginalRoommateWhenThereIsOnlyOneRoommate() {
+        underTest.addRoommate(userOne);
+        underTest.advanceWheel();
+        User currentRoommate = underTest.getCurrentRoommate();
+        assertThat(currentRoommate, is(userOne));
+    }
+
+    @Test
+    public void shouldBeTheCurrentRoommateWhenTheyAreTheOnlyRoommate() {
+        underTest.addRoommate(userOne);
+        User currentRoommate = underTest.getCurrentRoommate();
+        assertThat(currentRoommate, is(userOne));
     }
 }
