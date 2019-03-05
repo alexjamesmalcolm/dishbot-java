@@ -54,8 +54,16 @@ public class Message {
     private Message() {
     }
 
-    public Message (HttpServletRequest request) throws IOException, SystemMessageException, BotMessageException {
-        this(request.getReader().lines().collect(Collectors.joining(System.lineSeparator())));
+    public Message(HttpServletRequest request) throws SystemMessageException, BotMessageException {
+        this(getJsonFromRequest(request));
+    }
+
+    private static String getJsonFromRequest(HttpServletRequest request) {
+        try {
+            return request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        } catch (IOException ex) {
+            throw new IllegalArgumentException("Reader could not be retrieved from Request");
+        }
     }
 
     public Message(String json) throws SystemMessageException, BotMessageException {

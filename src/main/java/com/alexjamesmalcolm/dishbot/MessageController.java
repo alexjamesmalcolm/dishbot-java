@@ -17,9 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,9 +43,11 @@ public class MessageController {
     @Resource
     private Interpreter interpreter;
 
+    private String accessToken = properties.getAccessToken();
+
     @Transactional
     @RequestMapping("/receive-message")
-    public void receiveMessage(HttpServletRequest request) throws IOException, URISyntaxException {
+    public void receiveMessage(HttpServletRequest request) {
         try {
             Message message = new Message(request);
             long id = messageRepo.save(message).getId();
@@ -57,9 +57,8 @@ public class MessageController {
             Bot bot = message.getGroup().getBot();
             if (bot == null) {
                 long groupId = message.getGroup().getId();
-                URI uri = new URI(properties.getBaseUrl() +
-                        "/bots?token=" +
-                        properties.getAccessToken());
+                String str = properties.getBaseUrl() + "/bots?token=" + accessToken;
+                URI uri = URI.create(str);
                 Map<String, Object> results = restTemplate.getForObject(uri, Map.class);
                 System.out.println(results);
                 List<Map> bots = (List<Map>) results.get("response");
@@ -72,20 +71,13 @@ public class MessageController {
                     Group group = new Group(group_id);
                     return new Bot(bot_id, name, group);
                 }).filter(b -> b.getGroup().getId() == groupId).findFirst().get();
-                System.out.println(bot);
-                bot = botRepo.save(bot);
-                System.out.println(bot);
+                botRepo.save(bot);
             }
             em.flush();
             em.clear();
             message = messageRepo.findById(id).get();
             Optional<BotMessage> response = interpreter.respond(message);
-            response.ifPresent(botMessage -> sendMessage(botMessage));
-//            String text = message.getText();
-//            System.out.println(text);
-//            String botId = message.getGroup().getBot().getId();
-//            System.out.println(botId);
-//            sendMessage(text, botId);
+            response.ifPresent(this::sendMessage);
         } catch (BotMessageException e) {
             System.out.println("Message was from Bot");
         } catch (SystemMessageException e) {
