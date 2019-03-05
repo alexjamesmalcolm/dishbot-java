@@ -30,7 +30,7 @@
             </p>
             <section th:if="${group.wheel}">
                 <h3>Dishwheel details</h3>
-                <section th:if="${group.wheel.users}">
+                <section th:if="${group.wheel?.users}">
                     <h3>Roommates on the dish wheel</h3>
                     <div class="person" th:each="user : ${group.wheel.users}" th:object="${user}">
                         <p>
@@ -43,7 +43,7 @@
                         </p>
                     </div>
                 </section>
-                <p th:unless="${group.wheel.users}">There are no roommates on the dishwheel.</p>
+                <p th:unless="${group.wheel?.users}">There are no roommates on the dishwheel.</p>
             </section>
         </section>
     </main>
