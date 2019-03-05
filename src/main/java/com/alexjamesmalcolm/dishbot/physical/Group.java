@@ -19,14 +19,14 @@ public class Group {
     private List<User> users = new ArrayList<>();
     @OneToOne(mappedBy = "group", cascade = ALL)
     private Bot bot;
-    @OneToOne(cascade = ALL)
+    @OneToOne(cascade = ALL, orphanRemoval = true)
     private Wheel wheel;
 
     private Group() {}
 
     public Group(long group_id) {
         id = group_id;
-        wheel = new Wheel(1234);
+        createWheel();
     }
 
     public List<User> getUsers() {
@@ -47,5 +47,9 @@ public class Group {
 
     public Wheel getWheel() {
         return wheel;
+    }
+
+    public void createWheel() {
+        wheel = new Wheel(1234);
     }
 }

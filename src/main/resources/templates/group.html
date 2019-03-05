@@ -10,7 +10,7 @@
         <h1>Group: [[${group.id}]]</h1>
         <section>
             <h2>People on this line</h2>
-            <div th:each="user : ${group.users}" th:object="${user}">
+            <div class="person" th:each="user : ${group.users}" th:object="${user}">
                 <p>
                     <span>ID: </span>
                     <span th:text="*{id}"></span>
@@ -30,7 +30,7 @@
             </p>
             <section th:if="${group.wheel}">
                 <h3>Roommates on the dish wheel</h3>
-                <div th:each="roommate : ${group.wheel.roommates}" th:object="${roommate}">
+                <div class="person" th:each="roommate : ${group.wheel.roommates}" th:object="${roommate}">
                     <p>
                         <span>ID: </span>
                         <span th:text="*{id}"></span>
