@@ -22,13 +22,11 @@ public class GroupMeService {
     @Resource
     private Properties properties;
 
-    private String accessToken = properties.getAccessToken();
-
     public Bot getBot(Group group) {
         Bot bot = group.getBot();
         if (bot == null) {
             long groupId = group.getId();
-            String str = properties.getBaseUrl() + "/bots?token=" + accessToken;
+            String str = properties.getBaseUrl() + "/bots?token=" + properties.getAccessToken();
             URI uri = URI.create(str);
             Map<String, Object> results = restTemplate.getForObject(uri, Map.class);
             System.out.println(results);
