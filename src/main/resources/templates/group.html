@@ -23,7 +23,11 @@
         </section>
         <section th:object="${group.wheel}">
             <h2>Dishwheel</h2>
-            <p>Current Roommate: [[*{getCurrentRoommate()}]]</p>
+            <p>
+                <span>Dishwheel exists:</span>
+                <span th:text="${group?.wheel}"></span>
+            </p>
+            <!--<p>Current Roommate: [[*{getCurrentRoommate()}]]</p>-->
         </section>
         <!--<section>-->
             <!--<h2>Roommates on the dish wheel</h2>-->
