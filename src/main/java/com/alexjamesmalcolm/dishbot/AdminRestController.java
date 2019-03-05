@@ -37,7 +37,7 @@ public class AdminRestController {
         }
     }
 
-    @PostMapping("/group/{groupId}/wheel")
+    @PostMapping(value = "/group/{groupId}/wheel", params = "userId")
     public void addUserToWheel(@PathVariable Long groupId, @RequestParam Long userId, HttpServletResponse response) {
         Group group = findGroup(groupId);
         User user = findUser(userId);
