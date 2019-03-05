@@ -25,7 +25,8 @@
             <h2>Dishwheel</h2>
             <p>
                 <span>Dishwheel exists:</span>
-                <span th:text="${group?.wheel}"></span>
+                <span th:if="${group.wheel}">Yes</span>
+                <span th:unless="${group.wheel}">No</span>
             </p>
             <section>
                 <h3>Roommates on the dish wheel</h3>
