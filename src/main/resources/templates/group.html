@@ -32,7 +32,7 @@
                 <h3>Dishwheel details</h3>
                 <section th:if="${group.wheel.getNumberOfRoommates()}">
                     <h3>Roommates on the dish wheel</h3>
-                    <div class="person" th:each="user : ${group.wheel.roommates}" th:object="${user}">
+                    <div class="person" th:each="user : ${group.wheel.getRoommatesInOrder()}" th:object="${user}">
                         <p>
                             <span>ID: </span>
                             <span th:text="*{id}"></span>
