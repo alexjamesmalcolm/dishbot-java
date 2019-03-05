@@ -28,23 +28,20 @@
                 <span th:if="${group.wheel}">Yes</span>
                 <span th:unless="${group.wheel}">No</span>
             </p>
-            <section>
+            <section th:if="${group.wheel}">
                 <h3>Roommates on the dish wheel</h3>
+                <div th:each="roommate : ${group.wheel.roommates}" th:object="${roommate}">
+                    <p>
+                        <span>ID: </span>
+                        <span th:text="*{id}"></span>
+                    </p>
+                    <p>
+                        <span>Name: </span>
+                        <span th:text="*{name}"></span>
+                    </p>
+                </div>
             </section>
         </section>
-        <!--<section>-->
-            <!--<h2>Roommates on the dish wheel</h2>-->
-            <!--<div th:each="roommate : ${group.wheel.roommates}" th:object="${roommate}">-->
-                <!--<p>-->
-                    <!--<span>ID: </span>-->
-                    <!--<span th:text="*{id}"></span>-->
-                <!--</p>-->
-                <!--<p>-->
-                    <!--<span>Name: </span>-->
-                    <!--<span th:text="*{name}"></span>-->
-                <!--</p>-->
-            <!--</div>-->
-        <!--</section>-->
     </main>
 </div>
 </body>
