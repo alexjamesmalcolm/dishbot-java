@@ -94,4 +94,8 @@ public class Wheel {
     public long getId() {
         return id;
     }
+
+    public int getNumberOfRoommates() {
+        return roommates.size();
+    }
 }
