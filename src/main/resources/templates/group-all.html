@@ -10,9 +10,9 @@
         <h1>Groups</h1>
         <section th:each="group : ${groups}">
             <h2>
-                <span>ID:</span>
-                <a th:href="'/group/' + ${group.id}" th:text="${group.id}"></a>
+                <a th:href="'/group/' + ${group.id}" th:text="${group.name}"></a>
             </h2>
+            <p>ID: [[${group.id}]]</p>
             <div>
                 <h3>Users</h3>
                 <p>
