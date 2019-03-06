@@ -7,15 +7,18 @@
 <body>
 <div class="container">
     <main>
+        <h1>Groups</h1>
         <section th:each="group : ${groups}">
-            <p>
+            <h2>
                 <span>ID:</span>
                 <a th:href="'/group/' + ${group.id}" th:text="${group.id}"></a>
-            </p>
-            <p>
-                <span>Users:</span>
-                <span th:each="user : ${group.members}" th:text="${user.name}"></span>
-            </p>
+            </h2>
+            <div>
+                <h3>Users</h3>
+                <p>
+                    <span th:each="user : ${group.members}" th:object="${user}">[[*{name}]], </span>
+                </p>
+            </div>
         </section>
     </main>
 </div>

@@ -10,7 +10,7 @@
         <h1>Group: [[${group.id}]]</h1>
         <section>
             <h2>People on this line</h2>
-            <div class="person" th:each="user : ${group.users}" th:object="${user}">
+            <div class="person" th:each="user : ${group.members}" th:object="${user}">
                 <p>
                     <span>ID: </span>
                     <span th:text="*{id}"></span>
