@@ -6,6 +6,7 @@ import com.alexjamesmalcolm.dishbot.groupme.Group;
 import com.alexjamesmalcolm.dishbot.groupme.Member;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,8 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -34,6 +35,12 @@ public class GroupMeServiceTest {
     private GroupMeService underTest;
 
     private long groupId;
+
+    @Test
+    public void checkThatGroupMeIsAvailable() {
+        Map json = restTemplate.getForObject(properties.getBaseUrl(), Map.class);
+        System.out.println(json);
+    }
 
     @Before
     public void setup() {

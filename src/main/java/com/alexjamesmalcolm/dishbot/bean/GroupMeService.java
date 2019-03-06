@@ -3,6 +3,7 @@ package com.alexjamesmalcolm.dishbot.bean;
 import com.alexjamesmalcolm.dishbot.Properties;
 import com.alexjamesmalcolm.dishbot.groupme.Bot;
 import com.alexjamesmalcolm.dishbot.groupme.Group;
+import com.alexjamesmalcolm.dishbot.groupme.Member;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
 import com.alexjamesmalcolm.dishbot.logical.BotMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,6 +60,11 @@ public class GroupMeService {
         Map json = restTemplate.getForObject(path, Map.class);
         Group[] groups = objectMapper.convertValue(json.get("response"), Group[].class);
         return Arrays.asList(groups);
+    }
+
+    public Member getMember(Message message) {
+        // TODO Get the member who said this message
+        return null;
     }
 
     public void sendMessage(BotMessage message) {
