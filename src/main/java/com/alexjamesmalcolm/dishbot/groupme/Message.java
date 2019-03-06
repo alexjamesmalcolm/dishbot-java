@@ -3,6 +3,8 @@ package com.alexjamesmalcolm.dishbot.groupme;
 import java.net.URI;
 import java.util.List;
 
+import static java.lang.Long.parseLong;
+
 public class Message {
 
     private List attachments;
@@ -39,8 +41,8 @@ public class Message {
         this.created_at = created_at;
     }
 
-    public String getGroup_id() {
-        return group_id;
+    public Long getGroup_id() {
+        return parseLong(group_id);
     }
 
     public void setGroup_id(String group_id) {

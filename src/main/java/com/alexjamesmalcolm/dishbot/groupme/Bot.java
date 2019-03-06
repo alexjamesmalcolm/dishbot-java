@@ -23,8 +23,8 @@ public class Bot {
         this.name = name;
     }
 
-    public String getBot_id() {
-        return bot_id;
+    public Long getBot_id() {
+        return parseLong(bot_id);
     }
 
     public void setBot_id(String bot_id) {

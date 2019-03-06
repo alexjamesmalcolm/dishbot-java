@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class GroupMeService {
@@ -43,12 +44,12 @@ public class GroupMeService {
         return Arrays.asList(messages);
     }
 
-    public Bot getBot(Long groupId) {
-        List<Bot> bots = getAllBots();
-        return bots.stream().filter(bot -> bot.getGroup_id().equals(groupId)).findFirst().get();
+    public List<Bot> getBots(Long groupId) {
+        List<Bot> bots = getBots();
+        return bots.stream().filter(bot -> bot.getGroup_id().equals(groupId)).collect(Collectors.toList());
     }
 
-    public List<Bot> getAllBots() {
+    public List<Bot> getBots() {
         String path = properties.getBaseUrl() + "/bots?token=" + properties.getAccessToken();
         Map json = restTemplate.getForObject(path, Map.class);
         Bot[] bots = objectMapper.convertValue(json.get("response"), Bot[].class);
@@ -73,7 +74,7 @@ public class GroupMeService {
         restTemplate.postForLocation(botMessageUrl, entity);
     }
 
-    public void sendMessage(String text, String botId) {
+    public void sendMessage(String text, Long botId) {
         BotMessage botMessage = new BotMessage(text, botId);
         sendMessage(botMessage);
     }

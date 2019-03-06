@@ -2,9 +2,9 @@ package com.alexjamesmalcolm.dishbot.controller;
 
 import com.alexjamesmalcolm.dishbot.bean.GroupMeService;
 import com.alexjamesmalcolm.dishbot.bean.Interpreter;
+import com.alexjamesmalcolm.dishbot.groupme.Bot;
 import com.alexjamesmalcolm.dishbot.groupme.Group;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
-import com.alexjamesmalcolm.dishbot.logical.BotMessage;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,8 +28,15 @@ public class MessageController {
     @Transactional
     @RequestMapping("/receive-message")
     public void receiveMessage(Message message) {
-        BotMessage response = interpreter.respond(message);
-        groupMe.sendMessage(response);
+        long groupId = message.getGroup_id();
+        Optional<String> response = interpreter.respond(message);
+        response.ifPresent(content -> {
+            List<Bot> bots = groupMe.getBots(groupId);
+            Bot bot = bots.get(0);
+            // TODO Come up with something better than just getting the first bot
+            long botId = bot.getBot_id();
+            groupMe.sendMessage(content, botId);
+        });
     }
 
     @GetMapping("/message")

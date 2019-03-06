@@ -1,11 +1,11 @@
 package com.alexjamesmalcolm.dishbot.bean;
 
 import com.alexjamesmalcolm.dishbot.Properties;
-import com.alexjamesmalcolm.dishbot.bean.GroupMeService;
 import com.alexjamesmalcolm.dishbot.groupme.Bot;
 import com.alexjamesmalcolm.dishbot.groupme.Group;
 import com.alexjamesmalcolm.dishbot.groupme.Member;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
@@ -69,8 +69,8 @@ public class GroupMeServiceTest {
 
     @Test
     public void shouldGetBotForGroup() {
-        Bot bot = underTest.getBot(groupId);
-        assertNotNull(bot);
+        List<Bot> bots = underTest.getBots(groupId);
+        Assert.assertThat(bots, is(not(empty())));
     }
 
     @Test

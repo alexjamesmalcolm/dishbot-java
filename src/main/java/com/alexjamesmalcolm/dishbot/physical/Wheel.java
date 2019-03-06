@@ -14,4 +14,7 @@ public class Wheel {
     public long getId() {
         return id;
     }
+
+    public void advanceWheel() {
+    }
 }
