@@ -14,7 +14,7 @@
             </p>
             <p>
                 <span>Users:</span>
-                <span th:each="user : ${group.users}" th:text="${user.name}"></span>
+                <span th:each="user : ${group.members}" th:text="${user.name}"></span>
             </p>
         </section>
     </main>
