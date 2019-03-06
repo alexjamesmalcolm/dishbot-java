@@ -17,7 +17,8 @@ public class Member {
     private List roles;
     private String name;
 
-    private Member() {}
+    private Member() {
+    }
 
     public Long getUserId() {
         return parseLong(user_id);

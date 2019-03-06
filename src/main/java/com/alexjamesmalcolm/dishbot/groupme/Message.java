@@ -20,7 +20,8 @@ public class Message {
     private String user_id;
     private String platform;
 
-    private Message() {}
+    private Message() {
+    }
 
     public URI getAvatar_url() {
         return URI.create(avatar_url);

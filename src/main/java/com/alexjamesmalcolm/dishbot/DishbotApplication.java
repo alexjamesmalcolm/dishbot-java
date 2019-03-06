@@ -6,9 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class DishbotApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DishbotApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DishbotApplication.class, args);
+    }
 
 }
 

@@ -26,7 +26,8 @@ public class Group implements Serializable {
     private Map messages;
     private String max_members;
 
-    private Group() {}
+    private Group() {
+    }
 
     public Long getId() {
         return parseLong(id);

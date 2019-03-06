@@ -6,7 +6,6 @@ import com.alexjamesmalcolm.dishbot.groupme.Group;
 import com.alexjamesmalcolm.dishbot.groupme.Member;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,12 +34,6 @@ public class GroupMeServiceTest {
     private GroupMeService underTest;
 
     private long groupId;
-
-    @Test
-    public void checkThatGroupMeIsAvailable() {
-        Map json = restTemplate.getForObject(properties.getBaseUrl(), Map.class);
-        System.out.println(json);
-    }
 
     @Before
     public void setup() {
@@ -83,5 +76,11 @@ public class GroupMeServiceTest {
     public void shouldGetTenGroupsByDefault() {
         List<Group> groups = underTest.getAllGroups();
         assertThat(groups.size(), is(10));
+    }
+
+    @Test
+    public void checkThatGroupMeIsAvailable() {
+        Map json = restTemplate.getForObject(properties.getBaseUrl(), Map.class);
+        assertNotNull(json);
     }
 }

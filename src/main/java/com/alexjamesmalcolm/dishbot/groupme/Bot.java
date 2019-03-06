@@ -12,7 +12,8 @@ public class Bot {
     private String callback_url;
     private String dm_notification;
 
-    private Bot() {}
+    private Bot() {
+    }
 
     public String getName() {
         return name;
