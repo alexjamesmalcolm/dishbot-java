@@ -7,7 +7,8 @@
 <body>
 <div class="container">
     <main>
-        <h1>Group: [[${group.id}]]</h1>
+        <h1 th:text="${group.name}"></h1>
+        <p>ID: [[${group.id}]]</p>
         <section>
             <h2>People on this line</h2>
             <div class="person" th:each="user : ${group.members}" th:object="${user}">
