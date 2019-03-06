@@ -1,7 +1,7 @@
 package com.alexjamesmalcolm.dishbot;
 
-import com.alexjamesmalcolm.dishbot.exception.NotFoundException;
-import com.alexjamesmalcolm.dishbot.physical.Group;
+import com.alexjamesmalcolm.dishbot.bean.GroupMeService;
+import com.alexjamesmalcolm.dishbot.groupme.Group;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 public class AdminController {
 
     @Resource
-    private GroupRepository groupRepo;
+    private GroupMeService groupMe;
 
     @RequestMapping("/")
     public String displayHomePage() {
@@ -27,14 +27,14 @@ public class AdminController {
 
     @RequestMapping("/group/{groupId}")
     public String displayManageGroupPage(Model model, @PathVariable Long groupId) {
-        Group group = groupRepo.findById(groupId).orElseThrow(() -> new NotFoundException("Group was not found."));
+        Group group = groupMe.getGroup(groupId);
         model.addAttribute("group", group);
         return "group";
     }
 
     @RequestMapping("/group")
     public String displayAllGroupsPage(Model model) {
-        Iterable<Group> groups = groupRepo.findAll();
+        Iterable<Group> groups = groupMe.getAllGroups();
         model.addAttribute("groups", groups);
         return "group-all";
     }
