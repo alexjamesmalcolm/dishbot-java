@@ -1,4 +1,4 @@
-package com.alexjamesmalcolm.dishbot;
+package com.alexjamesmalcolm.dishbot.physical;
 
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import org.junit.Test;

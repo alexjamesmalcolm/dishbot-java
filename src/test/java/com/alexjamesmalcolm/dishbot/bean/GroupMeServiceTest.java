@@ -1,5 +1,6 @@
-package com.alexjamesmalcolm.dishbot;
+package com.alexjamesmalcolm.dishbot.bean;
 
+import com.alexjamesmalcolm.dishbot.Properties;
 import com.alexjamesmalcolm.dishbot.bean.GroupMeService;
 import com.alexjamesmalcolm.dishbot.groupme.Bot;
 import com.alexjamesmalcolm.dishbot.groupme.Group;
