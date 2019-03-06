@@ -1,4 +1,4 @@
-package com.alexjamesmalcolm.dishbot;
+package com.alexjamesmalcolm.dishbot.controller;
 
 import com.alexjamesmalcolm.dishbot.bean.GroupMeService;
 import org.springframework.web.bind.annotation.PathVariable;
