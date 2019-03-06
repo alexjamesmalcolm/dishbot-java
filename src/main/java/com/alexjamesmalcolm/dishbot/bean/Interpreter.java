@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class Interpreter {
     public BotMessage respond(Message message) {
-        return null;
+        return new BotMessage("", "");
     }
 }
