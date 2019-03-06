@@ -21,31 +21,31 @@
                 </p>
             </div>
         </section>
-        <section th:object="${group.wheel}">
-            <h2>Dishwheel</h2>
-            <p>
-                <span>Dishwheel exists:</span>
-                <span th:if="${group.wheel}">Yes</span>
-                <span th:unless="${group.wheel}">No</span>
-            </p>
-            <section th:if="${group.wheel}">
-                <h3>Dishwheel details</h3>
-                <section th:if="${group.wheel.getNumberOfRoommates()}">
-                    <h3>Roommates on the dish wheel</h3>
-                    <div class="person" th:each="user : ${group.wheel.getRoommatesInOrder()}" th:object="${user}">
-                        <p>
-                            <span>ID: </span>
-                            <span th:text="*{id}"></span>
-                        </p>
-                        <p>
-                            <span>Name: </span>
-                            <span th:text="*{name}"></span>
-                        </p>
-                    </div>
-                </section>
-                <p th:unless="${group.wheel.getNumberOfRoommates()}">There are no roommates on the dishwheel.</p>
-            </section>
-        </section>
+        <!--<section th:object="${group.wheel}">-->
+            <!--<h2>Dishwheel</h2>-->
+            <!--<p>-->
+                <!--<span>Dishwheel exists:</span>-->
+                <!--<span th:if="${group.wheel}">Yes</span>-->
+                <!--<span th:unless="${group.wheel}">No</span>-->
+            <!--</p>-->
+            <!--<section th:if="${group.wheel}">-->
+                <!--<h3>Dishwheel details</h3>-->
+                <!--<section th:if="${group.wheel.getNumberOfRoommates()}">-->
+                    <!--<h3>Roommates on the dish wheel</h3>-->
+                    <!--<div class="person" th:each="user : ${group.wheel.getRoommatesInOrder()}" th:object="${user}">-->
+                        <!--<p>-->
+                            <!--<span>ID: </span>-->
+                            <!--<span th:text="*{id}"></span>-->
+                        <!--</p>-->
+                        <!--<p>-->
+                            <!--<span>Name: </span>-->
+                            <!--<span th:text="*{name}"></span>-->
+                        <!--</p>-->
+                    <!--</div>-->
+                <!--</section>-->
+                <!--<p th:unless="${group.wheel.getNumberOfRoommates()}">There are no roommates on the dishwheel.</p>-->
+            <!--</section>-->
+        <!--</section>-->
     </main>
 </div>
 </body>
