@@ -1,20 +1,16 @@
 package com.alexjamesmalcolm.dishbot.bean;
 
 import com.alexjamesmalcolm.dishbot.WheelRepository;
+import com.alexjamesmalcolm.dishbot.groupme.Group;
 import com.alexjamesmalcolm.dishbot.groupme.Member;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.annotation.Resource;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
@@ -22,40 +18,49 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class InterpreterTest {
 
-    @Resource
-    private GroupMeService groupMe;
-
     @InjectMocks
-    @Resource
     private Interpreter underTest;
+
+    @Mock
+    private GroupMeService groupMe;
 
     @Mock
     private Message message;
 
-    @MockBean
+    @Mock
     private WheelRepository wheelRepo;
 
+    @Mock
+    private Member currentMember;
+    private long currentMemberUserId = 123;
+
+    @Mock
+    private Member nextMember;
+    private long nextMemberUserId = 321;
+
+    @Mock
+    private Group group;
     private long groupId = 1234;
-
-    @Mock
-    private Member member;
-
-    @Mock
-    private Member anotherMember;
 
     private Wheel wheel;
 
     @Before
     public void setup() {
+        underTest = new Interpreter();
         MockitoAnnotations.initMocks(this);
-        wheel = new Wheel(groupId);
-        wheelRepo.save(wheel);
-//        when(em.find(Wheel.class, groupId)).thenReturn(wheel);
         when(message.getGroupId()).thenReturn(groupId);
+        when(groupMe.getGroup(message)).thenReturn(group);
+        when(currentMember.getUserId()).thenReturn(currentMemberUserId);
+        when(nextMember.getUserId()).thenReturn(nextMemberUserId);
+        when(group.getMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
+        when(group.getMember(nextMemberUserId)).thenReturn(Optional.of(nextMember));
+        wheel = new Wheel(groupId);
+        wheel.addMember(currentMember);
+        wheel.addMember(nextMember);
+        when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(wheel);
+        when(wheelRepo.findByGroupId(groupId)).thenReturn(wheel);
     }
 
     @Test
@@ -72,8 +77,12 @@ public class InterpreterTest {
     public void shouldRespondToBangDishes() {
         String text = "!Dishes";
         when(message.getText()).thenReturn(text);
-        String response = underTest.respond(message).get();
         String expected = "Thank you for cleaning the dishes Alex! The next person on dishes is Sicquan.";
+        String currentName = "Alex";
+        String nextName = "Sicquan";
+        when(currentMember.getName()).thenReturn(currentName);
+        when(nextMember.getName()).thenReturn(nextName);
+        String response = underTest.respond(message).get();
         assertThat(response, is(expected));
     }
 
@@ -116,9 +125,12 @@ public class InterpreterTest {
     public void shouldThankSicquanForDoingTheDishesAndSayThatAlexIsUpNext() {
         String text = "!Dishes";
         when(message.getText()).thenReturn(text);
-//        when(wheel.getCurrentMember()).thenReturn(member);
+        String expected = "Thank you for cleaning the dishes Sicquan! The next person on dishes is Alex.";
+        String currentName = "Sicquan";
+        String nextName = "Alex";
+        when(currentMember.getName()).thenReturn(currentName);
+        when(nextMember.getName()).thenReturn(nextName);
         String response = underTest.respond(message).get();
-        String expected = "Thank you for cleaning the dishes Sicquan! The next person on dishes is Alex.";;
         assertThat(response, is(expected));
 
     }

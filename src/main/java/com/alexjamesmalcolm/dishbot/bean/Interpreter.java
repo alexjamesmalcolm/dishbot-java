@@ -1,6 +1,8 @@
 package com.alexjamesmalcolm.dishbot.bean;
 
 import com.alexjamesmalcolm.dishbot.WheelRepository;
+import com.alexjamesmalcolm.dishbot.groupme.Group;
+import com.alexjamesmalcolm.dishbot.groupme.Member;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import org.springframework.stereotype.Service;
@@ -15,13 +17,20 @@ public class Interpreter {
     @Resource
     private WheelRepository wheelRepo;
 
+    @Resource
+    private GroupMeService groupMe;
+
     public Optional<String> respond(Message message) {
-        Wheel wheel = wheelRepo.findByGroupId(message.getGroupId());
         String text = message.getText();
         if (text.equals("!Dishes")) {
+            Wheel wheel = wheelRepo.findByGroupId(message.getGroupId());
+            long currentMemberUserId = wheel.getCurrentMemberUserId();
             wheel.advanceWheel();
-            String firstName = "Alex";
-            String secondName = "Sicquan";
+            long nextMemberUserId = wheel.getCurrentMemberUserId();
+            wheelRepo.save(wheel);
+            Group group = groupMe.getGroup(message);
+            String firstName = group.getMember(currentMemberUserId).get().getName();
+            String secondName = group.getMember(nextMemberUserId).get().getName();
             return Optional.of(MessageFormat.format("Thank you for cleaning the dishes {0}! The next person on dishes is {1}.", firstName, secondName));
         } else if (text.equals("!Time")) {
             return Optional.of("");

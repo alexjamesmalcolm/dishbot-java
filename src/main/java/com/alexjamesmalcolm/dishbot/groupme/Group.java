@@ -5,6 +5,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.Long.parseLong;
 
@@ -152,5 +153,9 @@ public class Group implements Serializable {
 
     public void setUpdated_at(String updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public Optional<Member> getMember(long userId) {
+        return getMembers().stream().filter(member -> member.getUserId() == userId).findFirst();
     }
 }
