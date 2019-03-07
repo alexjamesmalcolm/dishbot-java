@@ -1,10 +1,8 @@
 package com.alexjamesmalcolm.dishbot.bean;
 
 import com.alexjamesmalcolm.dishbot.Properties;
-import com.alexjamesmalcolm.dishbot.groupme.Bot;
-import com.alexjamesmalcolm.dishbot.groupme.Group;
-import com.alexjamesmalcolm.dishbot.groupme.Member;
-import com.alexjamesmalcolm.dishbot.groupme.Message;
+import com.alexjamesmalcolm.dishbot.groupme.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,7 +79,9 @@ public class GroupMeServiceTest {
 
     @Test
     public void checkThatGroupMeIsAvailable() {
-        Map json = restTemplate.getForObject(properties.getBaseUrl(), Map.class);
-        assertNotNull(json);
+        Map json = restTemplate.getForObject(properties.getBaseUrl() + "/users/me?token=" + properties.getAccessToken(), Map.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Me me = objectMapper.convertValue(json.get("response"), Me.class);
+        assertNotNull(me);
     }
 }
