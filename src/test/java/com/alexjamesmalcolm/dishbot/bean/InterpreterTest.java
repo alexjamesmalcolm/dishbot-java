@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.Duration;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
@@ -137,6 +138,24 @@ public class InterpreterTest {
         String currentName = "Sicquan";
         when(currentMember.getName()).thenReturn(currentName);
         String expected = currentName + " has 48 hours to do the dishes.";
+        String response = underTest.respond(message).get();
+        assertThat(response, is(expected));
+    }
+
+    @Test
+    public void shouldHaveAlexGetTenHoursToDoTheDishes() {
+        String text = "!Time";
+        when(message.getText()).thenReturn(text);
+        when(message.getUserId()).thenReturn(currentMemberUserId);
+        String currentName = "Alex";
+        long hours = 10;
+        wheel = new Wheel(groupId, Duration.ofHours(hours));
+        wheel.addMember(currentMember);
+        wheel.addMember(nextMember);
+        when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(wheel);
+        when(wheelRepo.findByGroupId(groupId)).thenReturn(wheel);
+        when(currentMember.getName()).thenReturn(currentName);
+        String expected = currentName + " has " + hours + " hours to do the dishes.";
         String response = underTest.respond(message).get();
         assertThat(response, is(expected));
     }

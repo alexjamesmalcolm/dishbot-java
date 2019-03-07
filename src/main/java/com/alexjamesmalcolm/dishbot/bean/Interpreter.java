@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
+import java.time.Duration;
 import java.util.Optional;
 
 @Service
@@ -38,7 +39,10 @@ public class Interpreter {
             Optional<Member> potentialMember = group.getMember(userId);
             Member member = potentialMember.get();
             String name = member.getName();
-            return Optional.of(name + " has 48 hours to do the dishes.");
+            Wheel wheel = wheelRepo.findByGroupId(message.getGroupId());
+            Duration durationUntilFine = wheel.getDurationUntilFineForCurrent();
+            long hours = durationUntilFine.toHours();
+            return Optional.of(name + " has " + hours + " hours to do the dishes.");
         }
         return Optional.empty();
     }
