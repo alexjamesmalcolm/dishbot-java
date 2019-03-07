@@ -9,11 +9,11 @@ public class Envelope {
     private Map response;
     private Map meta;
 
-    public void setResponse(Map response) {
+    private void setResponse(Map response) {
         this.response = response;
     }
 
-    public void setMeta(Map meta) {
+    private void setMeta(Map meta) {
         this.meta = meta;
     }
 
