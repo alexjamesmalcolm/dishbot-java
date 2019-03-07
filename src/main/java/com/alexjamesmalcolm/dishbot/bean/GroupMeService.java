@@ -1,10 +1,7 @@
 package com.alexjamesmalcolm.dishbot.bean;
 
 import com.alexjamesmalcolm.dishbot.Properties;
-import com.alexjamesmalcolm.dishbot.groupme.Bot;
-import com.alexjamesmalcolm.dishbot.groupme.Group;
-import com.alexjamesmalcolm.dishbot.groupme.Member;
-import com.alexjamesmalcolm.dishbot.groupme.Message;
+import com.alexjamesmalcolm.dishbot.groupme.*;
 import com.alexjamesmalcolm.dishbot.logical.BotMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpEntity;
@@ -13,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,8 +30,12 @@ public class GroupMeService {
     public Group getGroup(Long groupId) {
         String path = properties.getBaseUrl() + "/groups/" + groupId + "?token=" + properties.getAccessToken();
         Map json = restTemplate.getForObject(path, Map.class);
-        Group group = objectMapper.convertValue(json.get("response"), Group.class);
-        return group;
+        return objectMapper.convertValue(json.get("response"), Group.class);
+    }
+
+    public Group getGroup(Message message) {
+        long groupId = message.getGroupId();
+        return getGroup(groupId);
     }
 
     public List<Message> getMessages(Long groupId) {
@@ -63,9 +65,27 @@ public class GroupMeService {
         return Arrays.asList(groups);
     }
 
+    public List<Member> getAllMembers() {
+        List<Group> groups = getAllGroups();
+        return groups.stream().map(Group::getMembers).flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    public Member getMember(long userId) {
+        List<Member> members = getAllMembers();
+        return members.stream().filter(member -> member.getUserId().equals(userId)).findFirst().get();
+    }
+
     public Member getMember(Message message) {
-        // TODO Get the member who said this message
-        return null;
+        long groupId = message.getGroupId();
+        Group group = getGroup(groupId);
+        long userId = message.getUserId();
+        return group.getMembers().stream().filter(member -> member.getUserId().equals(userId)).findFirst().get();
+    }
+
+    public Me getMe() {
+        String path = properties.getBaseUrl() + "/users/me?token=" + properties.getAccessToken();
+        Map json = restTemplate.getForObject(path, Map.class);
+        return objectMapper.convertValue(json.get("response"), Me.class);
     }
 
     public void sendMessage(BotMessage message) {

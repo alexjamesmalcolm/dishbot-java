@@ -28,7 +28,7 @@ public class MessageController {
     @Transactional
     @RequestMapping("/receive-message")
     public void receiveMessage(Message message) {
-        long groupId = message.getGroup_id();
+        long groupId = message.getGroupId();
         Optional<String> response = interpreter.respond(message);
         response.ifPresent(content -> {
             List<Bot> bots = groupMe.getBots(groupId);

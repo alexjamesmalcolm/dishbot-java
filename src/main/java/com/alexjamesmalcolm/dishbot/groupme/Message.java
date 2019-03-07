@@ -41,7 +41,7 @@ public class Message {
         this.created_at = created_at;
     }
 
-    public Long getGroup_id() {
+    public long getGroupId() {
         return parseLong(group_id);
     }
 
@@ -105,8 +105,8 @@ public class Message {
         this.text = text;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public long getUserId() {
+        return parseLong(user_id);
     }
 
     public void setUser_id(String user_id) {

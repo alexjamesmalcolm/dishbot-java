@@ -47,7 +47,7 @@ public class InterpreterTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         when(em.find(Wheel.class, groupId)).thenReturn(wheel);
-        when(message.getGroup_id()).thenReturn(groupId);
+        when(message.getGroupId()).thenReturn(groupId);
     }
 
     @Test

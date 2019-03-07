@@ -15,7 +15,7 @@ public class Interpreter {
     private EntityManager em;
 
     public Optional<String> respond(Message message) {
-        Wheel wheel = em.find(Wheel.class, message.getGroup_id());
+        Wheel wheel = em.find(Wheel.class, message.getGroupId());
         String text = message.getText();
         if (text.equals("!Dishes")) {
             wheel.advanceWheel();
