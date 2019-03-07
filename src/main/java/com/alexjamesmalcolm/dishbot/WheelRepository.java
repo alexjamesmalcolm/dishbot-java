@@ -1,4 +1,8 @@
 package com.alexjamesmalcolm.dishbot;
 
-public interface WheelRepository {
+import com.alexjamesmalcolm.dishbot.physical.Wheel;
+import org.springframework.data.repository.CrudRepository;
+
+public interface WheelRepository extends CrudRepository<Wheel, Long> {
+    Wheel findByGroupId(long groupId);
 }

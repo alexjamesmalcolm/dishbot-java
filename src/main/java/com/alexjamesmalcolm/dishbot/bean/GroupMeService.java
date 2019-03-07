@@ -72,14 +72,14 @@ public class GroupMeService {
 
     public Member getMember(long userId) {
         List<Member> members = getAllMembers();
-        return members.stream().filter(member -> member.getUserId().equals(userId)).findFirst().get();
+        return members.stream().filter(member -> member.getUserId() == userId).findFirst().get();
     }
 
     public Member getMember(Message message) {
         long groupId = message.getGroupId();
         Group group = getGroup(groupId);
         long userId = message.getUserId();
-        return group.getMembers().stream().filter(member -> member.getUserId().equals(userId)).findFirst().get();
+        return group.getMembers().stream().filter(member -> member.getUserId() == userId).findFirst().get();
     }
 
     public Me getMe() {

@@ -20,7 +20,7 @@ public class Member {
     private Member() {
     }
 
-    public Long getUserId() {
+    public long getUserId() {
         return parseLong(user_id);
     }
 
