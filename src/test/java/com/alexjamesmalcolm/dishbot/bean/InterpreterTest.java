@@ -159,4 +159,12 @@ public class InterpreterTest {
         String response = underTest.respond(message).get();
         assertThat(response, is(expected));
     }
+
+    @Test
+    public void shouldRespondWithTheUserIdsOfEveryMemberOfGroup() {
+        String text = "!Ids";
+        when(message.getText()).thenReturn(text);
+
+        String response = underTest.respond(message).get();
+    }
 }

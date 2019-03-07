@@ -27,6 +27,8 @@ public class Interpreter {
             return dishesDoneCommand(message);
         } else if (text.equals("!Time")) {
             return timeLeftCommand(message);
+        } else if (text.equals("!Ids")) {
+            return Optional.of("");
         }
         return Optional.empty();
     }
