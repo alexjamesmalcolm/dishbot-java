@@ -5,6 +5,7 @@ import com.alexjamesmalcolm.dishbot.groupme.Group;
 import com.alexjamesmalcolm.dishbot.groupme.Member;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -12,6 +13,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
@@ -161,10 +165,41 @@ public class InterpreterTest {
     }
 
     @Test
-    public void shouldRespondWithTheUserIdsOfEveryMemberOfGroup() {
+    public void shouldRespondWithTheUserIdsOfAlexAndSicquan() {
         String text = "!Ids";
         when(message.getText()).thenReturn(text);
+        String currentName = "Alex";
+        String nextName = "Sicquan";
+        when(currentMember.getName()).thenReturn(currentName);
+        when(nextMember.getName()).thenReturn(nextName);
+        List<Member> members = Arrays.asList(currentMember, nextMember);
+        when(group.getMembers()).thenReturn(members);
 
         String response = underTest.respond(message).get();
+
+        String expected = currentName + " -> " + currentMemberUserId + "\n" + nextName + " -> " + nextMemberUserId;
+        assertThat(response, is(expected));
+    }
+
+    @Test
+    public void shouldRespondWithTheUserIdsOfHanaanAndKwinton() {
+        String text = "!Ids";
+        when(message.getText()).thenReturn(text);
+        String currentName = "Hanaan";
+        String nextName = "Kwinton";
+        when(currentMember.getName()).thenReturn(currentName);
+        when(nextMember.getName()).thenReturn(nextName);
+        List<Member> members = Arrays.asList(currentMember, nextMember);
+        when(group.getMembers()).thenReturn(members);
+
+        String response = underTest.respond(message).get();
+
+        String expected = currentName + " -> " + currentMemberUserId + "\n" + nextName + " -> " + nextMemberUserId;
+        assertThat(response, is(expected));
+    }
+
+    @Test
+    public void shouldAddUserToWheelById() {
+        //TODO Finish this test
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.text.MessageFormat;
 import java.time.Duration;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,9 +29,22 @@ public class Interpreter {
         } else if (text.equals("!Time")) {
             return timeLeftCommand(message);
         } else if (text.equals("!Ids")) {
-            return Optional.of("");
+            return memberIdsCommand(message);
+        } else if (text.contains("!Add")) {
+            return addUserCommand(message);
         }
         return Optional.empty();
+    }
+
+    private Optional<String> addUserCommand(Message message) {
+        return Optional.empty();
+    }
+
+    private Optional<String> memberIdsCommand(Message message) {
+        Group group = groupMe.getGroup(message);
+        List<Member> members = group.getMembers();
+        String response = members.stream().map(member -> member.getName() + " -> " + member.getUserId()).reduce((first, second) -> first + "\n" + second).orElse("");
+        return Optional.of(response);
     }
 
     private Optional<String> timeLeftCommand(Message message) {
