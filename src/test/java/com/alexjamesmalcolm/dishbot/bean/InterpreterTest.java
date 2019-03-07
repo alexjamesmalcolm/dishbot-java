@@ -90,6 +90,7 @@ public class InterpreterTest {
     public void shouldNotThankUserForDoingDishesIfCommandIsNotDishes() {
         String text = "!Time";
         when(message.getText()).thenReturn(text);
+        when(message.getUserId()).thenReturn(currentMemberUserId);
         String response = underTest.respond(message).get();
         String expected = "Thank you for cleaning the dishes Alex! The next person on dishes is Sicquan.";
         assertThat(response, is(not(expected)));
@@ -112,6 +113,30 @@ public class InterpreterTest {
         String nextName = "Alex";
         when(currentMember.getName()).thenReturn(currentName);
         when(nextMember.getName()).thenReturn(nextName);
+        String response = underTest.respond(message).get();
+        assertThat(response, is(expected));
+    }
+
+    @Test
+    public void shouldHaveAlexGetFourtyEightHoursToDoTheDishes() {
+        String text = "!Time";
+        when(message.getText()).thenReturn(text);
+        when(message.getUserId()).thenReturn(currentMemberUserId);
+        String currentName = "Alex";
+        when(currentMember.getName()).thenReturn(currentName);
+        String expected = currentName + " has 48 hours to do the dishes.";
+        String response = underTest.respond(message).get();
+        assertThat(response, is(expected));
+    }
+
+    @Test
+    public void shouldHaveSicquanGetFourtyEightHoursToDoTheDishes() {
+        String text = "!Time";
+        when(message.getText()).thenReturn(text);
+        when(message.getUserId()).thenReturn(currentMemberUserId);
+        String currentName = "Sicquan";
+        when(currentMember.getName()).thenReturn(currentName);
+        String expected = currentName + " has 48 hours to do the dishes.";
         String response = underTest.respond(message).get();
         assertThat(response, is(expected));
     }

@@ -2,6 +2,7 @@ package com.alexjamesmalcolm.dishbot.bean;
 
 import com.alexjamesmalcolm.dishbot.WheelRepository;
 import com.alexjamesmalcolm.dishbot.groupme.Group;
+import com.alexjamesmalcolm.dishbot.groupme.Member;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,12 @@ public class Interpreter {
             String secondName = group.getMember(nextMemberUserId).get().getName();
             return Optional.of(MessageFormat.format("Thank you for cleaning the dishes {0}! The next person on dishes is {1}.", firstName, secondName));
         } else if (text.equals("!Time")) {
-            return Optional.of("");
+            long userId = message.getUserId();
+            Group group = groupMe.getGroup(message);
+            Optional<Member> potentialMember = group.getMember(userId);
+            Member member = potentialMember.get();
+            String name = member.getName();
+            return Optional.of(name + " has 48 hours to do the dishes.");
         }
         return Optional.empty();
     }
