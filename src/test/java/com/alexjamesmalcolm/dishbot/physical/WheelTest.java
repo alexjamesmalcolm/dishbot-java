@@ -8,7 +8,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.Duration;
 
+import static java.lang.Thread.sleep;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -100,5 +102,46 @@ public class WheelTest {
         wheel.setFineDuration(fineDuration);
         Duration actual = wheel.getFineDuration();
         assertThat(actual, is(fineDuration));
+    }
+
+    @Test
+    public void shouldGetNullForTimeUntilFineIfThereIsNoCurrentMember() {
+        long groupId = 123;
+        Wheel wheel = new Wheel(groupId);
+        Duration actual = wheel.getDurationUntilFineForCurrent();
+        assertNull(actual);
+    }
+
+    @Test
+    public void shouldGetFourtyEightHoursUntilFineForCurrentMember() {
+        long groupId = 123;
+        long expected = 48;
+        Wheel wheel = new Wheel(groupId);
+        wheel.addMember(memberOne);
+        Duration actual = wheel.getDurationUntilFineForCurrent();
+        assertThat(actual.toHours(), is(expected));
+    }
+
+    @Test
+    public void shouldGetTenHoursUntilFineForCurrentMember() {
+        long groupId = 123;
+        long expected = 10;
+        Wheel wheel = new Wheel(groupId, Duration.ofHours(10));
+        wheel.addMember(memberOne);
+        Duration actual = wheel.getDurationUntilFineForCurrent();
+        assertThat(actual.toHours(), is(expected));
+    }
+
+    @Test
+    public void shouldGetOneSecondLessThanFourtyEightHoursUntilFineForCurrentMember() throws InterruptedException {
+        long groupId = 123;
+        long expected = 1000;
+        Duration fineDuration = Duration.ofHours(48);
+        Wheel wheel = new Wheel(groupId);
+        wheel.addMember(memberOne);
+        sleep(expected);
+        Duration actual = wheel.getDurationUntilFineForCurrent();
+        Duration difference = fineDuration.minus(actual);
+        assertThat(difference.toMillis(), is(expected));
     }
 }

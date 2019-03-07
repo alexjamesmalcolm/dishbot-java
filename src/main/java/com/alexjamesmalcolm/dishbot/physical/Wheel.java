@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class Wheel {
     @ElementCollection
     private List<Long> userIds;
     private Duration fineDuration;
+    private Instant currentStart;
 
     private Wheel() {
     }
@@ -55,6 +57,7 @@ public class Wheel {
         if (currentUserId == 0) {
             currentUserId = member.getUserId();
         }
+        currentStart = Instant.now();
     }
 
     public long getCurrentMemberUserId() {
@@ -67,5 +70,14 @@ public class Wheel {
 
     public void setFineDuration(Duration fineDuration) {
         this.fineDuration = fineDuration;
+    }
+
+    public Duration getDurationUntilFineForCurrent() {
+        if (currentUserId == 0) {
+            return null;
+        } else {
+            Duration timeElapsed = Duration.between(currentStart, Instant.now());
+            return fineDuration.minus(timeElapsed);
+        }
     }
 }
