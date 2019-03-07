@@ -29,8 +29,8 @@ public class GroupMeService {
 
     public Group getGroup(Long groupId) {
         String path = properties.getBaseUrl() + "/groups/" + groupId + "?token=" + properties.getAccessToken();
-        Map json = restTemplate.getForObject(path, Map.class);
-        return objectMapper.convertValue(json.get("response"), Group.class);
+        Envelope envelope = makeRequest(path);
+        return envelope.getResponse(Group.class);
     }
 
     public Group getGroup(Message message) {
@@ -84,8 +84,8 @@ public class GroupMeService {
 
     public Me getMe() {
         String path = properties.getBaseUrl() + "/users/me?token=" + properties.getAccessToken();
-        Map json = restTemplate.getForObject(path, Map.class);
-        return objectMapper.convertValue(json.get("response"), Me.class);
+        Envelope envelope = makeRequest(path);
+        return envelope.getResponse(Me.class);
     }
 
     public void sendMessage(BotMessage message) {
@@ -99,9 +99,7 @@ public class GroupMeService {
         sendMessage(botMessage);
     }
 
-    public void setRestTemplate(RestTemplate restTemplate) {
-        if (this.restTemplate == null) {
-            this.restTemplate = restTemplate;
-        }
+    private Envelope makeRequest(String path) {
+        return restTemplate.getForObject(path, Envelope.class);
     }
 }

@@ -25,6 +25,7 @@ public class Group implements Serializable {
     private List<Member> members;
     private Map messages;
     private String max_members;
+    private String updated_at;
 
     private Group() {
     }
@@ -147,5 +148,9 @@ public class Group implements Serializable {
 
     public void setMessages(Map messages) {
         this.messages = messages;
+    }
+
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
     }
 }

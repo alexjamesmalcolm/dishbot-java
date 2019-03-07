@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
@@ -83,5 +84,15 @@ public class GroupMeServiceTest {
         ObjectMapper objectMapper = new ObjectMapper();
         Me me = objectMapper.convertValue(json.get("response"), Me.class);
         assertNotNull(me);
+    }
+
+    @Test
+    public void shouldGetGroupFromWrappedEnvelope() {
+        String path = properties.getBaseUrl() + "/groups/" + groupId + "?token=" + properties.getAccessToken();
+        Map rawEnvelope = restTemplate.getForObject(path, Map.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Envelope envelope = objectMapper.convertValue(rawEnvelope, Envelope.class);
+        Group group = envelope.getResponse(Group.class);
+        assertNotNull(group);
     }
 }

@@ -1,6 +1,5 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
-import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
