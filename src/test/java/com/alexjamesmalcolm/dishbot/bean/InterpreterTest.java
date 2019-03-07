@@ -87,24 +87,6 @@ public class InterpreterTest {
     }
 
     @Test
-    public void shouldAdvanceWheel() {
-        String text = "!Dishes";
-        when(message.getText()).thenReturn(text);
-        underTest.respond(message);
-//        verify(wheel).advanceWheel();
-        //TODO Verify that wheel was advanced
-    }
-
-    @Test
-    public void shouldNotAdvanceWheelIfCommandIsNotDishes() {
-        String text = "!Time";
-        when(message.getText()).thenReturn(text);
-        underTest.respond(message);
-//        verify(wheel, never()).advanceWheel();
-        //TODO Verify that wheel was not advanced
-    }
-
-    @Test
     public void shouldNotThankUserForDoingDishesIfCommandIsNotDishes() {
         String text = "!Time";
         when(message.getText()).thenReturn(text);
