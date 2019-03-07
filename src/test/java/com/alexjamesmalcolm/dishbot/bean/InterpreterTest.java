@@ -114,6 +114,5 @@ public class InterpreterTest {
         when(nextMember.getName()).thenReturn(nextName);
         String response = underTest.respond(message).get();
         assertThat(response, is(expected));
-
     }
 }

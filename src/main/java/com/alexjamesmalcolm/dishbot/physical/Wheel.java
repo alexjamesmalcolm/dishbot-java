@@ -6,6 +6,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class Wheel {
 
     @ElementCollection
     private List<Long> userIds;
+    private Duration fineDuration;
 
     private Wheel() {
     }
@@ -27,6 +29,12 @@ public class Wheel {
     public Wheel(long groupId) {
         userIds = new ArrayList<>();
         this.groupId = groupId;
+        this.fineDuration = Duration.ofHours(48);
+    }
+
+    public Wheel(long groupId, Duration fineDuration) {
+        this(groupId);
+        this.fineDuration = fineDuration;
     }
 
     public long getId() {
@@ -51,5 +59,13 @@ public class Wheel {
 
     public long getCurrentMemberUserId() {
         return currentUserId;
+    }
+
+    public Duration getFineDuration() {
+        return fineDuration;
+    }
+
+    public void setFineDuration(Duration fineDuration) {
+        this.fineDuration = fineDuration;
     }
 }

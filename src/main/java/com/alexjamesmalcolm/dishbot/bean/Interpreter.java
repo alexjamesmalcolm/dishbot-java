@@ -2,7 +2,6 @@ package com.alexjamesmalcolm.dishbot.bean;
 
 import com.alexjamesmalcolm.dishbot.WheelRepository;
 import com.alexjamesmalcolm.dishbot.groupme.Group;
-import com.alexjamesmalcolm.dishbot.groupme.Member;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import org.springframework.stereotype.Service;

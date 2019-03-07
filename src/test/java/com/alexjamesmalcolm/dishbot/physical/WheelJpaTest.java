@@ -1,7 +1,6 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
 import com.alexjamesmalcolm.dishbot.WheelRepository;
-import com.alexjamesmalcolm.dishbot.groupme.Group;
 import com.alexjamesmalcolm.dishbot.groupme.Member;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,13 +30,7 @@ public class WheelJpaTest {
     private WheelRepository wheelRepo;
 
     @Mock
-    private Group group;
-
-    @Mock
     private Member memberOne;
-
-    @Mock
-    private Member memberTwo;
 
     @Before
     public void setup() {
@@ -91,63 +84,6 @@ public class WheelJpaTest {
         em.flush();
         em.clear();
         wheel = wheelRepo.findByGroupId(groupId);
-        long userId = wheel.getCurrentMemberUserId();
-        assertThat(userId, is(memberOne.getUserId()));
-    }
-
-    @Test
-    public void shouldAddTwoPeopleToWheelAndTheFirstPersonShouldBeCurrent() {
-        long groupId = 123;
-        Wheel wheel = new Wheel(groupId);
-        long firstUserId = 50;
-        long secondUserId = 60;
-        when(memberOne.getUserId()).thenReturn(firstUserId);
-        when(memberTwo.getUserId()).thenReturn(secondUserId);
-        wheel.addMember(memberOne);
-        wheel.addMember(memberTwo);
-        em.persist(wheel);
-        em.flush();
-        em.clear();
-        wheel = wheelRepo.findByGroupId(groupId);
-        long userId = wheel.getCurrentMemberUserId();
-        assertThat(userId, is(memberOne.getUserId()));
-    }
-
-    @Test
-    public void shouldAdvanceTheWheelAndTheSecondPersonShouldBeCurrent() {
-        long groupId = 123;
-        Wheel wheel = new Wheel(groupId);
-        long firstUserId = 20;
-        long secondUserId = 30;
-        when(memberOne.getUserId()).thenReturn(firstUserId);
-        when(memberTwo.getUserId()).thenReturn(secondUserId);
-        wheel.addMember(memberOne);
-        wheel.addMember(memberTwo);
-        em.persist(wheel);
-        em.flush();
-        em.clear();
-        wheel = wheelRepo.findByGroupId(groupId);
-        wheel.advanceWheel();
-        long userId = wheel.getCurrentMemberUserId();
-        assertThat(userId, is(memberTwo.getUserId()));
-    }
-
-    @Test
-    public void shouldWrapAroundWhenAdvancingTwiceWithTwoPeople() {
-        long groupId = 123;
-        Wheel wheel = new Wheel(groupId);
-        long firstUserId = 100;
-        long secondUserId = 2000;
-        when(memberOne.getUserId()).thenReturn(firstUserId);
-        when(memberTwo.getUserId()).thenReturn(secondUserId);
-        wheel.addMember(memberOne);
-        wheel.addMember(memberTwo);
-        em.persist(wheel);
-        em.flush();
-        em.clear();
-        wheel = wheelRepo.findByGroupId(groupId);
-        wheel.advanceWheel();
-        wheel.advanceWheel();
         long userId = wheel.getCurrentMemberUserId();
         assertThat(userId, is(memberOne.getUserId()));
     }
