@@ -1,7 +1,6 @@
 package com.alexjamesmalcolm.dishbot.bean;
 
 import com.alexjamesmalcolm.dishbot.WheelRepository;
-import com.alexjamesmalcolm.dishbot.groupme.Bot;
 import com.alexjamesmalcolm.dishbot.groupme.Group;
 import com.alexjamesmalcolm.dishbot.groupme.Member;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
@@ -19,7 +18,7 @@ import java.util.Set;
 import static java.lang.Long.parseLong;
 
 @Service
-public class Interpreter {
+public class Composer {
 
     @Resource
     private WheelRepository wheelRepo;

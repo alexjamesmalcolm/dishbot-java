@@ -22,10 +22,10 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
-public class InterpreterTest {
+public class ComposerTest {
 
     @InjectMocks
-    private Interpreter underTest;
+    private Composer underTest;
 
     @Mock
     private GroupMeService groupMe;
@@ -55,7 +55,7 @@ public class InterpreterTest {
 
     @Before
     public void setup() {
-        underTest = new Interpreter();
+        underTest = new Composer();
         MockitoAnnotations.initMocks(this);
         when(message.getGroupId()).thenReturn(groupId);
         when(groupMe.getGroup(message)).thenReturn(group);

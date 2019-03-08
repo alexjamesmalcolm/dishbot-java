@@ -1,7 +1,7 @@
 package com.alexjamesmalcolm.dishbot.controller;
 
 import com.alexjamesmalcolm.dishbot.bean.GroupMeService;
-import com.alexjamesmalcolm.dishbot.bean.Interpreter;
+import com.alexjamesmalcolm.dishbot.bean.Composer;
 import com.alexjamesmalcolm.dishbot.groupme.Bot;
 import com.alexjamesmalcolm.dishbot.groupme.Group;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
@@ -23,18 +23,18 @@ public class MessageController {
     private GroupMeService groupMe;
 
     @Resource
-    private Interpreter interpreter;
+    private Composer composer;
 
     @Transactional
     @RequestMapping("/receive-message")
     public void receiveMessage(Message message) {
         long groupId = message.getGroupId();
-        Optional<String> response = interpreter.respond(message);
+        Optional<String> response = composer.respond(message);
         response.ifPresent(content -> {
             long botId = getBot(groupId).getBotId();
             groupMe.sendMessage(content, botId);
         });
-        interpreter.tryToWarnAll();
+        composer.tryToWarnAll();
     }
 
     @GetMapping("/message")
