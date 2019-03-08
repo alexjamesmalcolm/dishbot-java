@@ -1,6 +1,7 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
 import com.alexjamesmalcolm.dishbot.groupme.Member;
+import com.alexjamesmalcolm.dishbot.groupme.Message;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -24,6 +25,7 @@ public class Wheel {
     private List<Long> userIds;
     private Duration fineDuration;
     private Instant currentStart;
+    private boolean hasWarnedCurrent;
 
     private Wheel() {
     }
@@ -32,6 +34,7 @@ public class Wheel {
         userIds = new ArrayList<>();
         this.groupId = groupId;
         this.fineDuration = Duration.ofHours(48);
+        hasWarnedCurrent = false;
     }
 
     public Wheel(long groupId, Duration fineDuration) {
@@ -50,6 +53,7 @@ public class Wheel {
         } else {
             currentUserId = userIds.get(index + 1);
         }
+        hasWarnedCurrent = false;
     }
 
     public void addMember(Member member) {
@@ -83,5 +87,26 @@ public class Wheel {
             Duration timeElapsed = Duration.between(currentStart, Instant.now());
             return fineDuration.minus(timeElapsed);
         }
+    }
+
+    public boolean hasWarnedCurrent() {
+        return hasWarnedCurrent;
+    }
+
+    public boolean needToWarnCurrent() {
+        if (!hasWarnedCurrent) {
+            Duration timeLeft = getDurationUntilFineForCurrent();
+            Duration halfOfTimeGiven = getFineDuration().dividedBy(2);
+            return timeLeft.compareTo(halfOfTimeGiven) <= 0;
+        }
+        return false;
+    }
+
+    public void currentHasBeenWarned() {
+        hasWarnedCurrent = true;
+    }
+
+    public long getGroupId() {
+        return groupId;
     }
 }

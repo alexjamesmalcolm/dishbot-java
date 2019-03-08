@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import javax.persistence.EntityManager;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +29,9 @@ public class InterpreterTest {
 
     @Mock
     private GroupMeService groupMe;
+
+    @Mock
+    private EntityManager em;
 
     @Mock
     private Message message;

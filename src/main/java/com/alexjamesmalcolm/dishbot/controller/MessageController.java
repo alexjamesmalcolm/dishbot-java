@@ -31,12 +31,10 @@ public class MessageController {
         long groupId = message.getGroupId();
         Optional<String> response = interpreter.respond(message);
         response.ifPresent(content -> {
-            List<Bot> bots = groupMe.getBots(groupId);
-            Bot bot = bots.get(0);
-            // TODO Come up with something better than just getting the first bot
-            long botId = bot.getBot_id();
+            long botId = getBot(groupId).getBotId();
             groupMe.sendMessage(content, botId);
         });
+        interpreter.tryToWarnAll();
     }
 
     @GetMapping("/message")
@@ -46,5 +44,11 @@ public class MessageController {
             long groupId = group.getGroupId();
             return groupMe.getMessages(groupId);
         }).flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    private Bot getBot(long groupId) {
+        List<Bot> bots = groupMe.getBots(groupId);
+        return bots.get(0);
+        // TODO Come up with something better than just getting the first bot
     }
 }
