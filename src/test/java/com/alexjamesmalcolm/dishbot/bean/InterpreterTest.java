@@ -67,16 +67,6 @@ public class InterpreterTest {
     }
 
     @Test
-    public void shouldNotHaveNullInterpreter() {
-        assertNotNull(underTest);
-    }
-
-    @Test
-    public void shouldNotHaveGroupMeServiceBeNull() {
-        assertNotNull(groupMe);
-    }
-
-    @Test
     public void shouldRespondToBangDishes() {
         String text = "!Dishes";
         when(message.getText()).thenReturn(text);
