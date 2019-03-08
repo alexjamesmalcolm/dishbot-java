@@ -43,7 +43,7 @@ public class MessageController {
     public Iterable<Message> getMessages() {
         List<Group> groups = groupMe.getAllGroups();
         return groups.stream().map(group -> {
-            long groupId = group.getGroup_id();
+            long groupId = group.getGroupId();
             return groupMe.getMessages(groupId);
         }).flatMap(Collection::stream).collect(Collectors.toList());
     }

@@ -39,7 +39,7 @@ public class Group implements Serializable {
         this.id = id;
     }
 
-    public Long getGroup_id() {
+    public long getGroupId() {
         return parseLong(group_id);
     }
 

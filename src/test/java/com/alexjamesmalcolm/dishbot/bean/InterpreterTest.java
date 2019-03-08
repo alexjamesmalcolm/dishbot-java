@@ -5,7 +5,6 @@ import com.alexjamesmalcolm.dishbot.groupme.Group;
 import com.alexjamesmalcolm.dishbot.groupme.Member;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -13,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -199,7 +197,90 @@ public class InterpreterTest {
     }
 
     @Test
-    public void shouldAddUserToWheelById() {
-        //TODO Finish this test
+    public void shouldGetProperResponseWhenAddingUserToWheelById() {
+        String text = "!Add " + currentMemberUserId;
+        when(message.getText()).thenReturn(text);
+        String currentName = "Alex";
+        when(currentMember.getName()).thenReturn(currentName);
+        List<Member> members = Arrays.asList(currentMember, nextMember);
+        when(group.getMembers()).thenReturn(members);
+        when(group.getMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
+        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(wheel);
+
+        String response = underTest.respond(message).get();
+
+        String expected = "Added " + currentName + " to Dish Wheel.";
+        assertThat(response, is(expected));
+    }
+
+    @Test
+    public void shouldGetHanaanAsBeingAddedToWheelById() {
+        String text = "!Add " + currentMemberUserId;
+        when(message.getText()).thenReturn(text);
+        String currentName = "Hanaan";
+        when(currentMember.getName()).thenReturn(currentName);
+        List<Member> members = Arrays.asList(currentMember, nextMember);
+        when(group.getMembers()).thenReturn(members);
+        when(group.getMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
+        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(wheel);
+
+        String response = underTest.respond(message).get();
+
+        String expected = "Added " + currentName + " to Dish Wheel.";
+        assertThat(response, is(expected));
+    }
+
+    @Test
+    public void shouldRespondWithErrorMessageIfIdIsNotFoundInGroup() {
+        long badId = 432198764321L;
+        String text = "!Add " + badId;
+        when(message.getText()).thenReturn(text);
+        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(wheel);
+
+        String response = underTest.respond(message).get();
+
+        String expected = "Could not find user with id " + badId;
+        assertThat(response, is(expected));
+    }
+
+    @Test
+    public void shouldAddUserToWheel() {
+        String text = "!Add " + currentMemberUserId;
+        when(message.getText()).thenReturn(text);
+        String currentName = "Hanaan";
+        when(currentMember.getName()).thenReturn(currentName);
+        List<Member> members = Arrays.asList(currentMember, nextMember);
+        when(group.getMembers()).thenReturn(members);
+        when(group.getMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
+        wheel = new Wheel(groupId);
+        when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(wheel);
+        when(wheelRepo.findByGroupId(groupId)).thenReturn(wheel);
+        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(wheel);
+
+        underTest.respond(message).get();
+
+        long actual = wheel.getCurrentMemberUserId();
+        assertThat(actual, is(currentMemberUserId));
+    }
+
+    @Test
+    public void shouldNotAddUserToWheelIfIdIsNotFoundInGroup() {
+        long badId = 432198764321L;
+        String text = "!Add " + badId;
+        when(message.getText()).thenReturn(text);
+        String currentName = "Hanaan";
+        when(currentMember.getName()).thenReturn(currentName);
+        List<Member> members = Arrays.asList(currentMember, nextMember);
+        when(group.getMembers()).thenReturn(members);
+        when(group.getMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
+        wheel = new Wheel(groupId);
+        when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(wheel);
+        when(wheelRepo.findByGroupId(groupId)).thenReturn(wheel);
+        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(wheel);
+
+        underTest.respond(message).get();
+
+        long actual = wheel.getCurrentMemberUserId();
+        assertThat(actual, is(not(badId)));
     }
 }

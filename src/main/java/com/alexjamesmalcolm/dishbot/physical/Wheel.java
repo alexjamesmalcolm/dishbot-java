@@ -53,9 +53,13 @@ public class Wheel {
     }
 
     public void addMember(Member member) {
-        userIds.add(member.getUserId());
+        addMember(member.getUserId());
+    }
+
+    public void addMember(long userId) {
+        userIds.add(userId);
         if (currentUserId == 0) {
-            currentUserId = member.getUserId();
+            currentUserId = userId;
         }
         currentStart = Instant.now();
     }

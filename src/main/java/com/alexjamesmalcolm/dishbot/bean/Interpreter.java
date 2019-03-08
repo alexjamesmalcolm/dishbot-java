@@ -13,6 +13,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Long.parseLong;
+
 @Service
 public class Interpreter {
 
@@ -30,14 +32,25 @@ public class Interpreter {
             return timeLeftCommand(message);
         } else if (text.equals("!Ids")) {
             return memberIdsCommand(message);
-        } else if (text.contains("!Add")) {
+        } else if (text.startsWith("!Add ")) {
             return addUserCommand(message);
         }
         return Optional.empty();
     }
 
     private Optional<String> addUserCommand(Message message) {
-        return Optional.empty();
+        Group group = groupMe.getGroup(message);
+        long userId = parseLong(message.getText().substring(5));
+        Optional<Member> potentialMember = group.getMember(userId);
+        if (potentialMember.isPresent()) {
+            Wheel wheel = wheelRepo.findByGroupId(group.getGroupId());
+            wheel.addMember(userId);
+            wheelRepo.save(wheel);
+            String name = potentialMember.get().getName();
+            return Optional.of("Added " + name + " to Dish Wheel.");
+        } else {
+            return Optional.of("Could not find user with id " + userId);
+        }
     }
 
     private Optional<String> memberIdsCommand(Message message) {
