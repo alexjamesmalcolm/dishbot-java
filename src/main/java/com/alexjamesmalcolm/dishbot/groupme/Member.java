@@ -9,7 +9,7 @@ import java.util.List;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Long.parseLong;
 
-public class Member extends Response{
+public class Member extends Response {
 
     private Long userId;
     private String nickname;
