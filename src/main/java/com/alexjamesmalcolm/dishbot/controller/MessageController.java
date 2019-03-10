@@ -5,12 +5,15 @@ import com.alexjamesmalcolm.dishbot.bean.Composer;
 import com.alexjamesmalcolm.dishbot.groupme.Bot;
 import com.alexjamesmalcolm.dishbot.groupme.Group;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -25,9 +28,14 @@ public class MessageController {
     @Resource
     private Composer composer;
 
+    @Resource
+    private ObjectMapper mapper;
+
     @Transactional
     @RequestMapping("/receive-message")
-    public void receiveMessage(Message message) {
+    public void receiveMessage(HttpServletRequest request) throws IOException {
+        String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        Message message = mapper.readValue(json, Message.class);
         long groupId = message.getGroupId();
         Optional<String> response = composer.respond(message);
         response.ifPresent(content -> {
