@@ -1,63 +1,47 @@
 package com.alexjamesmalcolm.dishbot.groupme;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.alexjamesmalcolm.dishbot.groupme.attachment.Attachment;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.List;
 
 import static java.lang.Long.parseLong;
+import static java.util.stream.Collectors.toList;
 
-public class Message extends Response {
+public class Message {
 
     private List attachments;
     private String avatar_url;
-    private String created_at;
-    private List favorited_by;
+    private Integer created_at;
+    private List<String> favorited_by;
     private String group_id;
     private String id;
     private String name;
     private String sender_id;
     private String sender_type;
     private String source_guid;
-    private String system;
+    private Boolean system;
     private String text;
     private String user_id;
     private String platform;
 
-//    @JsonCreator
-    private Message(
-            List attachments,
-            String avatarUrl,
-            String createdAt,
-            List favoritedBy,
-            String groupId,
-            String id,
-            String name,
-            String senderId,
-            String senderType,
-            String sourceGuid,
-            String system,
-            String text,
-            String userId,
-            String platform
-    ) {}
-
     private Message() {
     }
 
-    public URI getAvatar_url() {
-        return URI.create(avatar_url);
+    public URI getAvatarUrl() {
+        return avatar_url != null && !avatar_url.isEmpty() ? URI.create(avatar_url) : null;
     }
 
     private void setAvatar_url(String avatar_url) {
         this.avatar_url = avatar_url;
     }
 
-    public String getCreated_at() {
-        return created_at;
+    public Instant getCreatedAt() {
+        return Instant.ofEpochMilli(created_at);
     }
 
-    private void setCreated_at(String created_at) {
+    private void setCreated_at(Integer created_at) {
         this.created_at = created_at;
     }
 
@@ -85,7 +69,7 @@ public class Message extends Response {
         this.name = name;
     }
 
-    public String getSender_id() {
+    public String getSenderId() {
         return sender_id;
     }
 
@@ -93,7 +77,7 @@ public class Message extends Response {
         this.sender_id = sender_id;
     }
 
-    public String getSender_type() {
+    public String getSenderType() {
         return sender_type;
     }
 
@@ -101,7 +85,7 @@ public class Message extends Response {
         this.sender_type = sender_type;
     }
 
-    public String getSource_guid() {
+    public String getSourceGuid() {
         return source_guid;
     }
 
@@ -109,11 +93,11 @@ public class Message extends Response {
         this.source_guid = source_guid;
     }
 
-    public String getSystem() {
+    public Boolean getSystem() {
         return system;
     }
 
-    private void setSystem(String system) {
+    private void setSystem(Boolean system) {
         this.system = system;
     }
 
@@ -141,7 +125,7 @@ public class Message extends Response {
         this.platform = platform;
     }
 
-    public List getAttachments() {
+    public List<Attachment> getAttachments() {
         return attachments;
     }
 
@@ -149,8 +133,8 @@ public class Message extends Response {
         this.attachments = attachments;
     }
 
-    public List getFavorited_by() {
-        return favorited_by;
+    public List<Long> getFavoritedBy() {
+        return favorited_by.stream().map(Long::parseLong).collect(toList());
     }
 
     private void setFavorited_by(List favorited_by) {
