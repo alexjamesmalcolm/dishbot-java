@@ -2,9 +2,11 @@ package com.alexjamesmalcolm.dishbot.groupme;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.URI;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -69,7 +71,7 @@ public class Group {
         this.officeMode = parseBoolean(officeMode);
         this.shareUrl = parseToUri(shareUrl);
         this.shareQrCodeUrl = parseToUri(shareQrCodeUrl);
-        this.members = members;
+        this.members = Arrays.asList(new ObjectMapper().convertValue(members, Member[].class));
         this.maxMembers = parseLong(maxMembers);
         this.messageCount = (Integer) messages.get("count");
         this.lastMessageId = parseLong((String) messages.get("last_message_id"));

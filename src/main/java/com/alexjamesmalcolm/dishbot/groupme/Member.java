@@ -31,13 +31,18 @@ public class Member {
                    @JsonProperty("name") String name) {
         this.userId = parseLong(userId);
         this.nickname = nickname;
-        this.imageUrl = URI.create(imageUrl);
+        this.imageUrl = parseToUri(imageUrl);
         this.id = parseLong(id);
         this.muted = parseBoolean(muted);
         this.autokicked = parseBoolean(autokicked);
         this.roles = roles;
         this.name = name;
     }
+
+    private URI parseToUri(String url) {
+        return url != null && !url.isEmpty() ? URI.create(url) : null;
+    }
+
 
     public String getName() {
         return name;

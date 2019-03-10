@@ -102,4 +102,13 @@ public class GroupMeServiceTest {
         Long actual = me.getUserId();
         assertThat(actual, is(expected));
     }
+
+    @Test
+    public void shouldGetMyselfFromMyTestGroupAsAMember() {
+        String expected = "Alex Malcolm";
+        Group group = underTest.getGroup(groupId);
+        List<Member> members = group.getMembers();
+        Member member = members.get(0);
+        assertThat(member.getName(), is(expected));
+    }
 }
