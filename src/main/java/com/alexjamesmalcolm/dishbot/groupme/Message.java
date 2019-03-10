@@ -30,6 +30,8 @@ public class Message {
     private Long userId;
     private String platform;
 
+    private Message() {}
+
     @JsonCreator
     private Message(
             @JsonProperty("attachments") List<Map> attachments,
