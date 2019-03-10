@@ -94,4 +94,12 @@ public class GroupMeServiceTest {
         Group group = envelope.getResponse(Group.class);
         assertNotNull(group);
     }
+
+    @Test
+    public void shouldGetMeWithMyUserId() {
+        Long expected = 19742906L;
+        Me me = underTest.getMe();
+        Long actual = me.getUserId();
+        assertThat(actual, is(expected));
+    }
 }
