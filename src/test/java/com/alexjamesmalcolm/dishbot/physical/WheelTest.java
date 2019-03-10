@@ -1,11 +1,13 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
 import com.alexjamesmalcolm.dishbot.groupme.Member;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 
 import static java.lang.Thread.sleep;
@@ -135,13 +137,13 @@ public class WheelTest {
     @Test
     public void shouldGetOneSecondLessThanFourtyEightHoursUntilFineForCurrentMember() throws InterruptedException {
         long groupId = 123;
-        long expected = 1000;
+        BigDecimal expected = new BigDecimal(1000);
         Duration fineDuration = Duration.ofHours(48);
         Wheel wheel = new Wheel(groupId);
         wheel.addMember(memberOne);
-        sleep(expected);
+        sleep(expected.intValue());
         Duration actual = wheel.getDurationUntilFineForCurrent();
         Duration difference = fineDuration.minus(actual);
-        assertThat(difference.toMillis(), is(expected));
+        assertThat(BigDecimal.valueOf(difference.toMillis()), is(Matchers.closeTo(expected, BigDecimal.valueOf(10))));
     }
 }

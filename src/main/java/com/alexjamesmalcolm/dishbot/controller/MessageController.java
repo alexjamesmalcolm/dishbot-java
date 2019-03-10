@@ -31,7 +31,7 @@ public class MessageController {
         long groupId = message.getGroupId();
         Optional<String> response = composer.respond(message);
         response.ifPresent(content -> {
-            long botId = getBot(groupId).getBotId();
+            String botId = getBot(groupId).getBotId();
             groupMe.sendMessage(content, botId);
         });
         composer.tryToWarnAll();

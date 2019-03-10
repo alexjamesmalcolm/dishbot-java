@@ -1,161 +1,103 @@
 package com.alexjamesmalcolm.dishbot.groupme;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.net.URI;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.Boolean.parseBoolean;
 import static java.lang.Long.parseLong;
 
-public class Group implements Serializable {
+public class Group extends Response {
 
-    private String id;
-    private String group_id;
+    private Long id;
+    private Long groupId;
     private String name;
-    private String phone_number;
+    private String phoneNumber;
     private String type;
     private String description;
-    private String image_url;
-    private String creator_user_id;
-    private String created_at;
-    private String office_mode;
-    private String share_url;
-    private String share_qr_code_url;
+    private URI imageUrl;
+    private Long creatorUserId;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private Boolean officeMode;
+    private URI shareUrl;
+    private URI shareQrCodeUrl;
     private List<Member> members;
-    private Map messages;
-    private String max_members;
-    private String updated_at;
+    private Long maxMembers;
+    private Integer messageCount;
+    private Long lastMessageId;
+    private Instant lastMessageCreatedAt;
+    private String lastMessageSenderNickname;
+    private String lastMessageText;
+    private URI lastMessageSenderImageUrl;
+    private List lastMessageAttachments;
 
-    private Group() {
-    }
-
-    public Long getId() {
-        return parseLong(id);
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public long getGroupId() {
-        return parseLong(group_id);
-    }
-
-    public void setGroup_id(String group_id) {
-        this.group_id = group_id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    @JsonCreator
+    private Group(
+            @JsonProperty("id") String id,
+            @JsonProperty("group_id") String groupId,
+            @JsonProperty("name") String name,
+            @JsonProperty("phone_number") String phoneNumber,
+            @JsonProperty("type") String type,
+            @JsonProperty("description") String description,
+            @JsonProperty("image_url") String imageUrl,
+            @JsonProperty("creator_user_id") String creatorUserId,
+            @JsonProperty("created_at") String createdAt,
+            @JsonProperty("updated_at") String updatedAt,
+            @JsonProperty("office_mode") String officeMode,
+            @JsonProperty("share_url") String shareUrl,
+            @JsonProperty("share_qr_code_url") String shareQrCodeUrl,
+            @JsonProperty("members") List members,
+            @JsonProperty("messages") Map messages,
+            @JsonProperty("max_members") String maxMembers
+    ) {
+        this.id = parseLong(id);
+        this.groupId = parseLong(groupId);
         this.name = name;
-    }
-
-    public String getPhone_number() {
-        return phone_number;
-    }
-
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
+        this.phoneNumber = phoneNumber;
         this.type = type;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
         this.description = description;
+        this.imageUrl = parseToUri(imageUrl);
+        this.creatorUserId = parseLong(creatorUserId);
+        this.createdAt = Instant.ofEpochMilli(parseLong(createdAt));
+        this.updatedAt = Instant.ofEpochMilli(parseLong(updatedAt));
+        this.officeMode = parseBoolean(officeMode);
+        this.shareUrl = parseToUri(shareUrl);
+        this.shareQrCodeUrl = parseToUri(shareQrCodeUrl);
+        this.members = members;
+        this.maxMembers = parseLong(maxMembers);
+        this.messageCount = (Integer) messages.get("count");
+        this.lastMessageId = parseLong((String) messages.get("last_message_id"));
+        this.lastMessageCreatedAt = Instant.ofEpochMilli((Integer) messages.get("last_message_created_at"));
+        Map preview = (Map) messages.get("preview");
+        this.lastMessageSenderNickname = (String) preview.get("nickname");
+        this.lastMessageText = (String) preview.get("text");
+        this.lastMessageSenderImageUrl = parseToUri((String) preview.get("image_url"));
+        this.lastMessageAttachments = (List) preview.get("attachments");
     }
 
-    public URI getImage_url() {
-        return URI.create(image_url);
+    private URI parseToUri(String uri) {
+        return uri != null ? URI.create(uri) : null;
     }
 
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
-    }
-
-    public Long getCreator_user_id() {
-        return parseLong(creator_user_id);
-    }
-
-    public void setCreator_user_id(String creator_user_id) {
-        this.creator_user_id = creator_user_id;
-    }
-
-    public Instant getCreated_at() {
-        return Instant.ofEpochMilli(parseLong(created_at));
-    }
-
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
-    }
-
-    public Boolean getOffice_mode() {
-        return Boolean.parseBoolean(office_mode);
-    }
-
-    public void setOffice_mode(String office_mode) {
-        this.office_mode = office_mode;
-    }
-
-    public URI getShare_url() {
-        return URI.create(share_url);
-    }
-
-    public void setShare_url(String share_url) {
-        this.share_url = share_url;
-    }
-
-    public URI getShare_qr_code_url() {
-        return URI.create(share_qr_code_url);
-    }
-
-    public void setShare_qr_code_url(String share_qr_code_url) {
-        this.share_qr_code_url = share_qr_code_url;
-    }
-
-    public Integer getMax_members() {
-        return Integer.parseInt(max_members);
-    }
-
-    public void setMax_members(String max_members) {
-        this.max_members = max_members;
+    public Long getGroupId() {
+        return groupId;
     }
 
     public List<Member> getMembers() {
         return members;
     }
 
-    public void setMembers(List members) {
-        this.members = members;
+    public Optional<Member> queryForMember(Long userId) {
+        return members.stream().filter(member -> member.getUserId().equals(userId)).findFirst();
     }
 
-    public Map getMessages() {
-        return messages;
-    }
-
-    public void setMessages(Map messages) {
-        this.messages = messages;
-    }
-
-    public void setUpdated_at(String updated_at) {
-        this.updated_at = updated_at;
-    }
-
-    public Optional<Member> getMember(long userId) {
-        return getMembers().stream().filter(member -> member.getUserId() == userId).findFirst();
+    public Long getId() {
+        return id;
     }
 }

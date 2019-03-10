@@ -48,7 +48,7 @@ public class GroupMeService {
 
     public List<Bot> getBots(Long groupId) {
         List<Bot> bots = getBots();
-        return bots.stream().filter(bot -> bot.getGroup_id().equals(groupId)).collect(Collectors.toList());
+        return bots.stream().filter(bot -> bot.getGroupId().equals(groupId)).collect(Collectors.toList());
     }
 
     public List<Bot> getBots() {
@@ -94,12 +94,14 @@ public class GroupMeService {
         restTemplate.postForLocation(botMessageUrl, entity);
     }
 
-    public void sendMessage(String text, Long botId) {
+    public void sendMessage(String text, String botId) {
         BotMessage botMessage = new BotMessage(text, botId);
         sendMessage(botMessage);
     }
 
     private Envelope makeRequest(String path) {
+//        Object json = restTemplate.getForObject(path, Object.class);
+//        return objectMapper.convertValue(json, Envelope.class);
         return restTemplate.getForObject(path, Envelope.class);
     }
 }

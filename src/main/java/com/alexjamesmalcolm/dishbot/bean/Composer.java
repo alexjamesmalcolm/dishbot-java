@@ -46,7 +46,7 @@ public class Composer {
     private Optional<String> addUserCommand(Message message) {
         Group group = groupMe.getGroup(message);
         long userId = parseLong(message.getText().substring(5));
-        Optional<Member> potentialMember = group.getMember(userId);
+        Optional<Member> potentialMember = group.queryForMember(userId);
         if (potentialMember.isPresent()) {
             Wheel wheel = wheelRepo.findByGroupId(group.getGroupId());
             wheel.addMember(userId);
@@ -70,7 +70,7 @@ public class Composer {
     private Optional<String> timeLeftCommand(Message message) {
         long userId = message.getUserId();
         Group group = groupMe.getGroup(message);
-        Optional<Member> potentialMember = group.getMember(userId);
+        Optional<Member> potentialMember = group.queryForMember(userId);
         Member member = potentialMember.get();
         String name = member.getName();
         Wheel wheel = wheelRepo.findByGroupId(message.getGroupId());
@@ -88,8 +88,8 @@ public class Composer {
         em.flush();
         em.clear();
         Group group = groupMe.getGroup(message);
-        String firstName = group.getMember(currentMemberUserId).get().getName();
-        String secondName = group.getMember(nextMemberUserId).get().getName();
+        String firstName = group.queryForMember(currentMemberUserId).get().getName();
+        String secondName = group.queryForMember(nextMemberUserId).get().getName();
         return Optional.of(MessageFormat.format("Thank you for cleaning the dishes {0}! The next person on dishes is {1}.", firstName, secondName));
     }
 
@@ -98,11 +98,11 @@ public class Composer {
         wheels.stream().filter(Wheel::needToWarnCurrent).forEach(wheel -> {
             Group group = groupMe.getGroup(wheel.getGroupId());
             long currentId = wheel.getCurrentMemberUserId();
-            Member member = group.getMember(currentId).get();
+            Member member = group.queryForMember(currentId).get();
             String name = member.getName();
             Duration timeLeft = wheel.getDurationUntilFineForCurrent();
             String warning = name + " has " + timeLeft.toHours() + " hours left to do the dishes.";
-            long botId = groupMe.getBots(group.getGroupId()).get(0).getBotId();
+            String botId = groupMe.getBots(group.getGroupId()).get(0).getBotId();
             //TODO Come up with something better than just getting the first bot
             groupMe.sendMessage(warning, botId);
             wheel.currentHasBeenWarned();

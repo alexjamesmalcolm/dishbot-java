@@ -1,73 +1,51 @@
 package com.alexjamesmalcolm.dishbot.groupme;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.net.URI;
+
+import static java.lang.Boolean.parseBoolean;
 import static java.lang.Long.parseLong;
 
-public class Bot {
+public class Bot extends Response {
 
     private String name;
-    private String bot_id;
-    private String group_id;
-    private String group_name;
-    private String avatar_url;
-    private String callback_url;
-    private String dm_notification;
+    private String botId;
+    private Long groupId;
+    private String groupName;
+    private URI avatarUrl;
+    private URI callbackUrl;
+    private Boolean dmNotification;
 
-    private Bot() {
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    private void setName(String name) {
+    @JsonCreator
+    private Bot(
+            @JsonProperty("name") String name,
+            @JsonProperty("bot_id") String botId,
+            @JsonProperty("group_id") String groupId,
+            @JsonProperty("group_name") String groupName,
+            @JsonProperty("avatar_url") String avatarUrl,
+            @JsonProperty("callback_url") String callbackUrl,
+            @JsonProperty("dm_notification") String dmNotification
+    ) {
         this.name = name;
+        this.botId = botId;
+        this.groupId = parseLong(groupId);
+        this.groupName = groupName;
+        this.avatarUrl = parseToUri(avatarUrl);
+        this.callbackUrl = parseToUri(callbackUrl);
+        this.dmNotification = parseBoolean(dmNotification);
     }
 
-    public long getBotId() {
-        return parseLong(bot_id);
+    private URI parseToUri(String uri) {
+        return uri != null ? URI.create(uri) : null;
     }
 
-    private void setBot_id(String bot_id) {
-        this.bot_id = bot_id;
+    public String getBotId() {
+        return botId;
     }
 
-    public Long getGroup_id() {
-        return parseLong(group_id);
-    }
-
-    private void setGroup_id(String group_id) {
-        this.group_id = group_id;
-    }
-
-    public String getGroupName() {
-        return group_name;
-    }
-
-    private void setGroup_name(String group_name) {
-        this.group_name = group_name;
-    }
-
-    public String getAvatarUrl() {
-        return avatar_url;
-    }
-
-    private void setAvatar_url(String avatar_url) {
-        this.avatar_url = avatar_url;
-    }
-
-    public String getCallbackUrl() {
-        return callback_url;
-    }
-
-    private void setCallback_url(String callback_url) {
-        this.callback_url = callback_url;
-    }
-
-    public String getDmNotification() {
-        return dm_notification;
-    }
-
-    private void setDm_notification(String dm_notification) {
-        this.dm_notification = dm_notification;
+    public Long getGroupId() {
+        return groupId;
     }
 }

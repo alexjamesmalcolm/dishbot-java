@@ -1,11 +1,13 @@
 package com.alexjamesmalcolm.dishbot.groupme;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.net.URI;
 import java.util.List;
 
 import static java.lang.Long.parseLong;
 
-public class Message {
+public class Message extends Response {
 
     private List attachments;
     private String avatar_url;
@@ -22,6 +24,24 @@ public class Message {
     private String user_id;
     private String platform;
 
+//    @JsonCreator
+    private Message(
+            List attachments,
+            String avatarUrl,
+            String createdAt,
+            List favoritedBy,
+            String groupId,
+            String id,
+            String name,
+            String senderId,
+            String senderType,
+            String sourceGuid,
+            String system,
+            String text,
+            String userId,
+            String platform
+    ) {}
+
     private Message() {
     }
 
@@ -29,7 +49,7 @@ public class Message {
         return URI.create(avatar_url);
     }
 
-    public void setAvatar_url(String avatar_url) {
+    private void setAvatar_url(String avatar_url) {
         this.avatar_url = avatar_url;
     }
 
@@ -37,7 +57,7 @@ public class Message {
         return created_at;
     }
 
-    public void setCreated_at(String created_at) {
+    private void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
 
@@ -45,7 +65,7 @@ public class Message {
         return parseLong(group_id);
     }
 
-    public void setGroup_id(String group_id) {
+    private void setGroup_id(String group_id) {
         this.group_id = group_id;
     }
 
@@ -53,7 +73,7 @@ public class Message {
         return id;
     }
 
-    public void setId(String id) {
+    private void setId(String id) {
         this.id = id;
     }
 
@@ -61,7 +81,7 @@ public class Message {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -69,7 +89,7 @@ public class Message {
         return sender_id;
     }
 
-    public void setSender_id(String sender_id) {
+    private void setSender_id(String sender_id) {
         this.sender_id = sender_id;
     }
 
@@ -77,7 +97,7 @@ public class Message {
         return sender_type;
     }
 
-    public void setSender_type(String sender_type) {
+    private void setSender_type(String sender_type) {
         this.sender_type = sender_type;
     }
 
@@ -85,7 +105,7 @@ public class Message {
         return source_guid;
     }
 
-    public void setSource_guid(String source_guid) {
+    private void setSource_guid(String source_guid) {
         this.source_guid = source_guid;
     }
 
@@ -93,7 +113,7 @@ public class Message {
         return system;
     }
 
-    public void setSystem(String system) {
+    private void setSystem(String system) {
         this.system = system;
     }
 
@@ -101,7 +121,7 @@ public class Message {
         return text;
     }
 
-    public void setText(String text) {
+    private void setText(String text) {
         this.text = text;
     }
 
@@ -109,7 +129,7 @@ public class Message {
         return parseLong(user_id);
     }
 
-    public void setUser_id(String user_id) {
+    private void setUser_id(String user_id) {
         this.user_id = user_id;
     }
 
@@ -117,7 +137,7 @@ public class Message {
         return platform;
     }
 
-    public void setPlatform(String platform) {
+    private void setPlatform(String platform) {
         this.platform = platform;
     }
 
@@ -125,7 +145,7 @@ public class Message {
         return attachments;
     }
 
-    public void setAttachments(List attachments) {
+    private void setAttachments(List attachments) {
         this.attachments = attachments;
     }
 
@@ -133,7 +153,7 @@ public class Message {
         return favorited_by;
     }
 
-    public void setFavorited_by(List favorited_by) {
+    private void setFavorited_by(List favorited_by) {
         this.favorited_by = favorited_by;
     }
 }
