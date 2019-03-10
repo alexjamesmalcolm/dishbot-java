@@ -48,7 +48,8 @@ public class Composer {
         long userId = parseLong(message.getText().substring(5));
         Optional<Member> potentialMember = group.queryForMember(userId);
         if (potentialMember.isPresent()) {
-            Wheel wheel = wheelRepo.findByGroupId(group.getGroupId());
+            Optional<Wheel> potentialWheel = wheelRepo.findByGroupId(group.getGroupId());
+            Wheel wheel = potentialWheel.orElse(new Wheel(group.getGroupId()));
             wheel.addMember(userId);
             wheelRepo.save(wheel);
             em.flush();
