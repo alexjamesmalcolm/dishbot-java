@@ -5,6 +5,7 @@ import com.alexjamesmalcolm.dishbot.groupme.*;
 import com.alexjamesmalcolm.dishbot.logical.BotMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

@@ -2,9 +2,11 @@ package com.alexjamesmalcolm.dishbot.bean;
 
 import com.alexjamesmalcolm.dishbot.Properties;
 import com.alexjamesmalcolm.dishbot.groupme.*;
+import com.alexjamesmalcolm.dishbot.logical.BotMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -110,5 +112,15 @@ public class GroupMeServiceTest {
         List<Member> members = group.getMembers();
         Member member = members.get(0);
         assertThat(member.getName(), is(expected));
+    }
+
+    @Ignore
+    @Test
+    public void shouldTrySendingABotMessage() {
+        List<Bot> bots = underTest.getBots(groupId);
+        Bot bot = bots.get(0);
+        String id = bot.getBotId();
+        BotMessage message = new BotMessage("Test", id);
+        underTest.sendMessage(message);
     }
 }

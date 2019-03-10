@@ -1,19 +1,23 @@
 package com.alexjamesmalcolm.dishbot.logical;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class BotMessage {
     private final String text;
-    private final String bot_id;
+    private final String botId;
 
-    public BotMessage(String text, String bot_id) {
+    public BotMessage(String text, String botId) {
         this.text = text;
-        this.bot_id = bot_id;
+        this.botId = botId;
     }
 
+    @JsonProperty("text")
     public String getText() {
         return text;
     }
 
+    @JsonProperty("bot_id")
     public String getBotId() {
-        return bot_id;
+        return botId;
     }
 }
