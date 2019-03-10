@@ -12,7 +12,7 @@ import java.util.Optional;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Long.parseLong;
 
-public class Group extends Response {
+public class Group {
 
     private Long id;
     private Long groupId;

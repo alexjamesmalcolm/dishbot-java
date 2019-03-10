@@ -10,7 +10,7 @@ import java.util.Map;
 
 import static java.lang.Long.parseLong;
 
-public class Me extends Response {
+public class Me {
 
     private Instant createdAt;
     private String email;

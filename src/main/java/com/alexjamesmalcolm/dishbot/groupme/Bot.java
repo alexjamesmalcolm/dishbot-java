@@ -8,7 +8,7 @@ import java.net.URI;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Long.parseLong;
 
-public class Bot extends Response {
+public class Bot {
 
     private String name;
     private String botId;
