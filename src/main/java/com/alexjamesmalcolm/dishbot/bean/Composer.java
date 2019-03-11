@@ -81,7 +81,7 @@ public class Composer {
             long hours = durationUntilFine.toHours();
             return Optional.of(name + " has " + hours + " hours to do the dishes.");
         }
-        return Optional.of("This group does not have a Dish Wheel.");
+        return Optional.of("This group's Dish Wheel is empty, add someone to it using the !Add <USER_ID> and !Ids commands");
     }
 
     private Optional<String> dishesDoneCommand(Message message) {
