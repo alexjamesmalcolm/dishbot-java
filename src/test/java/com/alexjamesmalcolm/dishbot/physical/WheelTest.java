@@ -20,18 +20,16 @@ public class WheelTest {
 
     @Mock
     private Member memberOne;
-    private long firstUserId;
 
     @Mock
     private Member memberTwo;
-    private long secondUserId;
 
     private long groupId = 123;
 
     @Before
     public void setup() {
-        firstUserId = 100L;
-        secondUserId = 200L;
+        long firstUserId = 100L;
+        long secondUserId = 200L;
         MockitoAnnotations.initMocks(this);
         when(memberOne.getUserId()).thenReturn(firstUserId);
         when(memberTwo.getUserId()).thenReturn(secondUserId);
