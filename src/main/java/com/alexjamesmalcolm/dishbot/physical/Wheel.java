@@ -1,7 +1,6 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
 import com.alexjamesmalcolm.dishbot.groupme.Member;
-import com.alexjamesmalcolm.dishbot.groupme.Message;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -11,6 +10,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 public class Wheel {
@@ -26,6 +27,7 @@ public class Wheel {
     private Duration fineDuration;
     private Instant currentStart;
     private boolean hasWarnedCurrent;
+    private Double fineAmount;
 
     private Wheel() {
     }
@@ -35,11 +37,17 @@ public class Wheel {
         this.groupId = groupId;
         this.fineDuration = Duration.ofHours(48);
         hasWarnedCurrent = false;
+        this.fineAmount = 5.0;
     }
 
     public Wheel(long groupId, Duration fineDuration) {
         this(groupId);
         this.fineDuration = fineDuration;
+    }
+
+    public Wheel(long groupId, Double fineAmount) {
+        this(groupId);
+        this.fineAmount = fineAmount;
     }
 
     public long getId() {
@@ -108,5 +116,13 @@ public class Wheel {
 
     public long getGroupId() {
         return groupId;
+    }
+
+    public Double getFineAmount() {
+        return fineAmount;
+    }
+
+    public Map<Long, Double> getFineAmounts() {
+        return userIds.stream().collect(Collectors.toMap(userId -> userId, userId -> 0.0));
     }
 }

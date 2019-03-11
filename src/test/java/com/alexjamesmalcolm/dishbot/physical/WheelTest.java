@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.util.Map;
 
 import static java.lang.Thread.sleep;
 import static org.hamcrest.Matchers.is;
@@ -145,5 +146,34 @@ public class WheelTest {
         Duration actual = wheel.getDurationUntilFineForCurrent();
         Duration difference = fineDuration.minus(actual);
         assertThat(BigDecimal.valueOf(difference.toMillis()), is(Matchers.closeTo(expected, BigDecimal.valueOf(10))));
+    }
+
+    @Test
+    public void shouldGetDefaultFineOfFiveDollars() {
+        long groupId = 123;
+        Double expected = 5.0;
+        Wheel wheel = new Wheel(groupId);
+        Double fine = wheel.getFineAmount();
+        assertThat(fine, is(expected));
+    }
+
+    @Test
+    public void shouldGetConstructorSetTenDollars() {
+        long groupId = 123;
+        Double expected = 10.0;
+        Wheel wheel = new Wheel(groupId, expected);
+        Double fine = wheel.getFineAmount();
+        assertThat(fine, is(expected));
+    }
+
+    @Test
+    public void shouldAddMemberAndThenGetTheirFineAsZero() {
+        long groupId = 123;
+        Double expected = 0.0;
+        Wheel wheel = new Wheel(groupId);
+        wheel.addMember(memberOne);
+        Map<Long, Double> fineAmounts = wheel.getFineAmounts();
+        Double actual = fineAmounts.get(memberOne.getUserId());
+        assertThat(actual, is(expected));
     }
 }
