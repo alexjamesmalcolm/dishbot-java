@@ -37,12 +37,11 @@ public class MessageController {
     @RequestMapping("/receive-message")
     public void receiveMessage(HttpServletRequest request) throws IOException {
         String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        Message message = mapper.readValue(json, Message.class);
         Map<String, Object> info = new HashMap<>();
         info.put("json", json);
-        log.info("Received a message", info);
-        Message message = mapper.readValue(json, Message.class);
         info.put("message", message);
-        log.info("Parsed message", info);
+        log.info("Received Message", info);
         long groupId = message.getGroupId();
         Optional<String> response = composer.respond(message);
         response.ifPresent(content -> {
