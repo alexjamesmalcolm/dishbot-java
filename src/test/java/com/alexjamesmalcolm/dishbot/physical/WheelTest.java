@@ -13,8 +13,7 @@ import java.util.Map;
 
 import static java.lang.Thread.sleep;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class WheelTest {
@@ -160,7 +159,7 @@ public class WheelTest {
         Double expected = 0.0;
         Wheel wheel = new Wheel(groupId);
         wheel.addMember(memberOne);
-        Map<Long, Double> fineAmounts = wheel.getFineAmounts();
+        Map<Long, Double> fineAmounts = wheel.getFines();
         Double actual = fineAmounts.get(memberOne.getUserId());
         assertThat(actual, is(expected));
     }
@@ -194,7 +193,7 @@ public class WheelTest {
         wheel.addMember(memberOne);
         wheel.addMember(memberTwo);
         wheel.giveFine(memberOne);
-        Map<Long, Double> fineAmounts = wheel.getFineAmounts();
+        Map<Long, Double> fineAmounts = wheel.getFines();
         Double actual = fineAmounts.get(memberOne.getUserId());
         assertThat(actual, is(expected));
     }
@@ -207,8 +206,29 @@ public class WheelTest {
         wheel.addMember(memberTwo);
         wheel.giveFine(memberOne);
         wheel.giveFine(memberOne.getUserId());
-        Map<Long, Double> fineAmounts = wheel.getFineAmounts();
+        Map<Long, Double> fineAmounts = wheel.getFines();
         Double actual = fineAmounts.get(memberOne.getUserId());
         assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldHaveCurrentMemberBeRemovedAsCurrentWhenRemovedFromWheel() {
+        Wheel wheel = new Wheel(groupId);
+        Long expected = memberTwo.getUserId();
+        wheel.addMember(memberOne);
+        wheel.addMember(memberTwo);
+        wheel.removeMember(memberOne);
+        Long actual = wheel.getCurrentMemberUserId();
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldRemoveUserFromFinesWhenRemovingUserFromWheel() {
+        Wheel wheel = new Wheel(groupId);
+        wheel.addMember(memberOne);
+        wheel.addMember(memberTwo);
+        wheel.removeMember(memberOne);
+        Map<Long, Double> fines = wheel.getFines();
+        assertFalse(fines.containsKey(memberOne.getUserId()));
     }
 }

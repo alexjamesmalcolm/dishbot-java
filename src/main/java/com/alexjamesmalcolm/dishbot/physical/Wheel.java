@@ -127,7 +127,7 @@ public class Wheel {
         return fineAmount;
     }
 
-    public Map<Long, Double> getFineAmounts() {
+    public Map<Long, Double> getFines() {
         return fines;
     }
 
@@ -146,6 +146,12 @@ public class Wheel {
     }
 
     public void removeMember(Long userId) {
+        advanceWheel();
+        fines.remove(userId);
         userIds.remove(userId);
+    }
+
+    public void removeMember(Member member) {
+        removeMember(member.getUserId());
     }
 }

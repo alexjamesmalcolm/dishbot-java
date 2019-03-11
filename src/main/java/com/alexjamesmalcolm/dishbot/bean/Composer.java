@@ -55,7 +55,7 @@ public class Composer {
             return Optional.of(EMPTY_DISH_WHEEL_WARNING);
         }
         Wheel wheel = optionalWheel.get();
-        Map<Long, Double> fines = wheel.getFineAmounts();
+        Map<Long, Double> fines = wheel.getFines();
         String text = "Fines:" + fines.keySet().stream().map(userId -> {
             Optional<Member> optionalMember = group.queryForMember(userId);
             if (!optionalMember.isPresent()) {
