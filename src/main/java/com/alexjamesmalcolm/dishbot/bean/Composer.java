@@ -20,6 +20,7 @@ import static java.lang.Long.parseLong;
 @Service
 public class Composer {
 
+    public static final String EMPTY_DISH_WHEEL_WARNING = "This group's Dish Wheel is empty, add someone to it using the !Add <USER_ID> and !Ids commands";
     @Resource
     private WheelRepository wheelRepo;
 
@@ -75,17 +76,20 @@ public class Composer {
         Member member = potentialMember.get();
         String name = member.getName();
         Optional<Wheel> potentialWheel = wheelRepo.findByGroupId(message.getGroupId());
-        if (potentialWheel.isPresent()) {
-            Wheel wheel = potentialWheel.get();
-            Duration durationUntilFine = wheel.getDurationUntilFineForCurrent();
-            long hours = durationUntilFine.toHours();
-            return Optional.of(name + " has " + hours + " hours to do the dishes.");
+        if (!potentialWheel.isPresent()) {
+            return Optional.of(EMPTY_DISH_WHEEL_WARNING);
         }
-        return Optional.of("This group's Dish Wheel is empty, add someone to it using the !Add <USER_ID> and !Ids commands");
+        Wheel wheel = potentialWheel.get();
+        Duration durationUntilFine = wheel.getDurationUntilFineForCurrent();
+        long hours = durationUntilFine.toHours();
+        return Optional.of(name + " has " + hours + " hours to do the dishes.");
     }
 
     private Optional<String> dishesDoneCommand(Message message) {
         Optional<Wheel> potentialWheel = wheelRepo.findByGroupId(message.getGroupId());
+        if (!potentialWheel.isPresent()) {
+            return Optional.of(EMPTY_DISH_WHEEL_WARNING);
+        }
         Wheel wheel = potentialWheel.get();
         long currentMemberUserId = wheel.getCurrentMemberUserId();
         wheel.advanceWheel();
