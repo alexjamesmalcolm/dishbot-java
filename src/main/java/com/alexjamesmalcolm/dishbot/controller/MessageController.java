@@ -1,11 +1,12 @@
 package com.alexjamesmalcolm.dishbot.controller;
 
-import com.alexjamesmalcolm.dishbot.bean.GroupMeService;
 import com.alexjamesmalcolm.dishbot.bean.Composer;
+import com.alexjamesmalcolm.dishbot.bean.GroupMeService;
 import com.alexjamesmalcolm.dishbot.groupme.Bot;
 import com.alexjamesmalcolm.dishbot.groupme.Group;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rollbar.notifier.Rollbar;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -31,11 +30,19 @@ public class MessageController {
     @Resource
     private ObjectMapper mapper;
 
+    @Resource
+    private Rollbar log;
+
     @Transactional
     @RequestMapping("/receive-message")
     public void receiveMessage(HttpServletRequest request) throws IOException {
         String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        Map<String, Object> info = new HashMap<>();
+        info.put("json", json);
+        log.info("Received a message", info);
         Message message = mapper.readValue(json, Message.class);
+        info.put("message", message);
+        log.info("Parsed message", info);
         long groupId = message.getGroupId();
         Optional<String> response = composer.respond(message);
         response.ifPresent(content -> {

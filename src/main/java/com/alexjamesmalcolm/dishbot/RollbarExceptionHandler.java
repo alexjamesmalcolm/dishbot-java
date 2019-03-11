@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 public class RollbarExceptionHandler {
 
     @Resource
-    Rollbar rollbar;
+    private Rollbar rollbar;
 
     @ExceptionHandler(Exception.class)
     public String defaultExceptionHandler(Model model, HttpServletRequest request, Exception e) {
