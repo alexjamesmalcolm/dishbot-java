@@ -21,7 +21,8 @@ import static java.util.Locale.US;
 @Service
 public class Composer {
 
-    public static final String EMPTY_DISH_WHEEL_WARNING = "This group's Dish Wheel is empty, add someone to it by using the !Ids and !Add <USER_ID> commands.";
+    private static final String EMPTY_DISH_WHEEL_WARNING = "This group's Dish Wheel is empty, add someone to it by using the !Ids and !Add <USER_ID> commands.";
+
     @Resource
     private WheelRepository wheelRepo;
 
@@ -94,7 +95,7 @@ public class Composer {
     private Optional<String> memberIdsCommand(Message message) {
         Group group = groupMe.getGroup(message);
         List<Member> members = group.getMembers();
-        String response = members.stream().map(member -> member.getName() + " -> " + member.getUserId()).reduce((first, second) -> first + "\n" + second).orElse("");
+        String response = "User IDs:\n" + members.stream().map(member -> member.getName() + " -> " + member.getUserId()).reduce((first, second) -> first + "\n" + second).orElse("");
         return Optional.of(response);
     }
 
@@ -102,6 +103,9 @@ public class Composer {
         long userId = message.getUserId();
         Group group = groupMe.getGroup(message);
         Optional<Member> potentialMember = group.queryForMember(userId);
+        if (!potentialMember.isPresent()) {
+            return Optional.empty();
+        }
         Member member = potentialMember.get();
         String name = member.getName();
         Optional<Wheel> potentialWheel = wheelRepo.findByGroupId(message.getGroupId());
@@ -137,14 +141,19 @@ public class Composer {
         wheels.stream().filter(Wheel::needToWarnCurrent).forEach(wheel -> {
             Group group = groupMe.getGroup(wheel.getGroupId());
             long currentId = wheel.getCurrentMemberUserId();
-            Member member = group.queryForMember(currentId).get();
-            String name = member.getName();
-            Duration timeLeft = wheel.getDurationUntilFineForCurrent();
-            String warning = name + " has " + timeLeft.toHours() + " hours left to do the dishes.";
-            String botId = groupMe.getBots(group.getGroupId()).get(0).getBotId();
-            //TODO Come up with something better than just getting the first bot
-            groupMe.sendMessage(warning, botId);
-            wheel.currentHasBeenWarned();
+            Optional<Member> optionalMember = group.queryForMember(currentId);
+            if (optionalMember.isPresent()) {
+                Member member = optionalMember.get();
+                String name = member.getName();
+                Duration timeLeft = wheel.getDurationUntilFineForCurrent();
+                String warning = name + " has " + timeLeft.toHours() + " hours left to do the dishes.";
+                String botId = groupMe.getBots(group.getGroupId()).get(0).getBotId();
+                //TODO Come up with something better than just getting the first bot
+                groupMe.sendMessage(warning, botId);
+                wheel.currentHasBeenWarned();
+            } else {
+                wheel.removeMember(currentId);
+            }
             wheelRepo.save(wheel);
         });
     }

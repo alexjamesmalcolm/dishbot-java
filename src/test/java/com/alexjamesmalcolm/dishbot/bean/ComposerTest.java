@@ -170,7 +170,7 @@ public class ComposerTest {
 
         String response = underTest.respond(message).get();
 
-        String expected = currentName + " -> " + currentMemberUserId + "\n" + nextName + " -> " + nextMemberUserId;
+        String expected = "User IDs:\n" + currentName + " -> " + currentMemberUserId + "\n" + nextName + " -> " + nextMemberUserId;
         assertThat(response, is(expected));
     }
 
@@ -187,7 +187,7 @@ public class ComposerTest {
 
         String response = underTest.respond(message).get();
 
-        String expected = currentName + " -> " + currentMemberUserId + "\n" + nextName + " -> " + nextMemberUserId;
+        String expected = "User IDs:\n" + currentName + " -> " + currentMemberUserId + "\n" + nextName + " -> " + nextMemberUserId;
         assertThat(response, is(expected));
     }
 
