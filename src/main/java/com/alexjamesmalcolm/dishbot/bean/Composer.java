@@ -75,10 +75,13 @@ public class Composer {
         Member member = potentialMember.get();
         String name = member.getName();
         Optional<Wheel> potentialWheel = wheelRepo.findByGroupId(message.getGroupId());
-        Wheel wheel = potentialWheel.get();
-        Duration durationUntilFine = wheel.getDurationUntilFineForCurrent();
-        long hours = durationUntilFine.toHours();
-        return Optional.of(name + " has " + hours + " hours to do the dishes.");
+        if (potentialWheel.isPresent()) {
+            Wheel wheel = potentialWheel.get();
+            Duration durationUntilFine = wheel.getDurationUntilFineForCurrent();
+            long hours = durationUntilFine.toHours();
+            return Optional.of(name + " has " + hours + " hours to do the dishes.");
+        }
+        return Optional.of("This group does not have a Dish Wheel.");
     }
 
     private Optional<String> dishesDoneCommand(Message message) {
