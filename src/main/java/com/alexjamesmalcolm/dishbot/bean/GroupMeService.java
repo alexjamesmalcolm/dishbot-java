@@ -5,7 +5,6 @@ import com.alexjamesmalcolm.dishbot.groupme.*;
 import com.alexjamesmalcolm.dishbot.logical.BotMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,7 +28,7 @@ public class GroupMeService {
     private Properties properties;
 
     public Group getGroup(Long groupId) {
-        String path = properties.getBaseUrl() + "/groups/" + groupId + "?token=" + properties.getAccessToken();
+        String path = properties.getBaseUrl() + "/groups/" + groupId + "?token=" + properties.getGroupMeAccessToken();
         Envelope envelope = makeRequest(path);
         return envelope.getResponse(Group.class);
     }
@@ -40,7 +39,7 @@ public class GroupMeService {
     }
 
     public List<Message> getMessages(Long groupId) {
-        String path = properties.getBaseUrl() + "/groups/" + groupId + "/messages?token=" + properties.getAccessToken();
+        String path = properties.getBaseUrl() + "/groups/" + groupId + "/messages?token=" + properties.getGroupMeAccessToken();
         Map json = restTemplate.getForObject(path, Map.class);
         Map response = (Map) json.get("response");
         Message[] messages = objectMapper.convertValue(response.get("messages"), Message[].class);
@@ -53,14 +52,14 @@ public class GroupMeService {
     }
 
     public List<Bot> getBots() {
-        String path = properties.getBaseUrl() + "/bots?token=" + properties.getAccessToken();
+        String path = properties.getBaseUrl() + "/bots?token=" + properties.getGroupMeAccessToken();
         Map json = restTemplate.getForObject(path, Map.class);
         Bot[] bots = objectMapper.convertValue(json.get("response"), Bot[].class);
         return Arrays.asList(bots);
     }
 
     public List<Group> getAllGroups() {
-        String path = properties.getBaseUrl() + "/groups?token=" + properties.getAccessToken();
+        String path = properties.getBaseUrl() + "/groups?token=" + properties.getGroupMeAccessToken();
         Map json = restTemplate.getForObject(path, Map.class);
         Group[] groups = objectMapper.convertValue(json.get("response"), Group[].class);
         return Arrays.asList(groups);
@@ -84,7 +83,7 @@ public class GroupMeService {
     }
 
     public Me getMe() {
-        String path = properties.getBaseUrl() + "/users/me?token=" + properties.getAccessToken();
+        String path = properties.getBaseUrl() + "/users/me?token=" + properties.getGroupMeAccessToken();
         Envelope envelope = makeRequest(path);
         return envelope.getResponse(Me.class);
     }

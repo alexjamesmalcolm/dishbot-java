@@ -13,6 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNotNull;
@@ -70,7 +72,8 @@ public class WheelJpaTest {
         em.persist(wheel);
         em.flush();
         em.clear();
-        wheel = wheelRepo.findByGroupId(groupId);
+        Optional<Wheel> potentialWheel = wheelRepo.findByGroupId(groupId);
+        wheel = potentialWheel.get();
         assertNotNull(wheel);
     }
 
@@ -83,7 +86,8 @@ public class WheelJpaTest {
         em.persist(wheel);
         em.flush();
         em.clear();
-        wheel = wheelRepo.findByGroupId(groupId);
+        Optional<Wheel> potentialWheel = wheelRepo.findByGroupId(groupId);
+        wheel = potentialWheel.get();
         long userId = wheel.getCurrentMemberUserId();
         assertThat(userId, is(memberOne.getUserId()));
     }

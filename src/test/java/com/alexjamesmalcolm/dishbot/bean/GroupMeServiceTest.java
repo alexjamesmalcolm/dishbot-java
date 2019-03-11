@@ -81,7 +81,7 @@ public class GroupMeServiceTest {
 
     @Test
     public void checkThatGroupMeIsAvailable() {
-        Map json = restTemplate.getForObject(properties.getBaseUrl() + "/users/me?token=" + properties.getAccessToken(), Map.class);
+        Map json = restTemplate.getForObject(properties.getBaseUrl() + "/users/me?token=" + properties.getGroupMeAccessToken(), Map.class);
         ObjectMapper objectMapper = new ObjectMapper();
         Me me = objectMapper.convertValue(json.get("response"), Me.class);
         assertNotNull(me);
@@ -89,7 +89,7 @@ public class GroupMeServiceTest {
 
     @Test
     public void shouldGetGroupFromWrappedEnvelope() {
-        String path = properties.getBaseUrl() + "/groups/" + groupId + "?token=" + properties.getAccessToken();
+        String path = properties.getBaseUrl() + "/groups/" + groupId + "?token=" + properties.getGroupMeAccessToken();
         Map rawEnvelope = restTemplate.getForObject(path, Map.class);
         ObjectMapper objectMapper = new ObjectMapper();
         Envelope envelope = objectMapper.convertValue(rawEnvelope, Envelope.class);

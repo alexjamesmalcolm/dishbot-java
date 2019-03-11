@@ -74,14 +74,16 @@ public class Composer {
         Optional<Member> potentialMember = group.queryForMember(userId);
         Member member = potentialMember.get();
         String name = member.getName();
-        Wheel wheel = wheelRepo.findByGroupId(message.getGroupId());
+        Optional<Wheel> potentialWheel = wheelRepo.findByGroupId(message.getGroupId());
+        Wheel wheel = potentialWheel.get();
         Duration durationUntilFine = wheel.getDurationUntilFineForCurrent();
         long hours = durationUntilFine.toHours();
         return Optional.of(name + " has " + hours + " hours to do the dishes.");
     }
 
     private Optional<String> dishesDoneCommand(Message message) {
-        Wheel wheel = wheelRepo.findByGroupId(message.getGroupId());
+        Optional<Wheel> potentialWheel = wheelRepo.findByGroupId(message.getGroupId());
+        Wheel wheel = potentialWheel.get();
         long currentMemberUserId = wheel.getCurrentMemberUserId();
         wheel.advanceWheel();
         long nextMemberUserId = wheel.getCurrentMemberUserId();

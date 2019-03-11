@@ -19,7 +19,8 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 public class ComposerTest {
@@ -66,8 +67,8 @@ public class ComposerTest {
         wheel = new Wheel(groupId);
         wheel.addMember(currentMember);
         wheel.addMember(nextMember);
-        when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(wheel);
-        when(wheelRepo.findByGroupId(groupId)).thenReturn(wheel);
+        when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(Optional.of(wheel));
+        when(wheelRepo.findByGroupId(groupId)).thenReturn(Optional.of(wheel));
     }
 
     @Test
@@ -148,8 +149,8 @@ public class ComposerTest {
         wheel = new Wheel(groupId, Duration.ofHours(hours));
         wheel.addMember(currentMember);
         wheel.addMember(nextMember);
-        when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(wheel);
-        when(wheelRepo.findByGroupId(groupId)).thenReturn(wheel);
+        when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(Optional.of(wheel));
+        when(wheelRepo.findByGroupId(groupId)).thenReturn(Optional.of(wheel));
         when(currentMember.getName()).thenReturn(currentName);
         String expected = currentName + " has " + hours + " hours to do the dishes.";
         String response = underTest.respond(message).get();
@@ -199,7 +200,7 @@ public class ComposerTest {
         List<Member> members = Arrays.asList(currentMember, nextMember);
         when(group.getMembers()).thenReturn(members);
         when(group.queryForMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
-        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(wheel);
+        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(Optional.of(wheel));
 
         String response = underTest.respond(message).get();
 
@@ -216,7 +217,7 @@ public class ComposerTest {
         List<Member> members = Arrays.asList(currentMember, nextMember);
         when(group.getMembers()).thenReturn(members);
         when(group.queryForMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
-        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(wheel);
+        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(Optional.of(wheel));
 
         String response = underTest.respond(message).get();
 
@@ -229,7 +230,7 @@ public class ComposerTest {
         long badId = 432198764321L;
         String text = "!Add " + badId;
         when(message.getText()).thenReturn(text);
-        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(wheel);
+        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(Optional.of(wheel));
 
         String response = underTest.respond(message).get();
 
@@ -247,9 +248,9 @@ public class ComposerTest {
         when(group.getMembers()).thenReturn(members);
         when(group.queryForMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
         wheel = new Wheel(groupId);
-        when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(wheel);
-        when(wheelRepo.findByGroupId(groupId)).thenReturn(wheel);
-        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(wheel);
+        when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(Optional.of(wheel));
+        when(wheelRepo.findByGroupId(groupId)).thenReturn(Optional.of(wheel));
+        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(Optional.of(wheel));
 
         underTest.respond(message).get();
 
@@ -268,9 +269,9 @@ public class ComposerTest {
         when(group.getMembers()).thenReturn(members);
         when(group.queryForMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
         wheel = new Wheel(groupId);
-        when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(wheel);
-        when(wheelRepo.findByGroupId(groupId)).thenReturn(wheel);
-        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(wheel);
+        when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(Optional.of(wheel));
+        when(wheelRepo.findByGroupId(groupId)).thenReturn(Optional.of(wheel));
+        when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(Optional.of(wheel));
 
         underTest.respond(message).get();
 
