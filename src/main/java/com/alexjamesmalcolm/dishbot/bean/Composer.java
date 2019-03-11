@@ -20,7 +20,7 @@ import static java.lang.Long.parseLong;
 @Service
 public class Composer {
 
-    public static final String EMPTY_DISH_WHEEL_WARNING = "This group's Dish Wheel is empty, add someone to it using the !Add <USER_ID> and !Ids commands";
+    public static final String EMPTY_DISH_WHEEL_WARNING = "This group's Dish Wheel is empty, add someone to it by using the !Ids and !Add <USER_ID> commands.";
     @Resource
     private WheelRepository wheelRepo;
 
