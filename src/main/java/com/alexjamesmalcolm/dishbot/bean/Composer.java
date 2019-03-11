@@ -10,12 +10,13 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import java.text.MessageFormat;
+import java.text.NumberFormat;
 import java.time.Duration;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.Long.parseLong;
+import static java.util.Locale.US;
 
 @Service
 public class Composer {
@@ -40,8 +41,36 @@ public class Composer {
             return memberIdsCommand(message);
         } else if (text.startsWith("!Add ")) {
             return addUserCommand(message);
+        } else if (text.startsWith("!Fines")) {
+            return allFinesCommand(message);
         }
         return Optional.empty();
+    }
+
+    private Optional<String> allFinesCommand(Message message) {
+        Group group = groupMe.getGroup(message);
+        Optional<Wheel> optionalWheel = wheelRepo.findByGroupId(group.getGroupId());
+        if (!optionalWheel.isPresent()) {
+            return Optional.of(EMPTY_DISH_WHEEL_WARNING);
+        }
+        Wheel wheel = optionalWheel.get();
+        Map<Long, Double> fines = wheel.getFineAmounts();
+        String text = "Fines:" + fines.keySet().stream().map(userId -> {
+            Optional<Member> optionalMember = group.queryForMember(userId);
+            if (!optionalMember.isPresent()) {
+                wheel.removeMember(userId);
+                return "";
+            } else {
+                Member member = optionalMember.get();
+                String name = member.getName();
+                Double fine = fines.get(userId);
+                Currency usd = Currency.getInstance("USD");
+                NumberFormat format = NumberFormat.getCurrencyInstance(US);
+                format.setCurrency(usd);
+                return "\n" + name + " -> " + format.format(fine);
+            }
+        }).collect(Collectors.joining());
+        return Optional.of(text);
     }
 
     private Optional<String> addUserCommand(Message message) {

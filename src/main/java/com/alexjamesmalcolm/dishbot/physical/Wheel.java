@@ -9,9 +9,9 @@ import javax.persistence.Id;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Entity
 public class Wheel {
@@ -28,16 +28,18 @@ public class Wheel {
     private Instant currentStart;
     private boolean hasWarnedCurrent;
     private Double fineAmount;
+    private Map<Long, Double> fines;
 
     private Wheel() {
     }
 
     public Wheel(long groupId) {
-        userIds = new ArrayList<>();
+        this.userIds = new ArrayList<>();
         this.groupId = groupId;
         this.fineDuration = Duration.ofHours(48);
-        hasWarnedCurrent = false;
+        this.hasWarnedCurrent = false;
         this.fineAmount = 5.0;
+        this.fines = new HashMap<>();
     }
 
     public Wheel(long groupId, Duration fineDuration) {
@@ -74,6 +76,7 @@ public class Wheel {
             currentUserId = userId;
         }
         currentStart = Instant.now();
+        fines.put(userId, 0.0);
     }
 
     public long getCurrentMemberUserId() {
@@ -123,6 +126,24 @@ public class Wheel {
     }
 
     public Map<Long, Double> getFineAmounts() {
-        return userIds.stream().collect(Collectors.toMap(userId -> userId, userId -> 0.0));
+        return fines;
+    }
+
+    public boolean isExpired() {
+        Duration timeLeft = getDurationUntilFineForCurrent();
+        return timeLeft.isZero() || timeLeft.isNegative();
+    }
+
+    public void giveFine(Member member) {
+        giveFine(member.getUserId());
+    }
+
+    public void giveFine(Long userId) {
+        Double previousFine = fines.get(userId);
+        fines.put(userId, previousFine + fineAmount);
+    }
+
+    public void removeMember(Long userId) {
+        userIds.remove(userId);
     }
 }
