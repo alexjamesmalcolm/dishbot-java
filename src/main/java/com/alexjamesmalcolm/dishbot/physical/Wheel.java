@@ -28,6 +28,8 @@ public class Wheel {
     private Instant currentStart;
     private boolean hasWarnedCurrent;
     private Double fineAmount;
+
+    @ElementCollection
     private Map<Long, Double> fines;
 
     private Wheel() {
