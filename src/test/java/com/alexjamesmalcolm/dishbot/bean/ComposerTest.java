@@ -12,13 +12,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static java.lang.Long.parseLong;
+import static java.math.BigDecimal.ONE;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
@@ -116,31 +118,33 @@ public class ComposerTest {
     }
 
     @Test
-    public void shouldHaveAlexGetFourtyEightHoursToDoTheDishes() {
+    public void shouldGiveFourtyEightHoursToDoTheDishes() {
         String text = "!Time";
         when(message.getText()).thenReturn(text);
         when(message.getUserId()).thenReturn(currentMemberUserId);
         String currentName = "Alex";
         when(currentMember.getName()).thenReturn(currentName);
-        String expected = currentName + " has 48 hours to do the dishes.";
         String response = underTest.respond(message).get();
-        assertThat(response, is(expected));
+        List<String> words = Arrays.asList(response.split(" "));
+        long actualHours = parseLong(words.get(words.indexOf("has") + 1));
+        assertThat(BigDecimal.valueOf(actualHours), is(closeTo(BigDecimal.valueOf(48), ONE)));
     }
 
     @Test
-    public void shouldHaveSicquanGetFourtyEightHoursToDoTheDishes() {
+    public void shouldHaveSicquanDoTheDishes() {
         String text = "!Time";
         when(message.getText()).thenReturn(text);
         when(message.getUserId()).thenReturn(currentMemberUserId);
         String currentName = "Sicquan";
         when(currentMember.getName()).thenReturn(currentName);
-        String expected = currentName + " has 48 hours to do the dishes.";
         String response = underTest.respond(message).get();
-        assertThat(response, is(expected));
+        List<String> words = Arrays.asList(response.split(" "));
+        String actualName = words.get(0);
+        assertThat(actualName, is(currentName));
     }
 
     @Test
-    public void shouldHaveAlexGetTenHoursToDoTheDishes() {
+    public void shouldHaveAlexDoTheDishes() {
         String text = "!Time";
         when(message.getText()).thenReturn(text);
         when(message.getUserId()).thenReturn(currentMemberUserId);
@@ -152,9 +156,29 @@ public class ComposerTest {
         when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(Optional.of(wheel));
         when(wheelRepo.findByGroupId(groupId)).thenReturn(Optional.of(wheel));
         when(currentMember.getName()).thenReturn(currentName);
-        String expected = currentName + " has " + hours + " hours to do the dishes.";
         String response = underTest.respond(message).get();
-        assertThat(response, is(expected));
+        List<String> words = Arrays.asList(response.split(" "));
+        String actualName = words.get(0);
+        assertThat(actualName, is(currentName));
+    }
+
+    @Test
+    public void shouldGiveTenHoursToDoTheDishes() {
+        String text = "!Time";
+        when(message.getText()).thenReturn(text);
+        when(message.getUserId()).thenReturn(currentMemberUserId);
+        String currentName = "Alex";
+        long hours = 10;
+        wheel = new Wheel(groupId, Duration.ofHours(hours));
+        wheel.addMember(currentMember);
+        wheel.addMember(nextMember);
+        when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(Optional.of(wheel));
+        when(wheelRepo.findByGroupId(groupId)).thenReturn(Optional.of(wheel));
+        when(currentMember.getName()).thenReturn(currentName);
+        String response = underTest.respond(message).get();
+        List<String> words = Arrays.asList(response.split(" "));
+        long actualHours = parseLong(words.get(words.indexOf("has") + 1));
+        assertThat(BigDecimal.valueOf(actualHours), is(closeTo(BigDecimal.valueOf(hours), ONE)));
     }
 
     @Test
