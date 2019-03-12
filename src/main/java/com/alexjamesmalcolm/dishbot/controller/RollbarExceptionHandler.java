@@ -1,12 +1,17 @@
 package com.alexjamesmalcolm.dishbot.controller;
 
 import com.rollbar.notifier.Rollbar;
+import org.springframework.expression.spel.SpelEvaluationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @ControllerAdvice
 public class RollbarExceptionHandler {
@@ -15,10 +20,12 @@ public class RollbarExceptionHandler {
     private Rollbar rollbar;
 
     @ExceptionHandler(Exception.class)
-    public String defaultExceptionHandler(Model model, HttpServletRequest request, Exception e) {
+    public ModelAndView defaultExceptionHandler(ModelAndView mav, HttpServletRequest request, Exception e) {
         rollbar.error(e);
-        model.addAttribute("exception", e);
-        model.addAttribute("url", request.getRequestURL());
-        return "error";
+        mav.addObject("exception", e);
+        mav.addObject("url", request.getRequestURL());
+        mav.setViewName("error");
+        mav.setStatus(INTERNAL_SERVER_ERROR);
+        return mav;
     }
 }
