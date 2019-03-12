@@ -48,6 +48,7 @@ public class MessageController {
             String botId = getBot(groupId).getBotId();
             groupMe.sendMessage(content, botId);
         });
+        composer.tryToFineAll();
         composer.tryToWarnAll();
     }
 

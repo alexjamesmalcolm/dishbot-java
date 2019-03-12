@@ -176,5 +176,32 @@ public class Composer {
             }
             wheelRepo.save(wheel);
         });
+        em.flush();
+        em.clear();
+    }
+
+    public void tryToFineAll() {
+        Set<Wheel> wheels = wheelRepo.findAll();
+        wheels.stream().filter(Wheel::isExpired).forEach(wheel -> {
+            Group group = groupMe.getGroup(wheel.getGroupId());
+            long currentId = wheel.getCurrentMemberUserId();
+            Optional<Member> optionalMember = group.queryForMember(currentId);
+            if (optionalMember.isPresent()) {
+                Member currentName = optionalMember.get();
+                wheel.giveFine(currentName);
+                wheel.advanceWheel();
+                long nextId = wheel.getCurrentMemberUserId();
+                String nextName = group.queryForMember(nextId).get().getName();
+                String warning = currentName + " took too long, " + nextName + " is on dishes now.";
+                String botId = groupMe.getBots(group.getGroupId()).get(0).getBotId();
+                //TODO Come up with something better than just getting the first bot
+                groupMe.sendMessage(warning, botId);
+            } else {
+                wheel.removeMember(currentId);
+            }
+            wheelRepo.save(wheel);
+        });
+        em.flush();
+        em.clear();
     }
 }
