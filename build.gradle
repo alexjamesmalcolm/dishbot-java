@@ -24,11 +24,20 @@ repositories {
 }
 
 test {
-    if(System.env["JDBC_DATABASE_URL"] == null) {
+    if (System.env["JDBC_DATABASE_URL"] == null) {
     	environment "JDBC_DATABASE_URL", "jdbc:h2:./test"
     }
-	if(System.env["GROUPME_ACCESSTOKEN"] == null) {
+	if (System.env["GROUPME_ACCESSTOKEN"] == null) {
 		environment "GROUPME_ACCESSTOKEN", GROUPME_ACCESSTOKEN
+	}
+	if (System.env["ROLLBAR_ACCESS_TOKEN"] == null) {
+		environment "ROLLBAR_ACCESS_TOKEN", ROLLBAR_ACCESS_TOKEN
+	}
+	if (System.env["ROLLBAR_ENDPOINT"] == null) {
+		environment "ROLLBAR_ENDPOINT", ROLLBAR_ENDPOINT
+	}
+	if (System.env["ENVIRONMENT"] == null) {
+		environment "ENVIRONMENT", ENVIRONMENT
 	}
 }
 

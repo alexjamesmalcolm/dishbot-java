@@ -133,7 +133,7 @@ public class WheelTest {
         sleep(expected.intValue());
         Duration actual = wheel.getDurationUntilFineForCurrent();
         Duration difference = fineDuration.minus(actual);
-        assertThat(BigDecimal.valueOf(difference.toMillis()), is(Matchers.closeTo(expected, BigDecimal.valueOf(10))));
+        assertThat(BigDecimal.valueOf(difference.toMillis()), is(Matchers.closeTo(expected, BigDecimal.valueOf(100))));
     }
 
     @Test
