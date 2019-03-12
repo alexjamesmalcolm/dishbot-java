@@ -1,4 +1,4 @@
-package com.alexjamesmalcolm.dishbot;
+package com.alexjamesmalcolm.dishbot.controller;
 
 import com.rollbar.notifier.Rollbar;
 import org.springframework.ui.Model;
