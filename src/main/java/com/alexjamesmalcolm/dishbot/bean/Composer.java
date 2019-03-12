@@ -33,19 +33,39 @@ public class Composer {
     private EntityManager em;
 
     public Optional<String> respond(Message message) {
-        String text = message.getText();
-        if (text.equals("!Dishes")) {
+        String text = message.getText().toLowerCase();
+        if (text.equals("!dishes")) {
             return dishesDoneCommand(message);
-        } else if (text.equals("!Time")) {
+        } else if (text.equals("!time")) {
             return timeLeftCommand(message);
-        } else if (text.equals("!Ids")) {
+        } else if (text.equals("!ids")) {
             return memberIdsCommand(message);
-        } else if (text.startsWith("!Add ")) {
+        } else if (text.startsWith("!add ")) {
             return addUserCommand(message);
-        } else if (text.startsWith("!Fines")) {
+        } else if (text.equals("!fines")) {
             return allFinesCommand(message);
+        } else if (text.startsWith("!remove ")) {
+            return removeUserCommand(message);
         }
         return Optional.empty();
+    }
+
+    private Optional<String> removeUserCommand(Message message) {
+        Group group = groupMe.getGroup(message);
+        Optional<Wheel> optionalWheel = wheelRepo.findByGroupId(group.getGroupId());
+        if (!optionalWheel.isPresent()) {
+            return Optional.of(EMPTY_DISH_WHEEL_WARNING);
+        }
+        Long userId = message.getUserId();
+        Optional<Member> optionalMember = group.queryForMember(userId);
+        if (!optionalMember.isPresent()) {
+            return Optional.of("Could not find user with id " + userId);
+        }
+        Wheel wheel = optionalWheel.get();
+        wheel.removeMember(userId);
+        wheelRepo.save(wheel);
+        String name = optionalMember.get().getName();
+        return Optional.of("Removed " + name + " from Dish Wheel.");
     }
 
     private Optional<String> allFinesCommand(Message message) {
