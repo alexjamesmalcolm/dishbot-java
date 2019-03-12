@@ -38,7 +38,7 @@ public class AdminMockMvcTest {
 
     @Test
     public void shouldGetSingleGroupOk() throws Exception {
-        long groupId = 123L;
+        long groupId = 46707218;
         mvc.perform(get("/group/" + groupId)).andExpect(status().isOk());
     }
 }
