@@ -20,6 +20,7 @@ import java.util.Map;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -38,6 +39,7 @@ public class GroupMeServiceTest {
 
     @Before
     public void setup() {
+        assumeThat("Unable to connect to GroupMe.", properties.getEnvironment(), is(not("work")));
         groupId = 46707218;
     }
 
@@ -114,7 +116,7 @@ public class GroupMeServiceTest {
         assertThat(member.getName(), is(expected));
     }
 
-    @Ignore
+    @Ignore("Skipping to avoid creating messages in test group")
     @Test
     public void shouldTrySendingABotMessage() {
         List<Bot> bots = underTest.getBots(groupId);
