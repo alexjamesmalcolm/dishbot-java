@@ -39,6 +39,9 @@ test {
 	if (System.env["ENVIRONMENT"] == null) {
 		environment "ENVIRONMENT", ENVIRONMENT
 	}
+	if (System.env["DISHBOT_CALLBACK"] == null) {
+		environment "DISHBOT_CALLBACK", DISHBOT_CALLBACK
+	}
 }
 
 dependencies {
