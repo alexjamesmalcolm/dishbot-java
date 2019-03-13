@@ -1,6 +1,6 @@
 package com.alexjamesmalcolm.dishbot.controller;
 
-import com.alexjamesmalcolm.dishbot.bean.GroupMeService;
+import com.alexjamesmalcolm.groupme.service.GroupMeService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

@@ -1,6 +1,6 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
-import com.alexjamesmalcolm.dishbot.groupme.Member;
+import com.alexjamesmalcolm.groupme.response.Member;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;

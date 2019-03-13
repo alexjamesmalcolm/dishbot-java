@@ -1,5 +1,6 @@
 package com.alexjamesmalcolm.dishbot;
 
+import com.alexjamesmalcolm.groupme.service.GroupMeService;
 import com.rollbar.notifier.Rollbar;
 import com.rollbar.notifier.config.ConfigBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -17,7 +18,6 @@ public class DishbotConfiguration {
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        builder.interceptors(new Interceptor());
         return builder.build();
     }
 
@@ -26,5 +26,10 @@ public class DishbotConfiguration {
         String accessToken = properties.getRollbarAccessToken();
         String environment = properties.getEnvironment();
         return new Rollbar(ConfigBuilder.withAccessToken(accessToken).environment(environment).handleUncaughtErrors(true).build());
+    }
+
+    @Bean
+    public GroupMeService groupMeService() {
+        return new GroupMeService();
     }
 }

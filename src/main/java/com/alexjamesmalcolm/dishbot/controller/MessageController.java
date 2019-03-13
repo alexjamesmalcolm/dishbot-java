@@ -1,10 +1,12 @@
 package com.alexjamesmalcolm.dishbot.controller;
 
+import com.alexjamesmalcolm.dishbot.AccountRepository;
 import com.alexjamesmalcolm.dishbot.Properties;
 import com.alexjamesmalcolm.dishbot.bean.Composer;
-import com.alexjamesmalcolm.dishbot.bean.GroupMeService;
-import com.alexjamesmalcolm.dishbot.groupme.Group;
-import com.alexjamesmalcolm.dishbot.groupme.Message;
+import com.alexjamesmalcolm.dishbot.physical.Account;
+import com.alexjamesmalcolm.groupme.response.Group;
+import com.alexjamesmalcolm.groupme.response.Message;
+import com.alexjamesmalcolm.groupme.service.GroupMeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rollbar.notifier.Rollbar;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 public class MessageController {
@@ -36,6 +40,9 @@ public class MessageController {
     @Resource
     private Properties properties;
 
+    @Resource
+    private AccountRepository accountRepo;
+
     @Transactional
     @RequestMapping("/receive-message")
     public void receiveMessage(HttpServletRequest request) throws IOException {
@@ -46,9 +53,11 @@ public class MessageController {
         info.put("message", message);
         log.info("Received Message", info);
         long groupId = message.getGroupId();
-        Optional<String> response = composer.respond(message);
+        Optional<Account> optionalAccount = accountRepo.findByUserId(message.getUserId());
+        Account account = optionalAccount.orElseGet(() -> accountRepo.findByGroupId(groupId).get());
+        Optional<String> response = composer.respond(account, message);
         response.ifPresent(content -> {
-            String botId = groupMe.getBot(groupId, properties.getDishbotUrl()).get().getBotId();
+            String botId = groupMe.getBot(account.getAccessToken(), groupId, properties.getDishbotUrl()).get().getBotId();
             groupMe.sendMessage(content, botId);
         });
         composer.tryToFineAll();
@@ -57,10 +66,13 @@ public class MessageController {
 
     @GetMapping("/message")
     public Iterable<Message> getMessages() {
-        List<Group> groups = groupMe.getAllGroups();
-        return groups.stream().map(group -> {
-            long groupId = group.getGroupId();
-            return groupMe.getMessages(groupId);
-        }).flatMap(Collection::stream).collect(Collectors.toList());
+        Collection<Account> accounts = accountRepo.findAll();
+        return accounts.stream().map(Account::getAccessToken).map(accessToken -> {
+            List<Group> groups = groupMe.getAllGroups(accessToken);
+            return groups.stream().map(group -> {
+                List<Message> messages = groupMe.getMessages(accessToken, group.getGroupId());
+                return messages.stream().distinct().collect(toList());
+            }).flatMap(Collection::stream).collect(toList());
+        }).flatMap(Collection::stream).collect(toList());
     }
 }

@@ -21,12 +21,29 @@ sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
+	maven { url "https://jitpack.io" }
+}
+
+dependencies {
+	implementation('org.springframework.boot:spring-boot-starter-websocket')
+	implementation("org.webjars:webjars-locator-core")
+	implementation("org.webjars:sockjs-client:1.0.2")
+	implementation("org.webjars:stomp-websocket:2.3.3")
+	implementation('org.webjars:vue:2.5.16')
+	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+	implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	implementation('com.rollbar:rollbar-web:1.2.1')
+	implementation('com.github.alexjamesmalcolm:groupme:1.0')
+	runtimeOnly('com.h2database:h2')
+	runtimeOnly('org.postgresql:postgresql')
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
 test {
-    if (System.env["JDBC_DATABASE_URL"] == null) {
-    	environment "JDBC_DATABASE_URL", "jdbc:h2:./test"
-    }
+	if (System.env["JDBC_DATABASE_URL"] == null) {
+		environment "JDBC_DATABASE_URL", "jdbc:h2:./test"
+	}
 	if (System.env["GROUPME_ACCESSTOKEN"] == null) {
 		environment "GROUPME_ACCESSTOKEN", GROUPME_ACCESSTOKEN
 	}
@@ -42,19 +59,4 @@ test {
 	if (System.env["DISHBOT_CALLBACK"] == null) {
 		environment "DISHBOT_CALLBACK", DISHBOT_CALLBACK
 	}
-}
-
-dependencies {
-	implementation('org.springframework.boot:spring-boot-starter-websocket')
-    implementation("org.webjars:webjars-locator-core")
-    implementation("org.webjars:sockjs-client:1.0.2")
-    implementation("org.webjars:stomp-websocket:2.3.3")
-	implementation('org.webjars:vue:2.5.16')
-	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-	implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
-	implementation('org.springframework.boot:spring-boot-starter-web')
-	implementation('com.rollbar:rollbar-web:1.2.1')
-	runtimeOnly('com.h2database:h2')
-	runtimeOnly('org.postgresql:postgresql')
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }

@@ -2,10 +2,12 @@ package com.alexjamesmalcolm.dishbot.bean;
 
 import com.alexjamesmalcolm.dishbot.Properties;
 import com.alexjamesmalcolm.dishbot.WheelRepository;
-import com.alexjamesmalcolm.dishbot.groupme.Group;
-import com.alexjamesmalcolm.dishbot.groupme.Member;
-import com.alexjamesmalcolm.dishbot.groupme.Message;
+import com.alexjamesmalcolm.dishbot.physical.Account;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
+import com.alexjamesmalcolm.groupme.response.Group;
+import com.alexjamesmalcolm.groupme.response.Member;
+import com.alexjamesmalcolm.groupme.response.Message;
+import com.alexjamesmalcolm.groupme.service.GroupMeService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -36,26 +38,26 @@ public class Composer {
     @Resource
     private Properties properties;
 
-    public Optional<String> respond(Message message) {
+    public Optional<String> respond(Account owner, Message message) {
         String text = message.getText().toLowerCase();
         if (text.equals("!dishes")) {
-            return dishesDoneCommand(message);
+            return dishesDoneCommand(owner, message);
         } else if (text.equals("!time")) {
-            return timeLeftCommand(message);
+            return timeLeftCommand(owner, message);
         } else if (text.equals("!ids")) {
-            return memberIdsCommand(message);
+            return memberIdsCommand(owner, message);
         } else if (text.startsWith("!add ")) {
-            return addUserCommand(message);
+            return addUserCommand(owner, message);
         } else if (text.equals("!fines")) {
-            return allFinesCommand(message);
+            return allFinesCommand(owner, message);
         } else if (text.startsWith("!remove ")) {
-            return removeUserCommand(message);
+            return removeUserCommand(owner, message);
         }
         return Optional.empty();
     }
 
-    private Optional<String> removeUserCommand(Message message) {
-        Group group = groupMe.getGroup(message);
+    private Optional<String> removeUserCommand(Account owner, Message message) {
+        Group group = groupMe.getGroup(owner.getAccessToken(), message);
         Optional<Wheel> optionalWheel = wheelRepo.findByGroupId(group.getGroupId());
         if (!optionalWheel.isPresent()) {
             return Optional.of(EMPTY_DISH_WHEEL_WARNING);
@@ -72,8 +74,8 @@ public class Composer {
         return Optional.of("Removed " + name + " from Dish Wheel.");
     }
 
-    private Optional<String> allFinesCommand(Message message) {
-        Group group = groupMe.getGroup(message);
+    private Optional<String> allFinesCommand(Account owner, Message message) {
+        Group group = groupMe.getGroup(owner.getAccessToken(), message);
         Optional<Wheel> optionalWheel = wheelRepo.findByGroupId(group.getGroupId());
         if (!optionalWheel.isPresent()) {
             return Optional.of(EMPTY_DISH_WHEEL_WARNING);
@@ -98,8 +100,8 @@ public class Composer {
         return Optional.of(text);
     }
 
-    private Optional<String> addUserCommand(Message message) {
-        Group group = groupMe.getGroup(message);
+    private Optional<String> addUserCommand(Account owner, Message message) {
+        Group group = groupMe.getGroup(owner.getAccessToken(), message);
         long userId = parseLong(message.getText().substring(5));
         Optional<Member> potentialMember = group.queryForMember(userId);
         if (potentialMember.isPresent()) {
@@ -116,16 +118,16 @@ public class Composer {
         }
     }
 
-    private Optional<String> memberIdsCommand(Message message) {
-        Group group = groupMe.getGroup(message);
+    private Optional<String> memberIdsCommand(Account owner, Message message) {
+        Group group = groupMe.getGroup(owner.getAccessToken(), message);
         List<Member> members = group.getMembers();
         String response = "User IDs:\n" + members.stream().map(member -> member.getName() + " -> " + member.getUserId()).reduce((first, second) -> first + "\n" + second).orElse("");
         return Optional.of(response);
     }
 
-    private Optional<String> timeLeftCommand(Message message) {
+    private Optional<String> timeLeftCommand(Account owner, Message message) {
         long userId = message.getUserId();
-        Group group = groupMe.getGroup(message);
+        Group group = groupMe.getGroup(owner.getAccessToken(), message);
         Optional<Member> potentialMember = group.queryForMember(userId);
         if (!potentialMember.isPresent()) {
             return Optional.empty();
@@ -142,7 +144,7 @@ public class Composer {
         return Optional.of(name + " has " + hours + " hours to do the dishes.");
     }
 
-    private Optional<String> dishesDoneCommand(Message message) {
+    private Optional<String> dishesDoneCommand(Account owner, Message message) {
         Optional<Wheel> potentialWheel = wheelRepo.findByGroupId(message.getGroupId());
         if (!potentialWheel.isPresent()) {
             return Optional.of(EMPTY_DISH_WHEEL_WARNING);
@@ -154,7 +156,7 @@ public class Composer {
         wheelRepo.save(wheel);
         em.flush();
         em.clear();
-        Group group = groupMe.getGroup(message);
+        Group group = groupMe.getGroup(owner.getAccessToken(), message);
         String firstName = group.queryForMember(currentMemberUserId).get().getName();
         String secondName = group.queryForMember(nextMemberUserId).get().getName();
         return Optional.of(MessageFormat.format("Thank you for cleaning the dishes {0}! The next person on dishes is {1}.", firstName, secondName));
@@ -163,7 +165,8 @@ public class Composer {
     public void tryToWarnAll() {
         Set<Wheel> wheels = wheelRepo.findAll();
         wheels.stream().filter(Wheel::needToWarnCurrent).forEach(wheel -> {
-            Group group = groupMe.getGroup(wheel.getGroupId());
+            Account owner = wheel.getOwner();
+            Group group = groupMe.getGroup(owner.getAccessToken(), wheel.getGroupId());
             long currentId = wheel.getCurrentMemberUserId();
             Optional<Member> optionalMember = group.queryForMember(currentId);
             if (optionalMember.isPresent()) {
@@ -171,7 +174,7 @@ public class Composer {
                 String name = member.getName();
                 Duration timeLeft = wheel.getDurationUntilFineForCurrent();
                 String warning = name + " has " + timeLeft.toHours() + " hours left to do the dishes.";
-                String botId = groupMe.getBot(group.getGroupId(), properties.getDishbotUrl()).get().getBotId();
+                String botId = groupMe.getBot(owner.getAccessToken(), group.getGroupId(), properties.getDishbotUrl()).get().getBotId();
                 groupMe.sendMessage(warning, botId);
                 wheel.currentHasBeenWarned();
             } else {
@@ -186,7 +189,8 @@ public class Composer {
     public void tryToFineAll() {
         Set<Wheel> wheels = wheelRepo.findAll();
         wheels.stream().filter(Wheel::isExpired).forEach(wheel -> {
-            Group group = groupMe.getGroup(wheel.getGroupId());
+            Account owner = wheel.getOwner();
+            Group group = groupMe.getGroup(owner.getAccessToken(), wheel.getGroupId());
             long currentId = wheel.getCurrentMemberUserId();
             Optional<Member> optionalMember = group.queryForMember(currentId);
             if (optionalMember.isPresent()) {
@@ -196,7 +200,7 @@ public class Composer {
                 long nextId = wheel.getCurrentMemberUserId();
                 String nextName = group.queryForMember(nextId).get().getName();
                 String warning = currentName + " took too long, " + nextName + " is on dishes now.";
-                String botId = groupMe.getBot(group.getGroupId(), properties.getDishbotUrl()).get().getBotId();
+                String botId = groupMe.getBot(owner.getAccessToken(), group.getGroupId(), properties.getDishbotUrl()).get().getBotId();
                 groupMe.sendMessage(warning, botId);
             } else {
                 wheel.removeMember(currentId);

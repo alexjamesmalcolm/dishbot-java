@@ -1,11 +1,8 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
-import com.alexjamesmalcolm.dishbot.groupme.Member;
+import com.alexjamesmalcolm.groupme.response.Member;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -28,6 +25,8 @@ public class Wheel {
     private Instant currentStart;
     private boolean hasWarnedCurrent;
     private Double fineAmount;
+    @ManyToOne
+    private Account owner;
 
     @ElementCollection
     private Map<Long, Double> fines;
@@ -153,5 +152,9 @@ public class Wheel {
 
     public void removeMember(Member member) {
         removeMember(member.getUserId());
+    }
+
+    public Account getOwner() {
+        return owner;
     }
 }

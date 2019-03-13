@@ -1,19 +1,29 @@
 package com.alexjamesmalcolm.dishbot.controller;
 
-import com.alexjamesmalcolm.dishbot.bean.GroupMeService;
-import com.alexjamesmalcolm.dishbot.groupme.Group;
+import com.alexjamesmalcolm.dishbot.AccountRepository;
+import com.alexjamesmalcolm.dishbot.physical.Account;
+import com.alexjamesmalcolm.groupme.response.Group;
+import com.alexjamesmalcolm.groupme.service.GroupMeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.HttpServerErrorException;
 
 import javax.annotation.Resource;
+import java.util.Collection;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 @Controller
 public class AdminController {
 
     @Resource
     private GroupMeService groupMe;
+
+    @Resource
+    private AccountRepository accountRepo;
 
     @RequestMapping("/")
     public String displayHomePage() {
@@ -27,14 +37,18 @@ public class AdminController {
 
     @RequestMapping("/group/{groupId}")
     public String displayManageGroupPage(Model model, @PathVariable Long groupId) {
-        Group group = groupMe.getGroup(groupId);
+        Collection<Account> accounts = accountRepo.findAllByGroupId(groupId);
+        Optional<Account> optionalAccount = accounts.stream().findAny();
+        String accessToken = optionalAccount.orElseThrow(() -> new RuntimeException("No account found.")).getAccessToken();
+        Group group = groupMe.getGroup(accessToken, groupId);
         model.addAttribute("group", group);
         return "group";
     }
 
     @RequestMapping("/group")
     public String displayAllGroupsPage(Model model) {
-        Iterable<Group> groups = groupMe.getAllGroups();
+        Collection<Account> accounts = accountRepo.findAll();
+        Iterable<Group> groups = accounts.stream().map(account -> groupMe.getAllGroups(account.getAccessToken())).flatMap(Collection::stream).distinct().collect(toList());
         model.addAttribute("groups", groups);
         return "group-all";
     }

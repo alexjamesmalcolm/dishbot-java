@@ -10,7 +10,6 @@ import java.net.URI;
 public class Properties {
 
     private final URI baseUrl;
-    private final String groupMeAccessToken;
     private final String rollbarAccessToken;
     private final URI rollbarEndpoint;
     private final String environment;
@@ -19,22 +18,16 @@ public class Properties {
 
     @Autowired
     public Properties(
-            @Value("${groupme.accesstoken}") String groupMeAccessToken,
             @Value("${groupme.baseurl}") String baseUrl,
             @Value("${rollbar.accesstoken}") String rollbarAccessToken,
             @Value("${rollbar.endpoint}") String rollbarEndpoint,
             @Value("${environment}") String environment,
             @Value("${dishbot.callback}") String dishbotUrl) {
-        this.groupMeAccessToken = groupMeAccessToken;
         this.baseUrl = URI.create(baseUrl);
         this.rollbarAccessToken = rollbarAccessToken;
         this.rollbarEndpoint = URI.create(rollbarEndpoint);
         this.environment = environment;
         this.dishbotUrl = URI.create(dishbotUrl);
-    }
-
-    public String getGroupMeAccessToken() {
-        return groupMeAccessToken;
     }
 
     public URI getBaseUrl() {

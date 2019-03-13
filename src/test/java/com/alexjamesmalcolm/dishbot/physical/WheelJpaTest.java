@@ -1,7 +1,7 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
 import com.alexjamesmalcolm.dishbot.WheelRepository;
-import com.alexjamesmalcolm.dishbot.groupme.Member;
+import com.alexjamesmalcolm.groupme.response.Member;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

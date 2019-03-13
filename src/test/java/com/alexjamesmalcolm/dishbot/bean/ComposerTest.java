@@ -1,10 +1,13 @@
 package com.alexjamesmalcolm.dishbot.bean;
 
 import com.alexjamesmalcolm.dishbot.WheelRepository;
-import com.alexjamesmalcolm.dishbot.groupme.Group;
-import com.alexjamesmalcolm.dishbot.groupme.Member;
-import com.alexjamesmalcolm.dishbot.groupme.Message;
+import com.alexjamesmalcolm.dishbot.physical.Account;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
+import com.alexjamesmalcolm.groupme.response.Group;
+import com.alexjamesmalcolm.groupme.response.Me;
+import com.alexjamesmalcolm.groupme.response.Member;
+import com.alexjamesmalcolm.groupme.response.Message;
+import com.alexjamesmalcolm.groupme.service.GroupMeService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -56,12 +59,16 @@ public class ComposerTest {
 
     private Wheel wheel;
 
+    @Mock
+    private Account owner;
+    private String accessToken;
+
     @Before
     public void setup() {
         underTest = new Composer();
         MockitoAnnotations.initMocks(this);
         when(message.getGroupId()).thenReturn(groupId);
-        when(groupMe.getGroup(message)).thenReturn(group);
+        when(groupMe.getGroup(accessToken, message)).thenReturn(group);
         when(currentMember.getUserId()).thenReturn(currentMemberUserId);
         when(nextMember.getUserId()).thenReturn(nextMemberUserId);
         when(group.queryForMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
@@ -82,7 +89,7 @@ public class ComposerTest {
         String nextName = "Sicquan";
         when(currentMember.getName()).thenReturn(currentName);
         when(nextMember.getName()).thenReturn(nextName);
-        String response = underTest.respond(message).get();
+        String response = underTest.respond(owner, message).get();
         assertThat(response, is(expected));
     }
 
@@ -91,7 +98,7 @@ public class ComposerTest {
         String text = "!Time";
         when(message.getText()).thenReturn(text);
         when(message.getUserId()).thenReturn(currentMemberUserId);
-        String response = underTest.respond(message).get();
+        String response = underTest.respond(owner, message).get();
         String expected = "Thank you for cleaning the dishes Alex! The next person on dishes is Sicquan.";
         assertThat(response, is(not(expected)));
     }
@@ -100,7 +107,7 @@ public class ComposerTest {
     public void shouldReturnNoResponseIfNotACommand() {
         String text = "Hello there";
         when(message.getText()).thenReturn(text);
-        Optional<String> potentialResponse = underTest.respond(message);
+        Optional<String> potentialResponse = underTest.respond(owner, message);
         assertFalse(potentialResponse.isPresent());
     }
 
@@ -113,7 +120,7 @@ public class ComposerTest {
         String nextName = "Alex";
         when(currentMember.getName()).thenReturn(currentName);
         when(nextMember.getName()).thenReturn(nextName);
-        String response = underTest.respond(message).get();
+        String response = underTest.respond(owner, message).get();
         assertThat(response, is(expected));
     }
 
@@ -124,7 +131,7 @@ public class ComposerTest {
         when(message.getUserId()).thenReturn(currentMemberUserId);
         String currentName = "Alex";
         when(currentMember.getName()).thenReturn(currentName);
-        String response = underTest.respond(message).get();
+        String response = underTest.respond(owner, message).get();
         List<String> words = Arrays.asList(response.split(" "));
         long actualHours = parseLong(words.get(words.indexOf("has") + 1));
         assertThat(BigDecimal.valueOf(actualHours), is(closeTo(BigDecimal.valueOf(48), ONE)));
@@ -137,7 +144,7 @@ public class ComposerTest {
         when(message.getUserId()).thenReturn(currentMemberUserId);
         String currentName = "Sicquan";
         when(currentMember.getName()).thenReturn(currentName);
-        String response = underTest.respond(message).get();
+        String response = underTest.respond(owner, message).get();
         List<String> words = Arrays.asList(response.split(" "));
         String actualName = words.get(0);
         assertThat(actualName, is(currentName));
@@ -156,7 +163,7 @@ public class ComposerTest {
         when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(Optional.of(wheel));
         when(wheelRepo.findByGroupId(groupId)).thenReturn(Optional.of(wheel));
         when(currentMember.getName()).thenReturn(currentName);
-        String response = underTest.respond(message).get();
+        String response = underTest.respond(owner, message).get();
         List<String> words = Arrays.asList(response.split(" "));
         String actualName = words.get(0);
         assertThat(actualName, is(currentName));
@@ -175,7 +182,7 @@ public class ComposerTest {
         when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(Optional.of(wheel));
         when(wheelRepo.findByGroupId(groupId)).thenReturn(Optional.of(wheel));
         when(currentMember.getName()).thenReturn(currentName);
-        String response = underTest.respond(message).get();
+        String response = underTest.respond(owner, message).get();
         List<String> words = Arrays.asList(response.split(" "));
         long actualHours = parseLong(words.get(words.indexOf("has") + 1));
         assertThat(BigDecimal.valueOf(actualHours), is(closeTo(BigDecimal.valueOf(hours), ONE)));
@@ -192,7 +199,7 @@ public class ComposerTest {
         List<Member> members = Arrays.asList(currentMember, nextMember);
         when(group.getMembers()).thenReturn(members);
 
-        String response = underTest.respond(message).get();
+        String response = underTest.respond(owner, message).get();
 
         String expected = "User IDs:\n" + currentName + " -> " + currentMemberUserId + "\n" + nextName + " -> " + nextMemberUserId;
         assertThat(response, is(expected));
@@ -209,7 +216,7 @@ public class ComposerTest {
         List<Member> members = Arrays.asList(currentMember, nextMember);
         when(group.getMembers()).thenReturn(members);
 
-        String response = underTest.respond(message).get();
+        String response = underTest.respond(owner, message).get();
 
         String expected = "User IDs:\n" + currentName + " -> " + currentMemberUserId + "\n" + nextName + " -> " + nextMemberUserId;
         assertThat(response, is(expected));
@@ -226,7 +233,7 @@ public class ComposerTest {
         when(group.queryForMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
         when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(Optional.of(wheel));
 
-        String response = underTest.respond(message).get();
+        String response = underTest.respond(owner, message).get();
 
         String expected = "Added " + currentName + " to Dish Wheel.";
         assertThat(response, is(expected));
@@ -243,7 +250,7 @@ public class ComposerTest {
         when(group.queryForMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
         when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(Optional.of(wheel));
 
-        String response = underTest.respond(message).get();
+        String response = underTest.respond(owner, message).get();
 
         String expected = "Added " + currentName + " to Dish Wheel.";
         assertThat(response, is(expected));
@@ -256,7 +263,7 @@ public class ComposerTest {
         when(message.getText()).thenReturn(text);
         when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(Optional.of(wheel));
 
-        String response = underTest.respond(message).get();
+        String response = underTest.respond(owner, message).get();
 
         String expected = "Could not find user with id " + badId;
         assertThat(response, is(expected));
@@ -276,7 +283,7 @@ public class ComposerTest {
         when(wheelRepo.findByGroupId(groupId)).thenReturn(Optional.of(wheel));
         when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(Optional.of(wheel));
 
-        underTest.respond(message).get();
+        underTest.respond(owner, message).get();
 
         long actual = wheel.getCurrentMemberUserId();
         assertThat(actual, is(currentMemberUserId));
@@ -297,9 +304,14 @@ public class ComposerTest {
         when(wheelRepo.findByGroupId(groupId)).thenReturn(Optional.of(wheel));
         when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(Optional.of(wheel));
 
-        underTest.respond(message).get();
+        underTest.respond(owner, message).get();
 
         long actual = wheel.getCurrentMemberUserId();
         assertThat(actual, is(not(badId)));
+    }
+
+    @Test
+    public void nonOwnerShouldNotBeAbleToUserAddCommand() {
+        Me me = groupMe.getMe(accessToken);
     }
 }
