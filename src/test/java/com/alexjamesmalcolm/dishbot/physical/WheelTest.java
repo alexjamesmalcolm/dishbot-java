@@ -26,6 +26,9 @@ public class WheelTest {
 
     private long groupId = 123;
 
+    @Mock
+    private Account owner;
+
     @Before
     public void setup() {
         long firstUserId = 100L;
@@ -37,7 +40,7 @@ public class WheelTest {
 
     @Test
     public void shouldGetCurrentMemberAsAddedMember() {
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         wheel.addMember(memberOne);
         long userId = wheel.getCurrentMemberUserId();
         assertThat(userId, is(memberOne.getUserId()));
@@ -45,7 +48,7 @@ public class WheelTest {
 
     @Test
     public void shouldAddTwoPeopleToWheelAndTheFirstPersonShouldBeCurrent() {
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         wheel.addMember(memberOne);
         wheel.addMember(memberTwo);
         long userId = wheel.getCurrentMemberUserId();
@@ -54,7 +57,7 @@ public class WheelTest {
 
     @Test
     public void shouldAdvanceTheWheelAndTheSecondPersonShouldBeCurrent() {
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         wheel.addMember(memberOne);
         wheel.addMember(memberTwo);
         wheel.advanceWheel();
@@ -64,7 +67,7 @@ public class WheelTest {
 
     @Test
     public void shouldWrapAroundWhenAdvancingTwiceWithTwoPeople() {
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         wheel.addMember(memberOne);
         wheel.addMember(memberTwo);
         wheel.advanceWheel();
@@ -76,7 +79,7 @@ public class WheelTest {
     @Test
     public void shouldGetDefaultFineDurationOfFourtyEightHours() {
         long expected = 48L;
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         Duration actual = wheel.getFineDuration();
         assertThat(actual.toHours(), is(expected));
     }
@@ -84,7 +87,7 @@ public class WheelTest {
     @Test
     public void shouldBeAbleToSetTheFineDurationToTenHoursFromConstructor() {
         long expected = 10;
-        Wheel wheel = new Wheel(groupId, Duration.ofHours(expected));
+        Wheel wheel = new Wheel(owner, groupId, Duration.ofHours(expected));
         Duration actual = wheel.getFineDuration();
         assertThat(actual.toHours(), is(expected));
     }
@@ -92,7 +95,7 @@ public class WheelTest {
     @Test
     public void shouldBeAbleToSetTheFineDurationToEightHoursFromSetter() {
         long expected = 8;
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         Duration fineDuration = Duration.ofHours(expected);
         wheel.setFineDuration(fineDuration);
         Duration actual = wheel.getFineDuration();
@@ -101,7 +104,7 @@ public class WheelTest {
 
     @Test
     public void shouldGetNullForTimeUntilFineIfThereIsNoCurrentMember() {
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         Duration actual = wheel.getDurationUntilFineForCurrent();
         assertNull(actual);
     }
@@ -109,7 +112,7 @@ public class WheelTest {
     @Test
     public void shouldGetFourtyEightHoursUntilFineForCurrentMember() {
         long expected = 48;
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         wheel.addMember(memberOne);
         Duration actual = wheel.getDurationUntilFineForCurrent();
         assertThat(actual.toHours(), is(expected));
@@ -118,7 +121,7 @@ public class WheelTest {
     @Test
     public void shouldGetTenHoursUntilFineForCurrentMember() {
         long expected = 10;
-        Wheel wheel = new Wheel(groupId, Duration.ofHours(10));
+        Wheel wheel = new Wheel(owner, groupId, Duration.ofHours(10));
         wheel.addMember(memberOne);
         Duration actual = wheel.getDurationUntilFineForCurrent();
         assertThat(actual.toHours(), is(expected));
@@ -128,7 +131,7 @@ public class WheelTest {
     public void shouldGetOneSecondLessThanFourtyEightHoursUntilFineForCurrentMember() throws InterruptedException {
         BigDecimal expected = new BigDecimal(1000);
         Duration fineDuration = Duration.ofHours(48);
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         wheel.addMember(memberOne);
         sleep(expected.intValue());
         Duration actual = wheel.getDurationUntilFineForCurrent();
@@ -139,7 +142,7 @@ public class WheelTest {
     @Test
     public void shouldGetDefaultFineOfFiveDollars() {
         Double expected = 5.0;
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         Double fine = wheel.getFineAmount();
         assertThat(fine, is(expected));
     }
@@ -147,7 +150,7 @@ public class WheelTest {
     @Test
     public void shouldGetConstructorSetTenDollars() {
         Double expected = 10.0;
-        Wheel wheel = new Wheel(groupId, expected);
+        Wheel wheel = new Wheel(owner, groupId, expected);
         Double fine = wheel.getFineAmount();
         assertThat(fine, is(expected));
     }
@@ -155,7 +158,7 @@ public class WheelTest {
     @Test
     public void shouldAddMemberAndThenGetTheirFineAsZero() {
         Double expected = 0.0;
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         wheel.addMember(memberOne);
         Map<Long, Double> fineAmounts = wheel.getFines();
         Double actual = fineAmounts.get(memberOne.getUserId());
@@ -165,7 +168,7 @@ public class WheelTest {
     @Test
     public void shouldHaveMemberNotBeExpired() {
         boolean expected = false;
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         wheel.addMember(memberOne);
         boolean actual = wheel.isExpired();
         assertThat(actual, is(expected));
@@ -176,7 +179,7 @@ public class WheelTest {
         boolean expected = true;
         int sleepTime = 1;
         Duration fineDuration = Duration.ofMillis(sleepTime);
-        Wheel wheel = new Wheel(groupId, fineDuration);
+        Wheel wheel = new Wheel(owner, groupId, fineDuration);
         wheel.addMember(memberOne);
         wheel.addMember(memberTwo);
         sleep(sleepTime + 1);
@@ -187,7 +190,7 @@ public class WheelTest {
     @Test
     public void shouldBeAbleToGiveMemberOneAFine() {
         Double expected = 5.0;
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         wheel.addMember(memberOne);
         wheel.addMember(memberTwo);
         wheel.giveFine(memberOne);
@@ -199,7 +202,7 @@ public class WheelTest {
     @Test
     public void shouldBeAbleToGiveMemberTwoFines() {
         Double expected = 10.0;
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         wheel.addMember(memberOne);
         wheel.addMember(memberTwo);
         wheel.giveFine(memberOne);
@@ -211,7 +214,7 @@ public class WheelTest {
 
     @Test
     public void shouldHaveCurrentMemberBeRemovedAsCurrentWhenRemovedFromWheel() {
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         Long expected = memberTwo.getUserId();
         wheel.addMember(memberOne);
         wheel.addMember(memberTwo);
@@ -222,7 +225,7 @@ public class WheelTest {
 
     @Test
     public void shouldRemoveUserFromFinesWhenRemovingUserFromWheel() {
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         wheel.addMember(memberOne);
         wheel.addMember(memberTwo);
         wheel.removeMember(memberOne);

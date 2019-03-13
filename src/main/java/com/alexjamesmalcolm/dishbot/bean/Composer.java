@@ -106,7 +106,7 @@ public class Composer {
         Optional<Member> potentialMember = group.queryForMember(userId);
         if (potentialMember.isPresent()) {
             Optional<Wheel> potentialWheel = wheelRepo.findByGroupId(group.getGroupId());
-            Wheel wheel = potentialWheel.orElse(new Wheel(group.getGroupId()));
+            Wheel wheel = potentialWheel.orElse(new Wheel(owner, group.getGroupId()));
             wheel.addMember(userId);
             wheelRepo.save(wheel);
             em.flush();

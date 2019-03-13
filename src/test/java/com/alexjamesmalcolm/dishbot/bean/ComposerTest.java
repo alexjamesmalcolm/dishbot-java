@@ -73,7 +73,7 @@ public class ComposerTest {
         when(nextMember.getUserId()).thenReturn(nextMemberUserId);
         when(group.queryForMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
         when(group.queryForMember(nextMemberUserId)).thenReturn(Optional.of(nextMember));
-        wheel = new Wheel(groupId);
+        wheel = new Wheel(owner, groupId);
         wheel.addMember(currentMember);
         wheel.addMember(nextMember);
         when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(Optional.of(wheel));
@@ -157,7 +157,7 @@ public class ComposerTest {
         when(message.getUserId()).thenReturn(currentMemberUserId);
         String currentName = "Alex";
         long hours = 10;
-        wheel = new Wheel(groupId, Duration.ofHours(hours));
+        wheel = new Wheel(owner, groupId, Duration.ofHours(hours));
         wheel.addMember(currentMember);
         wheel.addMember(nextMember);
         when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(Optional.of(wheel));
@@ -176,7 +176,7 @@ public class ComposerTest {
         when(message.getUserId()).thenReturn(currentMemberUserId);
         String currentName = "Alex";
         long hours = 10;
-        wheel = new Wheel(groupId, Duration.ofHours(hours));
+        wheel = new Wheel(owner, groupId, Duration.ofHours(hours));
         wheel.addMember(currentMember);
         wheel.addMember(nextMember);
         when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(Optional.of(wheel));
@@ -278,7 +278,7 @@ public class ComposerTest {
         List<Member> members = Arrays.asList(currentMember, nextMember);
         when(group.getMembers()).thenReturn(members);
         when(group.queryForMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
-        wheel = new Wheel(groupId);
+        wheel = new Wheel(owner, groupId);
         when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(Optional.of(wheel));
         when(wheelRepo.findByGroupId(groupId)).thenReturn(Optional.of(wheel));
         when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(Optional.of(wheel));
@@ -299,7 +299,7 @@ public class ComposerTest {
         List<Member> members = Arrays.asList(currentMember, nextMember);
         when(group.getMembers()).thenReturn(members);
         when(group.queryForMember(currentMemberUserId)).thenReturn(Optional.of(currentMember));
-        wheel = new Wheel(groupId);
+        wheel = new Wheel(owner, groupId);
         when(wheelRepo.findByGroupId(message.getGroupId())).thenReturn(Optional.of(wheel));
         when(wheelRepo.findByGroupId(groupId)).thenReturn(Optional.of(wheel));
         when(wheelRepo.findByGroupId(group.getGroupId())).thenReturn(Optional.of(wheel));

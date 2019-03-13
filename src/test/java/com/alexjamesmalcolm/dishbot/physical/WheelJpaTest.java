@@ -1,6 +1,8 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
+import com.alexjamesmalcolm.dishbot.AccountRepository;
 import com.alexjamesmalcolm.dishbot.WheelRepository;
+import com.alexjamesmalcolm.groupme.response.Group;
 import com.alexjamesmalcolm.groupme.response.Member;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +15,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
@@ -31,17 +35,27 @@ public class WheelJpaTest {
     @Resource
     private WheelRepository wheelRepo;
 
+    @Resource
+    private AccountRepository accountRepo;
+
     @Mock
     private Member memberOne;
+
+    private Account owner;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        String accessToken = "";
+        Long userId = 1L;
+        Collection<Group> groups = new ArrayList<>();
+        owner = new Account(accessToken, userId, groups);
+        owner = accountRepo.save(owner);
     }
 
     @Test
     public void shouldSaveWheel() {
-        Wheel wheel = new Wheel(123);
+        Wheel wheel = new Wheel(owner, 123);
         wheel = em.persist(wheel);
         long id = wheel.getId();
         em.flush();
@@ -52,8 +66,8 @@ public class WheelJpaTest {
 
     @Test
     public void shouldSaveAndRetrieveTwoWheels() {
-        Wheel firstWheel = new Wheel(123);
-        Wheel secondWheel = new Wheel(123);
+        Wheel firstWheel = new Wheel(owner, 123);
+        Wheel secondWheel = new Wheel(owner, 123);
         firstWheel = em.persist(firstWheel);
         secondWheel = em.persist(secondWheel);
         long firstId = firstWheel.getId();
@@ -68,7 +82,7 @@ public class WheelJpaTest {
     @Test
     public void shouldBeAbleToFindWheelByGroupId() {
         long groupId = 123;
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         em.persist(wheel);
         em.flush();
         em.clear();
@@ -80,7 +94,7 @@ public class WheelJpaTest {
     @Test
     public void shouldGetCurrentMemberAsAddedMember() {
         long groupId = 123;
-        Wheel wheel = new Wheel(groupId);
+        Wheel wheel = new Wheel(owner, groupId);
         when(memberOne.getUserId()).thenReturn(20L);
         wheel.addMember(memberOne);
         em.persist(wheel);

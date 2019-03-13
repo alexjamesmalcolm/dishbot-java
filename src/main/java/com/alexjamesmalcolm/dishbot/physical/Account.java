@@ -17,13 +17,14 @@ public class Account {
     private Long userId;
     @ElementCollection
     private Collection<Long> groupIds;
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private Collection<Wheel> wheels;
 
-    public Account(String accessToken, Long userId, Collection<Wheel> wheels, Collection<Group> groups) {
+    private Account() {}
+
+    public Account(String accessToken, Long userId, Collection<Group> groups) {
         this.accessToken = accessToken;
         this.userId = userId;
-        this.wheels = wheels;
         updateGroups(groups);
     }
 

@@ -25,7 +25,7 @@ public class Wheel {
     private Instant currentStart;
     private boolean hasWarnedCurrent;
     private Double fineAmount;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Account owner;
 
     @ElementCollection
@@ -34,7 +34,8 @@ public class Wheel {
     private Wheel() {
     }
 
-    public Wheel(long groupId) {
+    public Wheel(Account owner, long groupId) {
+        this.owner = owner;
         this.userIds = new ArrayList<>();
         this.groupId = groupId;
         this.fineDuration = Duration.ofHours(48);
@@ -43,13 +44,13 @@ public class Wheel {
         this.fines = new HashMap<>();
     }
 
-    public Wheel(long groupId, Duration fineDuration) {
-        this(groupId);
+    public Wheel(Account owner, long groupId, Duration fineDuration) {
+        this(owner, groupId);
         this.fineDuration = fineDuration;
     }
 
-    public Wheel(long groupId, Double fineAmount) {
-        this(groupId);
+    public Wheel(Account owner, long groupId, Double fineAmount) {
+        this(owner, groupId);
         this.fineAmount = fineAmount;
     }
 
