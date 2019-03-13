@@ -23,7 +23,7 @@
             <div class="person" th:each="user : ${group.members}" th:object="${user}">
                 <p>
                     <span>ID: </span>
-                    <span th:text="*{id}"></span>
+                    <span th:text="*{userId}"></span>
                 </p>
                 <p>
                     <span>Name: </span>
