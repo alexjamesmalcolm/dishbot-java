@@ -3,6 +3,7 @@
 !gradle/wrapper/gradle-wrapper.jar
 bin
 *.db
+gradle.properties
 
 ### STS ###
 .apt_generated
