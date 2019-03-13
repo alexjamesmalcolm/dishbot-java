@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.net.URI;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -100,8 +98,11 @@ public class GroupMeService {
     }
 
     private Envelope makeRequest(String path) {
-//        Object json = restTemplate.getForObject(path, Object.class);
-//        return objectMapper.convertValue(json, Envelope.class);
         return restTemplate.getForObject(path, Envelope.class);
+    }
+
+    public Optional<Bot> getBot(Long groupId, URI callback) {
+        List<Bot> bots = getBots(groupId);
+        return bots.stream().filter(bot -> bot.getCallbackUrl().equals(callback)).findFirst();
     }
 }

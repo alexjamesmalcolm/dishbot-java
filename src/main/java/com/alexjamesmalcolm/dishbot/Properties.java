@@ -4,14 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
+
 @Component
 public class Properties {
 
-    private final String baseUrl;
+    private final URI baseUrl;
     private final String groupMeAccessToken;
     private final String rollbarAccessToken;
-    private final String rollbarEndpoint;
+    private final URI rollbarEndpoint;
     private final String environment;
+    private final URI dishbotUrl;
 
 
     @Autowired
@@ -20,19 +23,21 @@ public class Properties {
             @Value("${groupme.baseurl}") String baseUrl,
             @Value("${rollbar.accesstoken}") String rollbarAccessToken,
             @Value("${rollbar.endpoint}") String rollbarEndpoint,
-            @Value("${environment}") String environment) {
+            @Value("${environment}") String environment,
+            @Value("${dishbot.callback}") String dishbotUrl) {
         this.groupMeAccessToken = groupMeAccessToken;
-        this.baseUrl = baseUrl;
+        this.baseUrl = URI.create(baseUrl);
         this.rollbarAccessToken = rollbarAccessToken;
-        this.rollbarEndpoint = rollbarEndpoint;
+        this.rollbarEndpoint = URI.create(rollbarEndpoint);
         this.environment = environment;
+        this.dishbotUrl = URI.create(dishbotUrl);
     }
 
     public String getGroupMeAccessToken() {
         return groupMeAccessToken;
     }
 
-    public String getBaseUrl() {
+    public URI getBaseUrl() {
         return baseUrl;
     }
 
@@ -44,7 +49,11 @@ public class Properties {
         return rollbarAccessToken;
     }
 
-    public String getRollbarEndpoint() {
+    public URI getRollbarEndpoint() {
         return rollbarEndpoint;
+    }
+
+    public URI getDishbotUrl() {
+        return dishbotUrl;
     }
 }

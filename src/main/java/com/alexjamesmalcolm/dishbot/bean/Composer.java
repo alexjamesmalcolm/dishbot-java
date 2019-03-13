@@ -1,5 +1,6 @@
 package com.alexjamesmalcolm.dishbot.bean;
 
+import com.alexjamesmalcolm.dishbot.Properties;
 import com.alexjamesmalcolm.dishbot.WheelRepository;
 import com.alexjamesmalcolm.dishbot.groupme.Group;
 import com.alexjamesmalcolm.dishbot.groupme.Member;
@@ -31,6 +32,9 @@ public class Composer {
 
     @Resource
     private EntityManager em;
+
+    @Resource
+    private Properties properties;
 
     public Optional<String> respond(Message message) {
         String text = message.getText().toLowerCase();
@@ -167,8 +171,7 @@ public class Composer {
                 String name = member.getName();
                 Duration timeLeft = wheel.getDurationUntilFineForCurrent();
                 String warning = name + " has " + timeLeft.toHours() + " hours left to do the dishes.";
-                String botId = groupMe.getBots(group.getGroupId()).get(0).getBotId();
-                //TODO Come up with something better than just getting the first bot
+                String botId = groupMe.getBot(group.getGroupId(), properties.getDishbotUrl()).get().getBotId();
                 groupMe.sendMessage(warning, botId);
                 wheel.currentHasBeenWarned();
             } else {
@@ -193,8 +196,7 @@ public class Composer {
                 long nextId = wheel.getCurrentMemberUserId();
                 String nextName = group.queryForMember(nextId).get().getName();
                 String warning = currentName + " took too long, " + nextName + " is on dishes now.";
-                String botId = groupMe.getBots(group.getGroupId()).get(0).getBotId();
-                //TODO Come up with something better than just getting the first bot
+                String botId = groupMe.getBot(group.getGroupId(), properties.getDishbotUrl()).get().getBotId();
                 groupMe.sendMessage(warning, botId);
             } else {
                 wheel.removeMember(currentId);

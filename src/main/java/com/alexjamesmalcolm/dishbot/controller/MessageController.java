@@ -1,8 +1,8 @@
 package com.alexjamesmalcolm.dishbot.controller;
 
+import com.alexjamesmalcolm.dishbot.Properties;
 import com.alexjamesmalcolm.dishbot.bean.Composer;
 import com.alexjamesmalcolm.dishbot.bean.GroupMeService;
-import com.alexjamesmalcolm.dishbot.groupme.Bot;
 import com.alexjamesmalcolm.dishbot.groupme.Group;
 import com.alexjamesmalcolm.dishbot.groupme.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +33,9 @@ public class MessageController {
     @Resource
     private Rollbar log;
 
+    @Resource
+    private Properties properties;
+
     @Transactional
     @RequestMapping("/receive-message")
     public void receiveMessage(HttpServletRequest request) throws IOException {
@@ -45,7 +48,7 @@ public class MessageController {
         long groupId = message.getGroupId();
         Optional<String> response = composer.respond(message);
         response.ifPresent(content -> {
-            String botId = getBot(groupId).getBotId();
+            String botId = groupMe.getBot(groupId, properties.getDishbotUrl()).get().getBotId();
             groupMe.sendMessage(content, botId);
         });
         composer.tryToFineAll();
@@ -59,11 +62,5 @@ public class MessageController {
             long groupId = group.getGroupId();
             return groupMe.getMessages(groupId);
         }).flatMap(Collection::stream).collect(Collectors.toList());
-    }
-
-    private Bot getBot(long groupId) {
-        List<Bot> bots = groupMe.getBots(groupId);
-        return bots.get(0);
-        // TODO Come up with something better than just getting the first bot
     }
 }

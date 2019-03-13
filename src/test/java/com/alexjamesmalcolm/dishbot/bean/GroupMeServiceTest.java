@@ -125,4 +125,10 @@ public class GroupMeServiceTest {
         BotMessage message = new BotMessage("Test", id);
         underTest.sendMessage(message);
     }
+
+    @Test
+    public void foo() {
+        List<Bot> bots = underTest.getBots(groupId);
+        bots.get(0);
+    }
 }

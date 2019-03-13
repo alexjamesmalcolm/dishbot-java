@@ -48,4 +48,8 @@ public class Bot {
     public Long getGroupId() {
         return groupId;
     }
+
+    public URI getCallbackUrl() {
+        return callbackUrl;
+    }
 }
