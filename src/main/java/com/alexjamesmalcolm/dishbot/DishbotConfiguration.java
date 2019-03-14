@@ -34,7 +34,7 @@ public class DishbotConfiguration {
     }
 
     @Bean
-    public OwnerOnlyAspect exampleAspect() {
-        return new OwnerOnlyAspect();
+    public DishbotAspect exampleAspect() {
+        return new DishbotAspect();
     }
 }
