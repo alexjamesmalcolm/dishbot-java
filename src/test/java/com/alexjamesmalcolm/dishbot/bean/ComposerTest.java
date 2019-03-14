@@ -67,6 +67,7 @@ public class ComposerTest {
         underTest = new Composer();
         MockitoAnnotations.initMocks(this);
         when(message.getGroupId()).thenReturn(groupId);
+        when(message.getUserId()).thenReturn(currentMemberUserId);
         when(groupMe.getGroup(accessToken, message)).thenReturn(group);
         when(currentMember.getUserId()).thenReturn(currentMemberUserId);
         when(nextMember.getUserId()).thenReturn(nextMemberUserId);
