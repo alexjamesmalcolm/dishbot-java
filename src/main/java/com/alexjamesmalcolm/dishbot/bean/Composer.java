@@ -153,6 +153,9 @@ public class Composer {
             return Optional.of(EMPTY_DISH_WHEEL_WARNING);
         }
         Wheel wheel = potentialWheel.get();
+        if (!message.getUserId().equals(wheel.getCurrentMemberUserId())) {
+            return Optional.empty();
+        }
         long currentMemberUserId = wheel.getCurrentMemberUserId();
         wheel.advanceWheel();
         long nextMemberUserId = wheel.getCurrentMemberUserId();
