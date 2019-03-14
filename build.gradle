@@ -35,6 +35,7 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-web')
 	implementation('com.rollbar:rollbar-web:1.2.1')
 	implementation('com.github.alexjamesmalcolm:groupme:1.0')
+	implementation('org.springframework.boot:spring-boot-starter-aop')
 	runtimeOnly('com.h2database:h2')
 	runtimeOnly('org.postgresql:postgresql')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')

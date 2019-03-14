@@ -1,5 +1,6 @@
 package com.alexjamesmalcolm.dishbot.bean;
 
+import com.alexjamesmalcolm.dishbot.OwnerOnly;
 import com.alexjamesmalcolm.dishbot.Properties;
 import com.alexjamesmalcolm.dishbot.WheelRepository;
 import com.alexjamesmalcolm.dishbot.physical.Account;
@@ -56,6 +57,7 @@ public class Composer {
         return Optional.empty();
     }
 
+    @OwnerOnly
     private Optional<String> removeUserCommand(Account owner, Message message) {
         Group group = groupMe.getGroup(owner.getAccessToken(), message);
         Optional<Wheel> optionalWheel = wheelRepo.findByGroupId(group.getGroupId());
@@ -100,6 +102,7 @@ public class Composer {
         return Optional.of(text);
     }
 
+    @OwnerOnly
     private Optional<String> addUserCommand(Account owner, Message message) {
         Group group = groupMe.getGroup(owner.getAccessToken(), message);
         long userId = parseLong(message.getText().substring(5));

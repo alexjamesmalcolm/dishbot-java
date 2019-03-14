@@ -4,7 +4,6 @@ import com.alexjamesmalcolm.dishbot.WheelRepository;
 import com.alexjamesmalcolm.dishbot.physical.Account;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import com.alexjamesmalcolm.groupme.response.Group;
-import com.alexjamesmalcolm.groupme.response.Me;
 import com.alexjamesmalcolm.groupme.response.Member;
 import com.alexjamesmalcolm.groupme.response.Message;
 import com.alexjamesmalcolm.groupme.service.GroupMeService;
@@ -308,10 +307,5 @@ public class ComposerTest {
 
         long actual = wheel.getCurrentMemberUserId();
         assertThat(actual, is(not(badId)));
-    }
-
-    @Test
-    public void nonOwnerShouldNotBeAbleToUserAddCommand() {
-        Me me = groupMe.getMe(accessToken);
     }
 }
