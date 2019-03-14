@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.client.HttpServerErrorException;
 
 import javax.annotation.Resource;
 import java.util.Collection;
@@ -39,10 +38,14 @@ public class AdminController {
     public String displayManageGroupPage(Model model, @PathVariable Long groupId) {
         Collection<Account> accounts = accountRepo.findAllByGroupId(groupId);
         Optional<Account> optionalAccount = accounts.stream().findAny();
-        String accessToken = optionalAccount.orElseThrow(() -> new RuntimeException("No account found.")).getAccessToken();
-        Group group = groupMe.getGroup(accessToken, groupId);
-        model.addAttribute("group", group);
-        return "group";
+        if (optionalAccount.isPresent()) {
+            String accessToken = optionalAccount.get().getAccessToken();
+            Group group = groupMe.getGroup(accessToken, groupId);
+            model.addAttribute("group", group);
+            return "group";
+        } else {
+            return "redirect:/setup";
+        }
     }
 
     @RequestMapping("/group")
