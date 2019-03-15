@@ -19,5 +19,5 @@ public interface AccountRepository extends CrudRepository<Account, Long> {
 
     Collection<Account> findAll();
 
-    Optional<Account> findByAccessToken(String accessToken);
+    Optional<Account> findByToken(String token);
 }

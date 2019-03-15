@@ -27,16 +27,16 @@ public class AccountController {
     private GroupMeService groupMe;
 
     @RequestMapping("/account")
-    public String receiveRedirectFromGroupMe(Model model, @RequestParam("account_token") String accountToken) {
-        Me user = groupMe.getMe(accountToken);
+    public String receiveRedirectFromGroupMe(Model model, @RequestParam("account_token") String token) {
+        Me user = groupMe.getMe(token);
         Long userId = user.getUserId();
         Optional<Account> optionalAccount = accountRepo.findByUserId(userId);
         Account account = optionalAccount.orElseGet(() -> {
-            List<Group> groups = groupMe.getAllGroups(accountToken);
-            return accountRepo.save(new Account(accountToken, userId, groups));
+            List<Group> groups = groupMe.getAllGroups(token);
+            return accountRepo.save(new Account(token, userId, groups));
         });
-        if (!account.getToken().equals(accountToken)) {
-            account.updateToken(accountToken);
+        if (!account.getToken().equals(token)) {
+            account.updateToken(token);
             account = accountRepo.save(account);
         }
         model.addAttribute("account", account);
