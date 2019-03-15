@@ -32,9 +32,4 @@ public class DishbotConfiguration {
     public GroupMeService groupMeService() {
         return new GroupMeService();
     }
-
-    @Bean
-    public DishbotAspect dishbotAspect() {
-        return new DishbotAspect();
-    }
 }

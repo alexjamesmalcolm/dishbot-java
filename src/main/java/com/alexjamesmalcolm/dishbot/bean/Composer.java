@@ -1,8 +1,8 @@
 package com.alexjamesmalcolm.dishbot.bean;
 
-import com.alexjamesmalcolm.dishbot.OwnerOnly;
 import com.alexjamesmalcolm.dishbot.Properties;
 import com.alexjamesmalcolm.dishbot.WheelRepository;
+import com.alexjamesmalcolm.dishbot.annotation.LogExecutionTime;
 import com.alexjamesmalcolm.dishbot.physical.Account;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import com.alexjamesmalcolm.groupme.response.Group;
@@ -39,6 +39,7 @@ public class Composer {
     @Resource
     private Properties properties;
 
+    @LogExecutionTime
     public Optional<String> respond(Account owner, Message message) {
         String text = message.getText().toLowerCase();
         if (text.equals("!dishes")) {
@@ -57,7 +58,6 @@ public class Composer {
         return Optional.empty();
     }
 
-    @OwnerOnly
     private Optional<String> removeUserCommand(Account owner, Message message) {
         Group group = groupMe.getGroup(owner.getToken(), message);
         Optional<Wheel> optionalWheel = wheelRepo.findByGroupId(group.getGroupId());
@@ -102,22 +102,25 @@ public class Composer {
         return Optional.of(text);
     }
 
-    @OwnerOnly
     private Optional<String> addUserCommand(Account owner, Message message) {
         Group group = groupMe.getGroup(owner.getToken(), message);
-        long userId = parseLong(message.getText().substring(5));
-        Optional<Member> potentialMember = group.queryForMember(userId);
-        if (potentialMember.isPresent()) {
-            Optional<Wheel> potentialWheel = wheelRepo.findByGroupId(group.getGroupId());
-            Wheel wheel = potentialWheel.orElse(new Wheel(owner, group.getGroupId()));
-            wheel.addMember(userId);
-            wheelRepo.save(wheel);
-            em.flush();
-            em.clear();
-            String name = potentialMember.get().getName();
-            return Optional.of("Added " + name + " to Dish Wheel.");
-        } else {
-            return Optional.of("Could not find user with id " + userId);
+        try {
+            long userId = parseLong(message.getText().substring(5));
+            Optional<Member> potentialMember = group.queryForMember(userId);
+            if (potentialMember.isPresent()) {
+                Optional<Wheel> potentialWheel = wheelRepo.findByGroupId(group.getGroupId());
+                Wheel wheel = potentialWheel.orElse(new Wheel(owner, group.getGroupId()));
+                wheel.addMember(userId);
+                wheelRepo.save(wheel);
+                em.flush();
+                em.clear();
+                String name = potentialMember.get().getName();
+                return Optional.of("Added " + name + " to Dish Wheel.");
+            } else {
+                return Optional.of("Could not find user with id " + userId);
+            }
+        } catch (NumberFormatException ex) {
+            return Optional.empty();
         }
     }
 

@@ -2,12 +2,15 @@ package com.alexjamesmalcolm.dishbot.bean;
 
 import com.alexjamesmalcolm.dishbot.physical.Account;
 import com.alexjamesmalcolm.groupme.response.Message;
+import com.alexjamesmalcolm.groupme.service.GroupMeService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
@@ -20,6 +23,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class ComposerAopTest {
 
+    @InjectMocks
     @Resource
     private Composer underTest;
 
@@ -29,6 +33,9 @@ public class ComposerAopTest {
     @Mock
     private Message message;
 
+    @MockBean
+    private GroupMeService groupMe;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -36,9 +43,10 @@ public class ComposerAopTest {
 
     @Test
     public void nonOwnerShouldNotBeAbleToUserAddCommand() {
-        String text = "!add ";
+        long messageUserId = 123L;
+        String text = "!add " + messageUserId;
         when(message.getText()).thenReturn(text);
-        when(message.getUserId()).thenReturn(123L);
+        when(message.getUserId()).thenReturn(messageUserId);
         when(owner.getUserId()).thenReturn(321L);
         Optional<String> response = underTest.respond(owner, message);
         assertFalse(response.isPresent());

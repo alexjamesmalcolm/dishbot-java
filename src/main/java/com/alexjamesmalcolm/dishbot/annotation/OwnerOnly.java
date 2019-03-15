@@ -1,4 +1,4 @@
-package com.alexjamesmalcolm.dishbot;
+package com.alexjamesmalcolm.dishbot.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

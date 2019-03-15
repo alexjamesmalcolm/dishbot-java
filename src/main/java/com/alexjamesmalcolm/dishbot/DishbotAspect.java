@@ -2,37 +2,27 @@ package com.alexjamesmalcolm.dishbot;
 
 import com.alexjamesmalcolm.dishbot.physical.Account;
 import com.alexjamesmalcolm.groupme.response.Message;
-import com.rollbar.notifier.Rollbar;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Aspect
+@Component
 public class DishbotAspect {
 
-    @Resource
-    private Rollbar logger;
-
-    @Pointcut("@annotation(OwnerOnly)")
+    @Pointcut("@annotation(com.alexjamesmalcolm.dishbot.annotation.OwnerOnly)")
     public void annotatedOwnerOnlyMethods() {
     }
 
-    @Pointcut("execution(* *..*(com.alexjamesmalcolm.dishbot.physical.Account,..))")
-    public void firstParameterAccount() {
-    }
-
-    @Pointcut("execution(* *..*(*,com.alexjamesmalcolm.groupme.response.Message,..))")
-    public void secondParameterMessage() {
-    }
-
-    @Around("annotatedOwnerOnlyMethods() && firstParameterAccount() && secondParameterMessage()")
+    @Around("annotatedOwnerOnlyMethods()")
     public Object checkIfOwner(ProceedingJoinPoint joinPoint) throws Throwable {
+        System.out.println("OWNERONLY");
         List<Object> argsList = Arrays.asList(joinPoint.getArgs());
         Account owner = (Account) argsList.get(0);
         Message message = (Message) argsList.get(1);
@@ -40,6 +30,19 @@ public class DishbotAspect {
             return joinPoint.proceed();
         }
         return Optional.empty();
+    }
+
+    @Around("@annotation(com.alexjamesmalcolm.dishbot.annotation.LogExecutionTime)")
+    public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+        System.out.println("LOG STARTING");
+        long start = System.currentTimeMillis();
+
+        Object proceed = joinPoint.proceed();
+
+        long executionTime = System.currentTimeMillis() - start;
+
+        System.out.println(joinPoint.getSignature() + " executed in " + executionTime + "ms");
+        return proceed;
     }
 
 }
