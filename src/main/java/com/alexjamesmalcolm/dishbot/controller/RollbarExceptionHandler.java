@@ -20,7 +20,8 @@ public class RollbarExceptionHandler {
     private Rollbar rollbar;
 
     @ExceptionHandler(Exception.class)
-    public ModelAndView defaultExceptionHandler(ModelAndView mav, HttpServletRequest request, Exception e) {
+    public ModelAndView defaultExceptionHandler(HttpServletRequest request, Exception e) {
+        ModelAndView mav = new ModelAndView();
         rollbar.error(e);
         mav.addObject("exception", e);
         mav.addObject("url", request.getRequestURL());

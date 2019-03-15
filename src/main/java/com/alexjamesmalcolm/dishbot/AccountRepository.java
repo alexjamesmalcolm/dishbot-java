@@ -18,4 +18,6 @@ public interface AccountRepository extends CrudRepository<Account, Long> {
     Optional<Account> findByGroupId(@Param("groupId") Long groupId);
 
     Collection<Account> findAll();
+
+    Optional<Account> findByAccessToken(String accessToken);
 }
