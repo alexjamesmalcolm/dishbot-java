@@ -2,7 +2,6 @@ package com.alexjamesmalcolm.dishbot.bean;
 
 import com.alexjamesmalcolm.dishbot.Properties;
 import com.alexjamesmalcolm.dishbot.WheelRepository;
-import com.alexjamesmalcolm.dishbot.annotation.LogExecutionTime;
 import com.alexjamesmalcolm.dishbot.physical.Account;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import com.alexjamesmalcolm.groupme.response.Group;
@@ -39,7 +38,6 @@ public class Composer {
     @Resource
     private Properties properties;
 
-    @LogExecutionTime
     public Optional<String> respond(Account owner, Message message) {
         String text = message.getText().toLowerCase();
         if (text.equals("!dishes")) {
