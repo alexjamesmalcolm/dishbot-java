@@ -39,7 +39,7 @@ public class AdminController {
         Collection<Account> accounts = accountRepo.findAllByGroupId(groupId);
         Optional<Account> optionalAccount = accounts.stream().findAny();
         if (optionalAccount.isPresent()) {
-            String accessToken = optionalAccount.get().getAccessToken();
+            String accessToken = optionalAccount.get().getToken();
             Group group = groupMe.getGroup(accessToken, groupId);
             model.addAttribute("group", group);
             return "group";
@@ -51,7 +51,7 @@ public class AdminController {
     @RequestMapping("/group")
     public String displayAllGroupsPage(Model model) {
         Collection<Account> accounts = accountRepo.findAll();
-        Iterable<Group> groups = accounts.stream().map(account -> groupMe.getAllGroups(account.getAccessToken())).flatMap(Collection::stream).distinct().collect(toList());
+        Iterable<Group> groups = accounts.stream().map(account -> groupMe.getAllGroups(account.getToken())).flatMap(Collection::stream).distinct().collect(toList());
         model.addAttribute("groups", groups);
         return "group-all";
     }

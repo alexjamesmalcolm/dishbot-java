@@ -34,7 +34,7 @@ public class DishbotConfiguration {
     }
 
     @Bean
-    public DishbotAspect exampleAspect() {
+    public DishbotAspect dishbotAspect() {
         return new DishbotAspect();
     }
 }

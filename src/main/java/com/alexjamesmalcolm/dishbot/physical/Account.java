@@ -13,7 +13,7 @@ public class Account {
     @Id
     @GeneratedValue
     private long id;
-    private String accessToken;
+    private String token;
     private Long userId;
     @ElementCollection
     private Collection<Long> groupIds;
@@ -22,14 +22,14 @@ public class Account {
 
     private Account() {}
 
-    public Account(String accessToken, Long userId, Collection<Group> groups) {
-        this.accessToken = accessToken;
+    public Account(String token, Long userId, Collection<Group> groups) {
+        this.token = token;
         this.userId = userId;
         updateGroups(groups);
     }
 
-    public String getAccessToken() {
-        return accessToken;
+    public String getToken() {
+        return token;
     }
 
     public Long getUserId() {
@@ -50,5 +50,9 @@ public class Account {
 
     public boolean isInGroup(Long groupId) {
         return groupIds.contains(groupId);
+    }
+
+    public void updateToken(String token) {
+        this.token = token;
     }
 }

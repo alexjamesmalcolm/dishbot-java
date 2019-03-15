@@ -56,7 +56,7 @@ public class GroupMeController {
         Account account = optionalAccount.get();
         Optional<String> response = composer.respond(account, message);
         response.ifPresent(content -> {
-            String botId = groupMe.getBot(account.getAccessToken(), groupId, properties.getDishbotUrl()).get().getBotId();
+            String botId = groupMe.getBot(account.getToken(), groupId, properties.getDishbotUrl()).get().getBotId();
             groupMe.sendMessage(content, botId);
         });
         composer.tryToFineAll();
