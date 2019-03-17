@@ -53,7 +53,7 @@ public class AccountController {
         return "redirect:/account/" + userId + "/settings";
     }
 
-    @GetMapping("/account/{userid}/settings")
+    @GetMapping("/account/{userId}/settings")
     public String settings(Model model, @PathVariable Long userId) {
         Optional<Account> optionalAccount = accountRepo.findByUserId(userId);
         Account account = optionalAccount.get();
