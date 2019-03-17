@@ -50,7 +50,7 @@ public class AccountController {
             account = accountRepo.save(account);
         }
         model.addAttribute("account", account);
-        return MessageFormat.format("redirect:/account/{0}/settings", userId);
+        return "redirect:/account/" + userId + "/settings";
     }
 
     @GetMapping("/account/{userid}/settings")
