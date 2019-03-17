@@ -24,16 +24,6 @@ public class AdminController {
     @Resource
     private AccountRepository accountRepo;
 
-    @RequestMapping("/")
-    public String displayHomePage() {
-        return "home";
-    }
-
-    @RequestMapping("/setup")
-    public String displaySetupPage() {
-        return "setup";
-    }
-
     @RequestMapping("/group/{groupId}")
     public String displayManageGroupPage(Model model, @PathVariable Long groupId) {
         Collection<Account> accounts = accountRepo.findAllByGroupId(groupId);

@@ -26,6 +26,16 @@ public class AccountController {
     @Resource
     private GroupMeService groupMe;
 
+    @RequestMapping("/")
+    public String displayHomePage() {
+        return "home";
+    }
+
+    @RequestMapping("/setup")
+    public String displaySetupPage() {
+        return "setup";
+    }
+
     @RequestMapping("/account")
     public String receiveRedirectFromGroupMe(Model model, @RequestParam("account_token") String token) {
         Me user = groupMe.getMe(token);
