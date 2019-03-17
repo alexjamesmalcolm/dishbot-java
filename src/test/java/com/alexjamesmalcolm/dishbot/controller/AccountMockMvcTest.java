@@ -43,6 +43,6 @@ public class AccountMockMvcTest {
     public void shouldGetSettings() throws Exception {
         long userId = 1278939L;
         Mockito.when(accountRepo.findByUserId(userId)).thenReturn(Optional.of(account));
-        mvc.perform(get("/account/" + userId + "/settings")).andExpect(status().isOk());
+        mvc.perform(get("/account/" + userId)).andExpect(status().isOk());
     }
 }

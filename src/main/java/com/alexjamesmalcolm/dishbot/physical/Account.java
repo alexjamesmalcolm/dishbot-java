@@ -44,7 +44,7 @@ public class Account {
         return wheels;
     }
 
-    public void updateGroups(Collection<Group> groups) {
+    private void updateGroups(Collection<Group> groups) {
         this.groupIds = groups.stream().map(Group::getGroupId).collect(toList());
     }
 
@@ -54,5 +54,10 @@ public class Account {
 
     public void updateToken(String token) {
         this.token = token;
+    }
+
+    public void updateAccount(String token, Collection<Group> groups) {
+        updateToken(token);
+        updateGroups(groups);
     }
 }

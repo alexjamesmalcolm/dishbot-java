@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,11 +52,21 @@ public class AccountController {
         return "redirect:/account/" + userId + "/settings";
     }
 
-    @GetMapping("/account/{userId}/settings")
-    public String settings(Model model, @PathVariable Long userId) {
+    @GetMapping("/account/{userId}")
+    public String settings(Model model, @PathVariable Long userId, @RequestParam String token) {
+        Me user = groupMe.getMe(token);
         Optional<Account> optionalAccount = accountRepo.findByUserId(userId);
+        if (!optionalAccount.isPresent()) {
+            return "redirect:/account?token=" + token;
+        }
         Account account = optionalAccount.get();
+        if (!account.getUserId().equals(user.getUserId())) {
+            return "redirect:/setup";
+        }
+        List<Group> groups = groupMe.getAllGroups(token);
+        account.updateAccount(token, groups);
+        account = accountRepo.save(account);
         model.addAttribute("account", account);
-        return "settings";
+        return "account";
     }
 }
