@@ -37,7 +37,7 @@ public class AccountController {
     }
 
     @RequestMapping("/account")
-    public String receiveRedirectFromGroupMe(Model model, @RequestParam("account_token") String token) {
+    public String receiveRedirectFromGroupMe(Model model, @RequestParam("access_token") String token) {
         Me user = groupMe.getMe(token);
         Long userId = user.getUserId();
         Optional<Account> optionalAccount = accountRepo.findByUserId(userId);
