@@ -25,18 +25,20 @@ public class AccountController {
     @Resource
     private GroupMeService groupMe;
 
+    private String redirectToGroupMeLogon = "redirect:https://oauth.groupme.com/oauth/authorize?client_id=nYOULhOHkuJcPSUjy3TtnXojCWraPk5GcI25nmkm2aShmQ2z";
+
     @RequestMapping("/")
     public String displayHomePage() {
         return "home";
     }
 
-    @RequestMapping("/setup")
+    @RequestMapping("/logon")
     public String displaySetupPage() {
-        return "setup";
+        return redirectToGroupMeLogon;
     }
 
     @RequestMapping("/account")
-    public String receiveRedirectFromGroupMe(Model model, @RequestParam("access_token") String token) {
+    public String receiveRedirectFromGroupMe(@RequestParam("access_token") String token) {
         Me user = groupMe.getMe(token);
         Long userId = user.getUserId();
         Optional<Account> optionalAccount = accountRepo.findByUserId(userId);
@@ -46,10 +48,9 @@ public class AccountController {
         });
         if (!account.getToken().equals(token)) {
             account.updateToken(token);
-            account = accountRepo.save(account);
+            accountRepo.save(account);
         }
-        model.addAttribute("account", account);
-        return "redirect:/account/" + userId + "/settings";
+        return "redirect:/account/" + userId + "?token=" + token;
     }
 
     @GetMapping("/account/{userId}")
@@ -61,9 +62,10 @@ public class AccountController {
         }
         Account account = optionalAccount.get();
         if (!account.getUserId().equals(user.getUserId())) {
-            return "redirect:/setup";
+            return redirectToGroupMeLogon;
         }
         List<Group> groups = groupMe.getAllGroups(token);
+        model.addAttribute("groups", groups);
         account.updateAccount(token, groups);
         account = accountRepo.save(account);
         model.addAttribute("account", account);
