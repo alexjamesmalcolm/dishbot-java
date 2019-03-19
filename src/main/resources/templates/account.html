@@ -2,16 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Account</title>
+    <title>Account [[${account.getName()}]]</title>
 </head>
 <body>
 <h1 th:text="${account.getName()}"></h1>
-<!--<section>-->
-    <!--<h2>Groups</h2>-->
-    <!--<article class="group" th:each="group : ${groups}">-->
-        <!--<h3 th:text="${group.name}"></h3>-->
-    <!--</article>-->
-<!--</section>-->
 <section>
     <h2>Dish Wheels</h2>
     <article class="wheel" th:each="wheel : ${account.wheels}">

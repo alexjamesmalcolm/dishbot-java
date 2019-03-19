@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Wheel</title>
+</head>
+<body>
+<h1>Dish Wheel - [[${wheel.getGroup().name}]]</h1>
+<p>Current Member</p>
+<section>
+    <h2>Members</h2>
+    <article class="person" th:each="member : ${wheel.getMembers()}">
+        <h3 th:text="${member.name}"></h3>
+        <p>Fines: [[${member.}]]</p>
+    </article>
+</section>
+</body>
+</html>
