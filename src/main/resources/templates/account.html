@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Account</title>
 </head>
 <body>
-<p>This is the settings page</p>
+<h1 th:text="${account.getName()}"></h1>
+<section>
+    <h2>Groups</h2>
+    <article class="group" th:each="group : ${groups}">
+        <h3 th:text="${group.name}"></h3>
+    </article>
+</section>
+<section>
+    <h2>Wheels</h2>
+    <article class="wheel" th:each="wheel : ${account.wheels}">
+        <h3></h3>
+    </article>
+</section>
 </body>
 </html>

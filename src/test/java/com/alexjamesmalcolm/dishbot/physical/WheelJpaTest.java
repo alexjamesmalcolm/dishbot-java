@@ -49,7 +49,7 @@ public class WheelJpaTest {
         String accessToken = "";
         Long userId = 1L;
         Collection<Group> groups = new ArrayList<>();
-        owner = new Account(accessToken, userId, groups);
+        owner = new Account(accessToken, userId);
         owner = accountRepo.save(owner);
     }
 

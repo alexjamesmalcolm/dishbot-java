@@ -1,13 +1,20 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
 import com.alexjamesmalcolm.groupme.response.Group;
+import com.alexjamesmalcolm.groupme.response.Me;
+import com.alexjamesmalcolm.groupme.service.GroupMeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.net.URI;
 import java.util.Collection;
+import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
 @Entity
+@Component
 public class Account {
 
     @Id
@@ -20,12 +27,23 @@ public class Account {
     @OneToMany(mappedBy = "owner", orphanRemoval = true)
     private Collection<Wheel> wheels;
 
+    @Transient
+    private static GroupMeService groupMe;
+    @Transient
+    private List<Group> groups;
+    @Transient
+    private Me me;
+
     private Account() {}
 
-    public Account(String token, Long userId, Collection<Group> groups) {
+    public Account(String token, Long userId) {
         this.token = token;
         this.userId = userId;
-        updateGroups(groups);
+    }
+
+    @Autowired
+    public void setGroupMeService(GroupMeService groupMeService) {
+        Account.groupMe = groupMeService;
     }
 
     public String getToken() {
@@ -44,20 +62,39 @@ public class Account {
         return wheels;
     }
 
-    private void updateGroups(Collection<Group> groups) {
-        this.groupIds = groups.stream().map(Group::getGroupId).collect(toList());
-    }
-
     public boolean isInGroup(Long groupId) {
-        return groupIds.contains(groupId);
+        return getGroupIds().contains(groupId);
     }
 
     public void updateToken(String token) {
         this.token = token;
     }
 
-    public void updateAccount(String token, Collection<Group> groups) {
+    public void updateAccount(String token) {
         updateToken(token);
-        updateGroups(groups);
+    }
+
+    public Collection<Group> getGroups() {
+        if (groups == null) {
+            groups = groupMe.getAllGroups(token);
+            groupIds = groups.stream().map(Group::getGroupId).collect(toList());
+        }
+        return groups;
+    }
+
+    private void initiateMe() {
+        if (me == null) {
+            me = groupMe.getMe(token);
+        }
+    }
+
+    public String getName() {
+        initiateMe();
+        return me.getName();
+    }
+
+    public URI getImage() {
+        initiateMe();
+        return me.getImageUrl();
     }
 }

@@ -44,7 +44,7 @@ public class AccountController {
         Optional<Account> optionalAccount = accountRepo.findByUserId(userId);
         Account account = optionalAccount.orElseGet(() -> {
             List<Group> groups = groupMe.getAllGroups(token);
-            return accountRepo.save(new Account(token, userId, groups));
+            return accountRepo.save(new Account(token, userId));
         });
         if (!account.getToken().equals(token)) {
             account.updateToken(token);
@@ -64,9 +64,7 @@ public class AccountController {
         if (!account.getUserId().equals(user.getUserId())) {
             return redirectToGroupMeLogon;
         }
-        List<Group> groups = groupMe.getAllGroups(token);
-        model.addAttribute("groups", groups);
-        account.updateAccount(token, groups);
+        account.updateAccount(token);
         account = accountRepo.save(account);
         model.addAttribute("account", account);
         return "account";

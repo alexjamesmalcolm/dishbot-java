@@ -1,14 +1,14 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
+import com.alexjamesmalcolm.groupme.response.Group;
 import com.alexjamesmalcolm.groupme.response.Member;
+import com.alexjamesmalcolm.groupme.service.GroupMeService;
 
+import javax.annotation.Resource;
 import javax.persistence.*;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 public class Wheel {
@@ -30,6 +30,10 @@ public class Wheel {
 
     @ElementCollection
     private Map<Long, Double> fines;
+
+    @Transient
+    @Resource
+    private GroupMeService groupMe;
 
     private Wheel() {
     }
@@ -157,5 +161,10 @@ public class Wheel {
 
     public Account getOwner() {
         return owner;
+    }
+
+    public Group getGroup() {
+        Collection<Group> groups = owner.getGroups();
+        return groups.stream().filter(g -> g.getGroupId().equals(groupId)).findFirst().get();
     }
 }

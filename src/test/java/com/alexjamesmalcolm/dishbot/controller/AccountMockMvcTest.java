@@ -2,6 +2,7 @@ package com.alexjamesmalcolm.dishbot.controller;
 
 import com.alexjamesmalcolm.dishbot.AccountRepository;
 import com.alexjamesmalcolm.dishbot.physical.Account;
+import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import com.alexjamesmalcolm.groupme.response.Group;
 import com.alexjamesmalcolm.groupme.response.Me;
 import com.alexjamesmalcolm.groupme.service.GroupMeService;
@@ -18,10 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,6 +42,9 @@ public class AccountMockMvcTest {
     @Mock
     private Group group;
 
+    @Mock
+    private Wheel wheel;
+
     @MockBean
     private AccountRepository accountRepo;
 
@@ -53,6 +54,8 @@ public class AccountMockMvcTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        when(account.getName()).thenReturn("Alex Malcolm");
+        when(accountRepo.save(account)).thenReturn(account);
     }
 
     @Test
@@ -63,6 +66,7 @@ public class AccountMockMvcTest {
         when(groupMe.getMe(token)).thenReturn(me);
         List<Group> groups = Collections.singletonList(group);
         when(groupMe.getAllGroups(token)).thenReturn(groups);
+        when(account.getWheels()).thenReturn(Collections.singletonList(wheel));
         mvc.perform(get("/account/" + userId + "?token=" + token)).andExpect(status().isOk());
     }
 }
