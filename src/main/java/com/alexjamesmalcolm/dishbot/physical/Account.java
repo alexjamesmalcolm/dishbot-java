@@ -1,5 +1,7 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
+import com.alexjamesmalcolm.dishbot.exception.GroupNotFound;
+import com.alexjamesmalcolm.dishbot.exception.WheelAlreadyCreated;
 import com.alexjamesmalcolm.groupme.response.Group;
 import com.alexjamesmalcolm.groupme.response.Me;
 import com.alexjamesmalcolm.groupme.service.GroupMeService;
@@ -10,6 +12,7 @@ import javax.persistence.*;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -100,5 +103,23 @@ public class Account {
     public URI getImage() {
         initiateMe();
         return me.getImageUrl();
+    }
+
+    public boolean hasWheelInGroup(Long groupId) {
+        return wheels.stream().anyMatch(wheel -> groupId.equals(wheel.getGroupId()));
+    }
+
+    public Wheel createWheel(Long groupId) throws GroupNotFound, WheelAlreadyCreated {
+        if (!isInGroup(groupId)) {
+            throw new GroupNotFound();
+        }
+        if (hasWheelInGroup(groupId)) {
+            throw new WheelAlreadyCreated();
+        }
+        return new Wheel(this, groupId);
+    }
+
+    public Optional<Wheel> getWheel(Long groupId) {
+        return wheels.stream().filter(wheel -> groupId.equals(wheel.getGroupId())).findFirst();
     }
 }

@@ -1,7 +1,10 @@
 package com.alexjamesmalcolm.dishbot.controller;
 
 import com.alexjamesmalcolm.dishbot.AccountRepository;
+import com.alexjamesmalcolm.dishbot.WheelRepository;
+import com.alexjamesmalcolm.dishbot.exception.GroupNotFound;
 import com.alexjamesmalcolm.dishbot.physical.Account;
+import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import com.alexjamesmalcolm.groupme.response.Group;
 import com.alexjamesmalcolm.groupme.response.Me;
 import com.alexjamesmalcolm.groupme.service.GroupMeService;
@@ -21,6 +24,9 @@ public class AccountController {
 
     @Resource
     private AccountRepository accountRepo;
+
+    @Resource
+    private WheelRepository wheelRepo;
 
     @Resource
     private GroupMeService groupMe;
@@ -66,7 +72,26 @@ public class AccountController {
         }
         account.updateAccount(token);
         account = accountRepo.save(account);
+        model.addAttribute("token", token);
         model.addAttribute("account", account);
         return "account";
+    }
+
+    @RequestMapping("/account/{userId}/group/{groupId}/wheel")
+    public String createWheelForGroup(Model model, @PathVariable Long userId, @PathVariable Long groupId, @RequestParam String token) {
+        Optional<Account> optionalAccount = accountRepo.findByUserId(userId);
+        if (!optionalAccount.isPresent()) {
+            return "redirect:/account?token=" + token;
+        }
+        Account account = optionalAccount.get();
+        Optional<Wheel> optionalWheel = account.getWheel(groupId);
+        Wheel wheel = optionalWheel.orElseGet(() -> {
+            Wheel w = new Wheel(account, groupId);
+            return wheelRepo.save(w);
+        });
+        model.addAttribute("token", token);
+        model.addAttribute("account", account);
+        model.addAttribute("wheel", wheel);
+        return "wheel";
     }
 }

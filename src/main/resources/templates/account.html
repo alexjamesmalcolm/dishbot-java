@@ -34,6 +34,7 @@
             <section class="person" th:each="member: ${group.getMembers()}">
                 <h5 th:text="${member.name}"></h5>
             </section>
+            <p><a th:href="@{~/account/{userId}/group/{groupId}/wheel(userId=${account.userId},groupId=${group.groupId},token=${token})}">Create</a> Dish Wheel</p>
         </section>
     </article>
 </section>
