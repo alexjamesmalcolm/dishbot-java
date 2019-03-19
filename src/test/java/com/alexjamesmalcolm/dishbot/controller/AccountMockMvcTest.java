@@ -5,9 +5,9 @@ import com.alexjamesmalcolm.dishbot.physical.Account;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import com.alexjamesmalcolm.groupme.response.Group;
 import com.alexjamesmalcolm.groupme.response.Me;
+import com.alexjamesmalcolm.groupme.response.Member;
 import com.alexjamesmalcolm.groupme.service.GroupMeService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -19,8 +19,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
+import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -45,6 +47,9 @@ public class AccountMockMvcTest {
     @Mock
     private Wheel wheel;
 
+    @Mock
+    private Member member;
+
     @MockBean
     private AccountRepository accountRepo;
 
@@ -56,6 +61,8 @@ public class AccountMockMvcTest {
         MockitoAnnotations.initMocks(this);
         when(account.getName()).thenReturn("Alex Malcolm");
         when(accountRepo.save(account)).thenReturn(account);
+        when(wheel.getGroup()).thenReturn(group);
+        when(wheel.getMembers()).thenReturn(singletonList(member));
     }
 
     @Test
@@ -64,9 +71,9 @@ public class AccountMockMvcTest {
         String token = "asdf1234";
         when(accountRepo.findByUserId(userId)).thenReturn(Optional.of(account));
         when(groupMe.getMe(token)).thenReturn(me);
-        List<Group> groups = Collections.singletonList(group);
+        List<Group> groups = singletonList(group);
         when(groupMe.getAllGroups(token)).thenReturn(groups);
-        when(account.getWheels()).thenReturn(Collections.singletonList(wheel));
+        when(account.getWheels()).thenReturn(singletonList(wheel));
         mvc.perform(get("/account/" + userId + "?token=" + token)).andExpect(status().isOk());
     }
 }

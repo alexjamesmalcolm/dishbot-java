@@ -6,16 +6,35 @@
 </head>
 <body>
 <h1 th:text="${account.getName()}"></h1>
+<!--<section>-->
+    <!--<h2>Groups</h2>-->
+    <!--<article class="group" th:each="group : ${groups}">-->
+        <!--<h3 th:text="${group.name}"></h3>-->
+    <!--</article>-->
+<!--</section>-->
 <section>
-    <h2>Groups</h2>
-    <article class="group" th:each="group : ${groups}">
-        <h3 th:text="${group.name}"></h3>
+    <h2>Dish Wheels</h2>
+    <article class="wheel" th:each="wheel : ${account.wheels}">
+        <h3 th:text="${wheel.getGroup().name}"></h3>
+        <section>
+            <h4>Members</h4>
+            <section class="person" th:each="member : ${wheel.getMembers()}">
+                <h5 th:text="${member.name}"></h5>
+                <p>Fines: [[${wheel.getFines(member)}]]</p>
+            </section>
+        </section>
     </article>
 </section>
 <section>
-    <h2>Wheels</h2>
-    <article class="wheel" th:each="wheel : ${account.wheels}">
-        <h3></h3>
+    <h2>Groups without Dish Wheels</h2>
+    <article class="group" th:each="group : ${account.getGroupsWithoutWheels()}">
+        <h3 th:text="${group.name}"></h3>
+        <section>
+            <h4>Members</h4>
+            <section class="person" th:each="member: ${group.getMembers()}">
+                <h5 th:text="${member.name}"></h5>
+            </section>
+        </section>
     </article>
 </section>
 </body>

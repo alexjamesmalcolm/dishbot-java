@@ -82,6 +82,10 @@ public class Account {
         return groups;
     }
 
+    public Collection<Group> getGroupsWithoutWheels() {
+        return getGroups().stream().filter(group -> wheels.stream().anyMatch(wheel -> group.getGroupId().equals(wheel.getGroupId()))).collect(toList());
+    }
+
     private void initiateMe() {
         if (me == null) {
             me = groupMe.getMe(token);

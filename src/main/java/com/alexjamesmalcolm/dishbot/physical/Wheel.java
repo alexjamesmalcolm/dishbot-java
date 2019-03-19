@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class Wheel {
@@ -140,6 +141,14 @@ public class Wheel {
         return timeLeft.isZero() || timeLeft.isNegative();
     }
 
+    public Double getFines(Member member) {
+        return getFines(member.getUserId());
+    }
+
+    public Double getFines(Long userId) {
+        return fines.get(userId);
+    }
+
     public void giveFine(Member member) {
         giveFine(member.getUserId());
     }
@@ -166,5 +175,11 @@ public class Wheel {
     public Group getGroup() {
         Collection<Group> groups = owner.getGroups();
         return groups.stream().filter(g -> g.getGroupId().equals(groupId)).findFirst().get();
+    }
+
+    public List<Member> getMembers() {
+        Group group = getGroup();
+        List<Member> members = group.getMembers();
+        return members.stream().filter(member -> userIds.stream().anyMatch(id -> member.getUserId().equals(id))).collect(Collectors.toList());
     }
 }
