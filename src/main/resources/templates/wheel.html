@@ -11,7 +11,7 @@
     <h2>Members</h2>
     <article class="person" th:each="member : ${wheel.getMembers()}">
         <h3 th:text="${member.name}"></h3>
-        <p>Fines: [[${member.}]]</p>
+        <p>Fines: [[${wheel.getFines(member)}]]</p>
     </article>
 </section>
 </body>

@@ -10,6 +10,7 @@
     <h2>Dish Wheels</h2>
     <article class="wheel" th:each="wheel : ${account.wheels}">
         <h3 th:text="${wheel.getGroup().name}"></h3>
+        <p><a th:href="@{~/account/{userId}/group/{groupId}/wheel(userId=${account.userId},groupId=${group.groupId},token=${token})}">Go</a> to Dish Wheel.</p>
         <section>
             <h4>Members</h4>
             <section class="person" th:each="member : ${wheel.getMembers()}">

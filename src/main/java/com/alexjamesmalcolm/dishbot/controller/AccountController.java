@@ -2,7 +2,6 @@ package com.alexjamesmalcolm.dishbot.controller;
 
 import com.alexjamesmalcolm.dishbot.AccountRepository;
 import com.alexjamesmalcolm.dishbot.WheelRepository;
-import com.alexjamesmalcolm.dishbot.exception.GroupNotFound;
 import com.alexjamesmalcolm.dishbot.physical.Account;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import com.alexjamesmalcolm.groupme.response.Group;
