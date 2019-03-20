@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AccountServiceTest {
+public class AccountBeanInjectionTest {
 
     @InjectMocks
     private Account underTest;

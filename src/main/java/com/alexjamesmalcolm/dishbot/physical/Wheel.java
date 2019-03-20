@@ -6,6 +6,7 @@ import com.alexjamesmalcolm.groupme.response.Group;
 import com.alexjamesmalcolm.groupme.response.Member;
 import com.alexjamesmalcolm.groupme.service.GroupMeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.*;
@@ -16,6 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
+@Component
 public class Wheel {
 
     @Id
@@ -65,8 +67,8 @@ public class Wheel {
     }
 
     @PostConstruct
-    public void createBot() {
-        if (botId == null || botId.isEmpty()) {
+    private void createBot() {
+        if ((botId == null || botId.isEmpty()) && groupId != 0 && owner != null) {
             botId = groupMe.createBot(owner.getToken(), "Dishbot", groupId, URI.create("https://dishbot.herokuapp.com/images/dishwasher.jpg"), properties.getDishbotCallbackUrl(), false);
         }
     }
@@ -213,5 +215,9 @@ public class Wheel {
             createBot();
             return groupMe.getBot(token, groupId, botId).get();
         });
+    }
+
+    GroupMeService getGroupMeService() {
+        return groupMe;
     }
 }
