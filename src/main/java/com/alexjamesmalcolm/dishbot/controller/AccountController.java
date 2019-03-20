@@ -33,12 +33,12 @@ public class AccountController {
     private String redirectToGroupMeLogon = "redirect:https://oauth.groupme.com/oauth/authorize?client_id=nYOULhOHkuJcPSUjy3TtnXojCWraPk5GcI25nmkm2aShmQ2z";
 
     @RequestMapping("/")
-    public String displayHomePage() {
+    public String index() {
         return "home";
     }
 
     @RequestMapping("/logon")
-    public String displaySetupPage() {
+    public String logon() {
         return redirectToGroupMeLogon;
     }
 
@@ -59,7 +59,7 @@ public class AccountController {
     }
 
     @GetMapping("/account/{userId}")
-    public String settings(Model model, @PathVariable Long userId, @RequestParam String token) {
+    public String account(Model model, @PathVariable Long userId, @RequestParam String token) {
         Me user = groupMe.getMe(token);
         Optional<Account> optionalAccount = accountRepo.findByUserId(userId);
         if (!optionalAccount.isPresent()) {
@@ -77,17 +77,14 @@ public class AccountController {
     }
 
     @RequestMapping("/account/{userId}/group/{groupId}/wheel")
-    public String createWheelForGroup(Model model, @PathVariable Long userId, @PathVariable Long groupId, @RequestParam String token) {
+    public String wheel(Model model, @PathVariable Long userId, @PathVariable Long groupId, @RequestParam String token) {
         Optional<Account> optionalAccount = accountRepo.findByUserId(userId);
         if (!optionalAccount.isPresent()) {
             return "redirect:/account?token=" + token;
         }
         Account account = optionalAccount.get();
         Optional<Wheel> optionalWheel = account.getWheel(groupId);
-        Wheel wheel = optionalWheel.orElseGet(() -> {
-            Wheel w = new Wheel(account, groupId);
-            return wheelRepo.save(w);
-        });
+        Wheel wheel = optionalWheel.orElseGet(() -> wheelRepo.save(new Wheel(account, groupId)));
         model.addAttribute("token", token);
         model.addAttribute("account", account);
         model.addAttribute("wheel", wheel);

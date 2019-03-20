@@ -1,5 +1,6 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
+import com.alexjamesmalcolm.dishbot.Properties;
 import com.alexjamesmalcolm.groupme.service.GroupMeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +29,14 @@ public class WheelBeanInjectionTest {
         long groupId = 1234;
         Wheel underTest = new Wheel(account, groupId);
         GroupMeService actual = underTest.getGroupMeService();
+        assertNotNull(actual);
+    }
+
+    @Test
+    public void shouldGetProperties() {
+        long groupId = 1234;
+        Wheel underTest = new Wheel(account, groupId);
+        Properties actual = underTest.getProperties();
         assertNotNull(actual);
     }
 }

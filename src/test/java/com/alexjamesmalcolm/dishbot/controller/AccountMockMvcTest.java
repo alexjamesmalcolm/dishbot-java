@@ -37,24 +37,21 @@ public class AccountMockMvcTest {
 
     @Mock
     private Account account;
-
     @Mock
     private Me me;
-
     @Mock
     private Group group;
-
     @Mock
     private Wheel wheel;
-
     @Mock
     private Member member;
 
     @MockBean
     private AccountRepository accountRepo;
-
     @MockBean
     private GroupMeService groupMe;
+
+    private Long userId = 1278939L;
 
     @Before
     public void setup() {
@@ -63,17 +60,24 @@ public class AccountMockMvcTest {
         when(accountRepo.save(account)).thenReturn(account);
         when(wheel.getGroup()).thenReturn(group);
         when(wheel.getMembers()).thenReturn(singletonList(member));
+        when(accountRepo.findByUserId(userId)).thenReturn(Optional.of(account));
     }
 
     @Test
-    public void shouldGetSettings() throws Exception {
-        long userId = 1278939L;
+    public void shouldGetAccountView() throws Exception {
         String token = "asdf1234";
-        when(accountRepo.findByUserId(userId)).thenReturn(Optional.of(account));
         when(groupMe.getMe(token)).thenReturn(me);
         List<Group> groups = singletonList(group);
         when(groupMe.getAllGroups(token)).thenReturn(groups);
         when(account.getWheels()).thenReturn(singletonList(wheel));
         mvc.perform(get("/account/" + userId + "?token=" + token)).andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldGetWheelView() throws Exception {
+        long groupId = 1356L;
+        String token = "asdfjkl";
+        when(account.getWheel(groupId)).thenReturn(Optional.of(wheel));
+        mvc.perform(get("/account/" + userId + "/group/" + groupId + "/wheel?token=" + token)).andExpect(status().isOk());
     }
 }

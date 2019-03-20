@@ -220,4 +220,8 @@ public class Wheel {
     GroupMeService getGroupMeService() {
         return groupMe;
     }
+
+    Properties getProperties() {
+        return properties;
+    }
 }
