@@ -1,21 +1,21 @@
 package com.alexjamesmalcolm.dishbot.physical;
 
+import com.alexjamesmalcolm.dishbot.Properties;
 import com.alexjamesmalcolm.groupme.response.Bot;
 import com.alexjamesmalcolm.groupme.response.Group;
 import com.alexjamesmalcolm.groupme.response.Member;
 import com.alexjamesmalcolm.groupme.service.GroupMeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.*;
+import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
-@Component
 public class Wheel {
 
     @Id
@@ -38,6 +38,8 @@ public class Wheel {
 
     @Transient
     private static GroupMeService groupMe;
+    @Transient
+    private static Properties properties;
 
     private Wheel() {
     }
@@ -65,13 +67,18 @@ public class Wheel {
     @PostConstruct
     public void createBot() {
         if (botId == null || botId.isEmpty()) {
-            //TODO Create bot using GroupMe
+            botId = groupMe.createBot(owner.getToken(), "Dishbot", groupId, URI.create("https://dishbot.herokuapp.com/images/dishwasher.jpg"), properties.getDishbotCallbackUrl(), false);
         }
     }
 
     @Autowired
     public void setGroupMeService(GroupMeService groupMeService) {
         Wheel.groupMe = groupMeService;
+    }
+
+    @Autowired
+    public void setProperties(Properties properties) {
+        Wheel.properties = properties;
     }
 
     public long getId() {
@@ -199,9 +206,12 @@ public class Wheel {
     }
 
     public Bot getBot() {
-        //TODO Switch this to the new method of getting a bot by botId when that feature is released in the next version
-        List<Bot> bots = groupMe.getBots(owner.getToken(), groupId);
-        return bots.stream().filter(bot -> bot.getBotId().equals(botId)).findFirst().get();
-        //TODO Create bot if bot is not found
+        createBot();
+        String token = owner.getToken();
+        Optional<Bot> optionalBot = groupMe.getBot(token, groupId, botId);
+        return optionalBot.orElseGet(() -> {
+            createBot();
+            return groupMe.getBot(token, groupId, botId).get();
+        });
     }
 }

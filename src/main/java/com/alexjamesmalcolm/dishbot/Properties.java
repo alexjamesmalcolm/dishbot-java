@@ -46,7 +46,7 @@ public class Properties {
         return rollbarEndpoint;
     }
 
-    public URI getDishbotUrl() {
+    public URI getDishbotCallbackUrl() {
         return dishbotUrl;
     }
 }

@@ -181,7 +181,7 @@ public class Composer {
                 String name = member.getName();
                 Duration timeLeft = wheel.getDurationUntilFineForCurrent();
                 String warning = name + " has " + timeLeft.toHours() + " hours left to do the dishes.";
-                String botId = groupMe.getBot(owner.getToken(), group.getGroupId(), properties.getDishbotUrl()).get().getBotId();
+                String botId = groupMe.getBot(owner.getToken(), group.getGroupId(), properties.getDishbotCallbackUrl()).get().getBotId();
                 groupMe.sendMessage(warning, botId);
                 wheel.currentHasBeenWarned();
             } else {
@@ -207,7 +207,7 @@ public class Composer {
                 long nextId = wheel.getCurrentMemberUserId();
                 String nextName = group.queryForMember(nextId).get().getName();
                 String warning = currentName + " took too long, " + nextName + " is on dishes now.";
-                String botId = groupMe.getBot(owner.getToken(), group.getGroupId(), properties.getDishbotUrl()).get().getBotId();
+                String botId = groupMe.getBot(owner.getToken(), group.getGroupId(), properties.getDishbotCallbackUrl()).get().getBotId();
                 groupMe.sendMessage(warning, botId);
             } else {
                 wheel.removeMember(currentId);
