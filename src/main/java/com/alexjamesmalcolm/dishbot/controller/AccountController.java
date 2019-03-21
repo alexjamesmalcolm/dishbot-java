@@ -126,6 +126,10 @@ public class AccountController {
         }
         Member member = optionalMember.get();
         wheel.removeMember(member);
+        if (wheel.getMembers().size() == 0) {
+            wheelRepo.delete(wheel);
+            return "redirect:/account/" + accountUserId + "?token=" + token;
+        }
         wheelRepo.save(wheel);
         return finalDestination;
     }
