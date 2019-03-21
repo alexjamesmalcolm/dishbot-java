@@ -60,11 +60,11 @@ test {
 	if (System.env["DISHBOT_CALLBACK"] == null) {
 		environment "DISHBOT_CALLBACK", DISHBOT_CALLBACK
 	}
-	if (System.env["EVNRIONMENT"] == "Travis-CI") {
-		testLogging {
-			showStandardStreams = true
-			events "failed"
-			exceptionFormat "full"
-		}
+	testLogging {
+		if (System.env["EVNRIONMENT"] == "Travis-CI") {
+            showStandardStreams = true
+        }
+		events "failed"
+		exceptionFormat "full"
 	}
 }
