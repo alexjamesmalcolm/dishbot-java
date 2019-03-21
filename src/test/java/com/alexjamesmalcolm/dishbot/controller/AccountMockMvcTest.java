@@ -61,6 +61,8 @@ public class AccountMockMvcTest {
         when(wheel.getGroup()).thenReturn(group);
         when(wheel.getMembers()).thenReturn(singletonList(member));
         when(accountRepo.findByUserId(userId)).thenReturn(Optional.of(account));
+        when(wheel.getCurrentMember()).thenReturn(member);
+        when(wheel.getOwner()).thenReturn(account);
     }
 
     @Test
