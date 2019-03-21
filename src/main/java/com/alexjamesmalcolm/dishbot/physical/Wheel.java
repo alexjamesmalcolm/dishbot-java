@@ -249,4 +249,8 @@ public class Wheel {
         List<Member> groupMembers = group.getMembers();
         return groupMembers.stream().filter(member -> userIds.stream().noneMatch(id -> member.getUserId().equals(id))).collect(toList());
     }
+
+    public boolean hasMembers() {
+        return !userIds.isEmpty();
+    }
 }

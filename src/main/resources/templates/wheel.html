@@ -6,16 +6,18 @@
 </head>
 <body>
 <h1>Dish Wheel - [[${wheel.getGroup().name}]]</h1>
-<p>Current Member</p>
-<p th:text="${wheel.getCurrentMember().name}"></p>
-<section>
-    <h2>Members</h2>
-    <article class="person" th:each="member : ${wheel.getMembers()}">
-        <h3 th:text="${member.name}"></h3>
-        <p>Fines: [[${wheel.getFines(member)}]]</p>
-        <a th:href="@{/account/{accountUserId}/group/{groupId}/wheel/{userId}/remove(accountUserId=${wheel.owner.userId},groupId=${wheel.groupId},userId=${member.userId},token=${token})}">Remove from Wheel</a>
-    </article>
-</section>
+<div th:if="${wheel.hasMembers()}">
+    <p>Current Member</p>
+    <p th:text="${wheel.getCurrentMember().name}"></p>
+    <section>
+        <h2>Members</h2>
+        <article class="person" th:each="member : ${wheel.getMembers()}">
+            <h3 th:text="${member.name}"></h3>
+            <p>Fines: [[${wheel.getFines(member)}]]</p>
+            <a th:href="@{/account/{accountUserId}/group/{groupId}/wheel/{userId}/remove(accountUserId=${wheel.owner.userId},groupId=${wheel.groupId},userId=${member.userId},token=${token})}">Remove from Wheel</a>
+        </article>
+    </section>
+</div>
 <section>
     <h2>Group Members not in Dish Wheel</h2>
     <article class="person" th:each="member : ${wheel.getGroupMembersNotInWheel()}">
