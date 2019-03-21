@@ -196,7 +196,9 @@ public class Wheel {
     }
 
     public void removeMember(Long userId) {
-        advanceWheel();
+        if (userId.equals(currentUserId)) {
+            advanceWheel();
+        }
         fines.remove(userId);
         userIds.remove(userId);
     }
