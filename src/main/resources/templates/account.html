@@ -11,7 +11,7 @@
     <h2>Dish Wheels</h2>
     <article class="wheel" th:each="wheel : ${account.wheels}">
         <h3 th:text="${wheel.getGroup().name}"></h3>
-        <p><a th:href="@{account/{userId}/group/{groupId}/wheel(userId=${account.userId},groupId=${wheel.groupId},token=${token})}">Go</a> to Dish Wheel.</p>
+        <p><a th:href="@{/account/{userId}/group/{groupId}/wheel(userId=${account.userId},groupId=${wheel.groupId},token=${token})}">Go</a> to Dish Wheel.</p>
         <section>
             <h4>Members</h4>
             <section class="person" th:each="member : ${wheel.getMembers()}">
@@ -30,7 +30,7 @@
             <p class="list">
                 <span class="person" th:each="member : ${group.getMembers()}" th:text="${member.name}"></span>
             </p>
-            <p><a th:href="@{account/{userId}/group/{groupId}/wheel(userId=${account.userId},groupId=${group.groupId},token=${token})}">Create</a> Dish Wheel</p>
+            <p><a th:href="@{/account/{userId}/group/{groupId}/wheel(userId=${account.userId},groupId=${group.groupId},token=${token})}">Create</a> Dish Wheel</p>
         </section>
     </article>
 </section>
