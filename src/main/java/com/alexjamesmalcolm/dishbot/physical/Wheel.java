@@ -67,11 +67,17 @@ public class Wheel {
         this.fineAmount = fineAmount;
     }
 
+    @PrePersist
     @PostConstruct
     private void createBot() {
         if ((botId == null || botId.isEmpty()) && groupId != 0 && owner != null) {
             botId = groupMe.createBot(getToken(), "Dishbot", groupId, URI.create("https://dishbot.herokuapp.com/images/dishwasher.jpg"), properties.getDishbotCallbackUrl(), false);
         }
+    }
+
+    @PreRemove
+    public void deleteBot() {
+        groupMe.deleteBot(getToken(), botId);
     }
 
     @Autowired
