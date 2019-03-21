@@ -90,7 +90,7 @@ public class Account {
             return getGroups();
         }
         return getGroups().stream().filter(group -> {
-            return wheels.stream().anyMatch(wheel -> {
+            return wheels.stream().noneMatch(wheel -> {
                 return group.getGroupId().equals(wheel.getGroupId());
             });
         }).collect(toList());
