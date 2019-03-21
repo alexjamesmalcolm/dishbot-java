@@ -40,6 +40,6 @@ public class AccountBeanInjectionTest {
     public void shouldGetGroupsWithoutWheels() {
         underTest = new Account(token, userId);
         Collection<Group> groups = underTest.getGroupsWithoutWheels();
-        assertTrue(groups.size() > 0);
+        assertTrue(groups.size() > 2);
     }
 }
