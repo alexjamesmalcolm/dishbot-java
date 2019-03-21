@@ -31,7 +31,7 @@ public class AccountBeanInjectionTest {
     @Test
     public void shouldGetName() {
         underTest = new Account(token, userId);
-        String expected = "Alex";
+        String expected = "Alex Malcolm";
         String name = underTest.getName();
         assertThat(name, is(expected));
     }
