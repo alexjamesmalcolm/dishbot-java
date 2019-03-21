@@ -28,7 +28,7 @@ public class Account {
     @ElementCollection
     private Collection<Long> groupIds;
     @OneToMany(mappedBy = "owner", orphanRemoval = true)
-    private Collection<Wheel> wheels;
+    private List<Wheel> wheels;
 
     @Transient
     private static GroupMeService groupMe;
@@ -86,6 +86,9 @@ public class Account {
     }
 
     public Collection<Group> getGroupsWithoutWheels() {
+        if (wheels == null || wheels.isEmpty()) {
+            return getGroups();
+        }
         return getGroups().stream().filter(group -> {
             return wheels.stream().anyMatch(wheel -> {
                 return group.getGroupId().equals(wheel.getGroupId());
