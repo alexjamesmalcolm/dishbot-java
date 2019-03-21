@@ -116,7 +116,15 @@ public class Wheel {
     }
 
     public Member getCurrentMember() {
-        return getGroup().queryForMember(getCurrentMemberUserId()).get();
+        if (userIds.isEmpty()) {
+            return null;
+        }
+        Optional<Member> optionalMember = getGroup().queryForMember(getCurrentMemberUserId());
+        if (!optionalMember.isPresent()) {
+            advanceWheel();
+            return getCurrentMember();
+        }
+        return optionalMember.get();
     }
 
     public Duration getFineDuration() {
