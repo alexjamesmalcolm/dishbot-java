@@ -12,14 +12,14 @@
     <article class="person" th:each="member : ${wheel.getMembers()}">
         <h3 th:text="${member.name}"></h3>
         <p>Fines: [[${wheel.getFines(member)}]]</p>
-        <a th:href="@{/{userId}/remove(userId=${member.userId},token=${token})}">Remove from Wheel</a>
+        <a th:href="@{/account/{accountUserId}/group/{groupId}/wheel/{userId}/remove(accountUserId=${wheel.owner.userId},groupId=${wheel.groupId},userId=${member.userId},token=${token})}">Remove from Wheel</a>
     </article>
 </section>
 <section>
     <h2>Group Members not in Dish Wheel</h2>
     <article class="person" th:each="member : ${wheel.getGroupMembersNotInWheel()}">
         <h3 th:text="${member.name}"></h3>
-        <a th:href="@{/{userId}/add(userId=${member.userId},token=${token})}">Add to Wheel</a>
+        <a th:href="@{/account/{accountUserId}/group/{groupId}/wheel/{userId}/add(accountUserId=${wheel.owner.userId},groupId=${wheel.groupId},userId=${member.userId},token=${token})}">Add to Wheel</a>
     </article>
 </section>
 </body>
