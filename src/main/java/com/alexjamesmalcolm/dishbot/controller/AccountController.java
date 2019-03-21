@@ -6,6 +6,7 @@ import com.alexjamesmalcolm.dishbot.physical.Account;
 import com.alexjamesmalcolm.dishbot.physical.Wheel;
 import com.alexjamesmalcolm.groupme.response.Group;
 import com.alexjamesmalcolm.groupme.response.Me;
+import com.alexjamesmalcolm.groupme.response.Member;
 import com.alexjamesmalcolm.groupme.service.GroupMeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -47,10 +47,7 @@ public class AccountController {
         Me user = groupMe.getMe(token);
         Long userId = user.getUserId();
         Optional<Account> optionalAccount = accountRepo.findByUserId(userId);
-        Account account = optionalAccount.orElseGet(() -> {
-            List<Group> groups = groupMe.getAllGroups(token);
-            return accountRepo.save(new Account(token, userId));
-        });
+        Account account = optionalAccount.orElseGet(() -> accountRepo.save(new Account(token, userId)));
         if (!account.getToken().equals(token)) {
             account.updateToken(token);
             accountRepo.save(account);
@@ -89,5 +86,47 @@ public class AccountController {
         model.addAttribute("account", account);
         model.addAttribute("wheel", wheel);
         return "wheel";
+    }
+
+    @RequestMapping("/account/{accountUserId}/group/{groupId}/wheel/{userId}/add")
+    public String addUserToWheel(@PathVariable Long accountUserId, @PathVariable Long groupId, @PathVariable Long userId, @RequestParam String token) {
+        Optional<Account> optionalAccount = accountRepo.findByUserId(accountUserId);
+        if (!optionalAccount.isPresent()) {
+            return "redirect:/account?token=" + token;
+        }
+        Account account = optionalAccount.get();
+        Optional<Wheel> optionalWheel = account.getWheel(groupId);
+        Wheel wheel = optionalWheel.orElseGet(() -> wheelRepo.save(new Wheel(account, groupId)));
+        Group group = wheel.getGroup();
+        Optional<Member> optionalMember = group.queryForMember(userId);
+        String finalDestination = "/account/" + accountUserId + "/group/" + groupId + "/wheel?token=" + token;
+        if (!optionalMember.isPresent()) {
+            return finalDestination;
+        }
+        Member member = optionalMember.get();
+        wheel.addMember(member);
+        wheelRepo.save(wheel);
+        return finalDestination;
+    }
+
+    @RequestMapping("/account/{accountUserId}/group/{groupId}/wheel/{userId}/remove")
+    public String removeUserFromWheel(@PathVariable Long accountUserId, @PathVariable Long groupId, @PathVariable Long userId, @RequestParam String token) {
+        Optional<Account> optionalAccount = accountRepo.findByUserId(accountUserId);
+        if (!optionalAccount.isPresent()) {
+            return "redirect:/account?token=" + token;
+        }
+        Account account = optionalAccount.get();
+        Optional<Wheel> optionalWheel = account.getWheel(groupId);
+        Wheel wheel = optionalWheel.orElseGet(() -> wheelRepo.save(new Wheel(account, groupId)));
+        Group group = wheel.getGroup();
+        Optional<Member> optionalMember = group.queryForMember(userId);
+        String finalDestination = "/account/" + accountUserId + "/group/" + groupId + "/wheel?token=" + token;
+        if (!optionalMember.isPresent()) {
+            return finalDestination;
+        }
+        Member member = optionalMember.get();
+        wheel.removeMember(member);
+        wheelRepo.save(wheel);
+        return finalDestination;
     }
 }

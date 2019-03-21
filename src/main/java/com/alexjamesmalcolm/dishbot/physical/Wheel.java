@@ -14,7 +14,8 @@ import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Entity
 @Component
@@ -69,7 +70,7 @@ public class Wheel {
     @PostConstruct
     private void createBot() {
         if ((botId == null || botId.isEmpty()) && groupId != 0 && owner != null) {
-            botId = groupMe.createBot(owner.getToken(), "Dishbot", groupId, URI.create("https://dishbot.herokuapp.com/images/dishwasher.jpg"), properties.getDishbotCallbackUrl(), false);
+            botId = groupMe.createBot(getToken(), "Dishbot", groupId, URI.create("https://dishbot.herokuapp.com/images/dishwasher.jpg"), properties.getDishbotCallbackUrl(), false);
         }
     }
 
@@ -112,6 +113,10 @@ public class Wheel {
 
     public long getCurrentMemberUserId() {
         return currentUserId;
+    }
+
+    public Member getCurrentMember() {
+        return groupMe.getMember(getToken(), getCurrentMemberUserId());
     }
 
     public Duration getFineDuration() {
@@ -204,12 +209,12 @@ public class Wheel {
     public List<Member> getMembers() {
         Group group = getGroup();
         List<Member> members = group.getMembers();
-        return members.stream().filter(member -> userIds.stream().anyMatch(id -> member.getUserId().equals(id))).collect(Collectors.toList());
+        return members.stream().filter(member -> userIds.stream().anyMatch(id -> member.getUserId().equals(id))).collect(toList());
     }
 
     public Bot getBot() {
         createBot();
-        String token = owner.getToken();
+        String token = getToken();
         Optional<Bot> optionalBot = groupMe.getBot(token, groupId, botId);
         return optionalBot.orElseGet(() -> {
             createBot();
@@ -223,5 +228,15 @@ public class Wheel {
 
     Properties getProperties() {
         return properties;
+    }
+
+    private String getToken() {
+        return owner.getToken();
+    }
+
+    public List<Member> getGroupMembersNotInWheel() {
+        Group group = getGroup();
+        List<Member> groupMembers = group.getMembers();
+        return groupMembers.stream().filter(member -> userIds.stream().noneMatch(id -> member.getUserId().equals(id))).collect(toList());
     }
 }
