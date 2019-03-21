@@ -1,0 +1,3 @@
+.list > *:not(:last-child):after {
+    content: ", ";
+}
