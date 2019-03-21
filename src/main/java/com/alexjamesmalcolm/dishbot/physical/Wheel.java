@@ -116,7 +116,7 @@ public class Wheel {
     }
 
     public Member getCurrentMember() {
-        return groupMe.getMember(getToken(), getCurrentMemberUserId());
+        return getGroup().queryForMember(getCurrentMemberUserId()).get();
     }
 
     public Duration getFineDuration() {

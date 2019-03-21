@@ -7,6 +7,7 @@
 <body>
 <h1>Dish Wheel - [[${wheel.getGroup().name}]]</h1>
 <p>Current Member</p>
+<p th:text="${wheel.getCurrentMember().name}"></p>
 <section>
     <h2>Members</h2>
     <article class="person" th:each="member : ${wheel.getMembers()}">
