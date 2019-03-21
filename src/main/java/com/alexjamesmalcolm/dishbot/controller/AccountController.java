@@ -99,7 +99,7 @@ public class AccountController {
         Wheel wheel = optionalWheel.orElseGet(() -> wheelRepo.save(new Wheel(account, groupId)));
         Group group = wheel.getGroup();
         Optional<Member> optionalMember = group.queryForMember(userId);
-        String finalDestination = "/account/" + accountUserId + "/group/" + groupId + "/wheel?token=" + token;
+        String finalDestination = "redirect:/account/" + accountUserId + "/group/" + groupId + "/wheel?token=" + token;
         if (!optionalMember.isPresent()) {
             return finalDestination;
         }
@@ -120,7 +120,7 @@ public class AccountController {
         Wheel wheel = optionalWheel.orElseGet(() -> wheelRepo.save(new Wheel(account, groupId)));
         Group group = wheel.getGroup();
         Optional<Member> optionalMember = group.queryForMember(userId);
-        String finalDestination = "/account/" + accountUserId + "/group/" + groupId + "/wheel?token=" + token;
+        String finalDestination = "redirect:/account/" + accountUserId + "/group/" + groupId + "/wheel?token=" + token;
         if (!optionalMember.isPresent()) {
             return finalDestination;
         }
