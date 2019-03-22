@@ -67,7 +67,6 @@ public class Wheel {
         this.fineAmount = fineAmount;
     }
 
-    @PrePersist
     @PostConstruct
     private void createBot() {
         if ((botId == null || botId.isEmpty()) && groupId != 0 && owner != null) {

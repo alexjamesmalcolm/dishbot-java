@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collection;
 
+import static java.util.stream.Collectors.joining;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -40,6 +41,6 @@ public class AccountBeanInjectionTest {
     public void shouldGetGroupsWithoutWheels() {
         underTest = new Account(token, userId);
         Collection<Group> groups = underTest.getGroupsWithoutWheels();
-        assertTrue(groups.size() > 2);
+        assertTrue("There should be more than 2 groups but these are the groups we found instead: " + groups.stream().map(Group::getName).collect(joining(", ")), groups.size() > 2);
     }
 }
